@@ -8,7 +8,6 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Patrick+Hand&family=Quicksand:wght@400;600&display=swap" rel="stylesheet">
-
     <style>
         :root {
             --bg-lemon: #fffdf0;
@@ -16,14 +15,12 @@
             --accent-gold: #c89b27;
             --text-color: #4a4231;
         }
-
         * {
             box-sizing: border-box;
             margin: 0;
             padding: 0;
             font-family: 'Quicksand', sans-serif;
         }
-
         body {
             background-color: var(--bg-lemon);
             color: var(--text-color);
@@ -34,7 +31,6 @@
             position: relative;
             overflow-x: hidden;
         }
-
         /* Hạt kim tuyến / giấy lấp lánh rơi */
         .sparkle-particle {
             position: fixed;
@@ -46,13 +42,11 @@
             animation: floatSparkle 8s infinite linear;
             z-index: 1;
         }
-
         @keyframes floatSparkle {
             0% { transform: translateY(100vh) rotate(0deg); opacity: 0; }
             50% { opacity: 0.8; }
             100% { transform: translateY(-10vh) rotate(360deg); opacity: 0; }
         }
-
         /* HEADER & MENU */
         header {
             width: 100%;
@@ -61,7 +55,6 @@
             text-align: center;
             z-index: 10;
         }
-
         .nav-bar {
             display: flex;
             justify-content: center;
@@ -70,7 +63,6 @@
             flex-wrap: wrap;
             margin-bottom: 20px;
         }
-
         .nav-btn {
             background: #ffffff;
             border: 2px solid var(--main-yellow);
@@ -84,19 +76,16 @@
             text-decoration: none;
             font-size: 14px;
         }
-
         .nav-btn:hover, .nav-btn.active {
             background: var(--main-yellow);
             color: #fff;
             transform: translateY(-2px);
         }
-
         .nav-btn.back-home {
             border-color: var(--accent-gold);
             background: #fef7dc;
             color: var(--accent-gold);
         }
-
         .banner {
             background: #ffffff;
             border: 2px dashed var(--accent-gold);
@@ -105,19 +94,16 @@
             margin-bottom: 20px;
             box-shadow: 0 4px 12px rgba(200, 155, 39, 0.1);
         }
-
         .banner h1 {
             font-family: 'Patrick Hand', cursive;
             font-size: 30px;
             color: var(--accent-gold);
             margin-bottom: 6px;
         }
-
         .banner p {
             font-size: 13px;
             color: #786a4e;
         }
-
         /* MAIN CONTENT */
         main {
             width: 100%;
@@ -126,15 +112,12 @@
             flex: 1;
             z-index: 10;
         }
-
         .tab-content {
             display: none;
         }
-
         .tab-content.active {
             display: block;
         }
-
         /* BẢNG GIẤY NOTE (TAB 1) */
         .cork-board {
             background: #fcf8e8;
@@ -148,7 +131,6 @@
             gap: 20px;
             align-content: start;
         }
-
         .note-card {
             padding: 18px;
             border-radius: 4px;
@@ -163,12 +145,10 @@
             justify-content: space-between;
             transition: transform 0.2s ease;
         }
-
         .note-card:hover {
             transform: scale(1.03) rotate(0deg) !important;
             z-index: 5;
         }
-
         .note-card::before {
             content: '';
             position: absolute;
@@ -180,13 +160,11 @@
             background: #e63946;
             border-radius: 50%;
         }
-
         .note-yellow { background: #fff59d; }
         .note-pink   { background: #ffcdd2; }
         .note-green  { background: #c8e6c9; }
         .note-blue   { background: #bbdefb; }
         .note-orange { background: #ffe0b2; }
-
         .note-author {
             font-size: 13px;
             font-family: 'Quicksand', sans-serif;
@@ -194,7 +172,99 @@
             font-weight: bold;
             color: #555;
             margin-top: 10px;
+            position: relative;
+            z-index: 2;
         }
+        /* Sticker dán trên Note */
+        .note-sticker {
+            position: absolute;
+            bottom: 10px;
+            left: 10px;
+            font-size: 28px;
+            opacity: 0.8;
+            pointer-events: none;
+            z-index: 1;
+            transform: rotate(-10deg);
+        }
+
+        /* POPUP TẠO NOTE MỚI */
+        .modal-overlay {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.4);
+            z-index: 1000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            backdrop-filter: blur(2px);
+        }
+        .modal-content {
+            background: #fff;
+            padding: 25px;
+            border-radius: 16px;
+            width: 90%;
+            max-width: 400px;
+            border: 2px solid var(--accent-gold);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        .modal-content h3 {
+            color: var(--accent-gold);
+            text-align: center;
+            font-family: 'Patrick Hand', cursive;
+            font-size: 24px;
+        }
+        .modal-content input, .modal-content textarea, .modal-content select {
+            padding: 10px 14px;
+            border: 1px solid #e0d0a0;
+            border-radius: 8px;
+            font-size: 13px;
+            outline: none;
+            background: #fffef8;
+            width: 100%;
+        }
+        .form-row {
+            display: flex;
+            gap: 10px;
+        }
+        .form-row > div {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+        .form-row label {
+            font-size: 12px;
+            font-weight: bold;
+            color: #776a4a;
+        }
+        .modal-buttons {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+            margin-top: 5px;
+        }
+        .btn-cancel {
+            background: #f5f5f5;
+            color: #555;
+            border: 1px solid #ccc;
+            padding: 8px 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+        .btn-submit {
+            background: var(--accent-gold);
+            color: #fff;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+        .btn-submit:hover { background: #b0841a; }
 
         /* KHU BÀI VIẾT TÂM SỰ & FEEDBACK DẠNG DANH SÁCH */
         .post-list {
@@ -203,7 +273,6 @@
             gap: 15px;
             min-height: 320px;
         }
-
         .post-card {
             background: #ffffff;
             border: 1px solid #ebdca8;
@@ -213,7 +282,6 @@
             box-shadow: 0 2px 8px rgba(0,0,0,0.03);
             position: relative;
         }
-
         .post-header {
             display: flex;
             justify-content: space-between;
@@ -221,12 +289,10 @@
             margin-bottom: 8px;
             font-size: 13px;
         }
-
         .post-author {
             font-weight: bold;
             color: var(--accent-gold);
         }
-
         .post-tag {
             background: #fff8d6;
             color: #8d7237;
@@ -235,14 +301,12 @@
             font-size: 11px;
             font-weight: 600;
         }
-
         .post-content {
             font-size: 14px;
             line-height: 1.6;
             color: #4a4231;
             white-space: pre-line;
         }
-
         .toggle-btn {
             background: none;
             border: none;
@@ -254,14 +318,12 @@
             padding: 0;
             display: inline-block;
         }
-
         .post-date {
             font-size: 11px;
             color: #aaa;
             margin-top: 8px;
             text-align: right;
         }
-
         /* FORM ĐẶT PHÍA DƯỚI CÙNG */
         .form-box {
             background: #ffffff;
@@ -275,7 +337,6 @@
             gap: 12px;
             box-shadow: 0 4px 10px rgba(0,0,0,0.03);
         }
-
         .form-box input, .form-box textarea {
             padding: 10px 14px;
             border: 1px solid #e0d0a0;
@@ -284,7 +345,6 @@
             outline: none;
             background: #fffef8;
         }
-
         .form-box button {
             background: var(--accent-gold);
             color: #fff;
@@ -297,11 +357,9 @@
             align-self: flex-end;
             transition: background 0.2s ease;
         }
-
         .form-box button:hover {
             background: #b0841a;
         }
-
         /* THANH PHÂN TRANG */
         .pagination {
             display: flex;
@@ -311,7 +369,6 @@
             margin-top: 20px;
             margin-bottom: 10px;
         }
-
         .page-btn {
             background: #fff;
             border: 1px solid var(--accent-gold);
@@ -322,12 +379,10 @@
             font-weight: 600;
             color: var(--accent-gold);
         }
-
         .page-btn.active {
             background: var(--accent-gold);
             color: #fff;
         }
-
         /* ĐĨA THAN */
         .vinyl-player-box {
             position: fixed;
@@ -344,7 +399,6 @@
             z-index: 100;
             backdrop-filter: blur(5px);
         }
-
         .vinyl-record {
             width: 50px;
             height: 50px;
@@ -357,11 +411,9 @@
             animation: spin 5s linear infinite;
             animation-play-state: paused;
         }
-
         .vinyl-record.playing {
             animation-play-state: running;
         }
-
         .vinyl-img {
             width: 22px;
             height: 22px;
@@ -369,11 +421,9 @@
             object-fit: cover;
             border: 2px solid #fff;
         }
-
         @keyframes spin {
             100% { transform: rotate(360deg); }
         }
-
         .music-btn {
             background: var(--main-yellow);
             border: none;
@@ -383,6 +433,81 @@
             font-size: 11px;
             font-weight: bold;
             color: #555;
+        }
+        
+        /* =========================================
+           HIỆU ỨNG GỬI FORM (HOA ĐĂNG, THƯ, SAO)
+           ========================================= */
+        /* Hoa đăng (Ước nguyện) */
+        .lantern-effect {
+            position: fixed;
+            bottom: -60px;
+            font-size: 38px;
+            z-index: 10001;
+            pointer-events: none;
+            filter: drop-shadow(0 0 15px #ffb300);
+            animation: flyUpLantern 5s ease-in forwards;
+        }
+        @keyframes flyUpLantern {
+            0% { transform: translateY(0) scale(0.8) rotate(0deg); opacity: 1; }
+            100% { transform: translateY(-120vh) scale(1.3) rotate(25deg); opacity: 0; }
+        }
+
+        /* Thư tình bay (Tâm sự) */
+        .letter-effect {
+            position: fixed;
+            bottom: 5vh;
+            left: 50%;
+            font-size: 45px;
+            z-index: 10001;
+            pointer-events: none;
+            animation: flyLetter 4s ease-in-out forwards;
+            filter: drop-shadow(0 4px 6px rgba(0,0,0,0.1));
+        }
+        @keyframes flyLetter {
+            0% { transform: translate(-50%, 0) scale(0.5); opacity: 0; }
+            15% { opacity: 1; transform: translate(-50%, -15vh) scale(1.1); }
+            100% { transform: translate(calc(-50% + 300px), -100vh) scale(0.7) rotate(45deg); opacity: 0; }
+        }
+
+        /* Sao băng nổ (Feedback) */
+        .star-effect {
+            position: fixed;
+            font-size: 28px;
+            z-index: 10001;
+            pointer-events: none;
+            animation: shootStarBurst 2s ease-out forwards;
+            filter: drop-shadow(0 0 10px gold);
+        }
+        @keyframes shootStarBurst {
+            0% { transform: translate(0, 0) scale(0) rotate(0deg); opacity: 1; }
+            60% { transform: translate(var(--dx), var(--dy)) scale(1.5) rotate(180deg); opacity: 1; }
+            100% { transform: translate(calc(var(--dx) * 1.5), calc(var(--dy) * 1.5)) scale(0) rotate(360deg); opacity: 0; }
+        }
+
+        /* =========================================
+           THÔNG BÁO TÙY CHỈNH (TOAST)
+           ========================================= */
+        .custom-toast {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%) translateY(-30px);
+            background: var(--accent-gold);
+            color: #fff;
+            padding: 12px 24px;
+            border-radius: 30px;
+            font-size: 14px;
+            font-weight: bold;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            z-index: 99999;
+            opacity: 0;
+            pointer-events: none;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        .custom-toast.show {
+            transform: translateX(-50%) translateY(0);
+            opacity: 1;
         }
 
         /* FOOTER */
@@ -400,7 +525,6 @@
     </style>
 </head>
 <body>
-
     <!-- ĐĨA THAN PHÁT NHẠC -->
     <div class="vinyl-player-box">
         <div class="vinyl-record" id="vinylRecord">
@@ -413,7 +537,6 @@
     </div>
     <audio id="bgMusic" loop src="nhac.mp3"></audio>
 
-
     <!-- HEADER -->
     <header>
         <div class="nav-bar">
@@ -422,32 +545,66 @@
             <button class="nav-btn" onclick="switchTab('tam-su', this)">💌 Lời Tâm Sự</button>
             <button class="nav-btn" onclick="switchTab('feedback', this)">🌱 Feedback Char</button>
         </div>
-
         <div class="banner">
             <h1> Góc Ước Nguyện Giao Lưu & Feedback Char✨</h1>
             <p>Nơi gửi gắm suy nghĩ, góc nhỏ tâm sự và lời góp ý dễ thương từ mọi người ghé thăm Tiệm Nhà Hyperion.</p>
         </div>
     </header>
 
-
     <!-- MAIN CONTENT -->
     <main>
-
         <!-- TAB 1: BẢNG GIẤY NOTE -->
         <div id="uoc-nguyen" class="tab-content active">
             <div class="cork-board" id="corkBoard"></div>
             <div class="pagination" id="notePagination"></div>
             <div style="text-align: center; margin-top: 20px;">
-                <button class="nav-btn" style="background:var(--accent-gold); color:#fff; padding:10px 24px; font-size:15px;" onclick="openNoteForm()">✍️ Dán giấy ước nguyện mới</button>
+                <button class="nav-btn" style="background:var(--accent-gold); color:#fff; padding:10px 24px; font-size:15px;" onclick="openNoteModal()">✍️ Dán giấy ước nguyện mới</button>
             </div>
         </div>
 
+        <!-- MODAL TẠO NOTE MỚI -->
+        <div id="noteModal" class="modal-overlay" style="display: none;">
+            <div class="modal-content">
+                <h3>✍️ Tạo Giấy Note Mới</h3>
+                <input type="text" id="newNoteAuthor" placeholder="Tên của bạn (hoặc để trống)">
+                <textarea id="newNoteText" rows="3" placeholder="Nhập lời ước nguyện hoặc yêu cầu tạo char..."></textarea>
+                
+                <div class="form-row">
+                    <div>
+                        <label>🎨 Màu giấy:</label>
+                        <select id="newNoteColor">
+                            <option value="note-yellow">💛 Vàng</option>
+                            <option value="note-pink">💖 Hồng</option>
+                            <option value="note-green">💚 Xanh lá</option>
+                            <option value="note-blue">💙 Xanh dương</option>
+                            <option value="note-orange">🧡 Cam</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label>✨ Sticker:</label>
+                        <select id="newNoteSticker">
+                            <option value="">Không dán</option>
+                            <option value="🌸">🌸 Hoa Đào</option>
+                            <option value="🌙">🌙 Trăng Khuyết</option>
+                            <option value="⭐">⭐ Ngôi Sao</option>
+                            <option value="🍀">🍀 Cỏ 4 Lá</option>
+                            <option value="🎀">🎀 Nơ Hồng</option>
+                            <option value="🐱">🐱 Mèo Con</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="modal-buttons">
+                    <button class="btn-cancel" onclick="closeNoteModal()">Hủy</button>
+                    <button class="btn-submit" onclick="submitNote()">Dán Lên Bảng</button>
+                </div>
+            </div>
+        </div>
 
         <!-- TAB 2: KHU LỜI TÂM SỰ -->
         <div id="tam-su" class="tab-content">
             <div class="post-list" id="tamSuList"></div>
             <div class="pagination" id="tamSuPagination"></div>
-
             <div class="form-box">
                 <h4 style="color:var(--accent-gold);">✍️ Viết lời tâm sự mới gửi tiệm</h4>
                 <input type="text" id="tsAuthor" placeholder="Tên/Biệt danh của bạn (không bắt buộc)">
@@ -456,12 +613,10 @@
             </div>
         </div>
 
-
         <!-- TAB 3: KHU FEEDBACK CHAR -->
         <div id="feedback" class="tab-content">
             <div class="post-list" id="feedbackList"></div>
             <div class="pagination" id="feedbackPagination"></div>
-
             <div class="form-box">
                 <h4 style="color:var(--accent-gold);">✍️ Gửi Feedback Cho Nhân Vật</h4>
                 <div style="display:flex; gap:10px;">
@@ -472,9 +627,7 @@
                 <button type="button" onclick="addFeedback()">Gửi Feedback</button>
             </div>
         </div>
-
     </main>
-
 
     <!-- FOOTER -->
     <footer>
@@ -482,20 +635,88 @@
         <p style="margin-top:5px; font-size:11px; color:#aaa;">© 2026 Tiệm Nhà Hyperion - Góc Ước Nguyện Giao Lưu & Feedback Char</p>
     </footer>
 
-
     <!-- SCRIPT CHÍNH -->
     <script>
+        // HÀM HIỂN THỊ THÔNG BÁO XINH XẮN (THAY CHO ALERT)
+        function showToast(message) {
+            const toast = document.createElement("div");
+            toast.className = "custom-toast";
+            toast.innerText = message;
+            document.body.appendChild(toast);
+            
+            // Hiệu ứng trượt xuống
+            requestAnimationFrame(() => {
+                toast.classList.add("show");
+            });
+            
+            // Tự động ẩn và xóa sau 3 giây
+            setTimeout(() => {
+                toast.classList.remove("show");
+                setTimeout(() => toast.remove(), 400); // Đợi animation ẩn chạy xong
+            }, 3000);
+        }
+
+        // CÁC HÀM TẠO HIỆU ỨNG GỬI FORM (HOA ĐĂNG, THƯ, SAO BĂNG)
+        function triggerLanternEffect() {
+            for (let i = 0; i < 15; i++) {
+                setTimeout(() => {
+                    const lantern = document.createElement("div");
+                    lantern.className = "lantern-effect";
+                    lantern.innerText = "🏮"; 
+                    lantern.style.left = Math.random() * 90 + 5 + "vw";
+                    lantern.style.animationDuration = (Math.random() * 2 + 3) + "s";
+                    document.body.appendChild(lantern);
+                    setTimeout(() => lantern.remove(), 6000);
+                }, i * 200);
+            }
+        }
+
+        function triggerLetterEffect() {
+            for (let i = 0; i < 6; i++) {
+                setTimeout(() => {
+                    const letter = document.createElement("div");
+                    letter.className = "letter-effect";
+                    letter.innerText = "💌"; 
+                    letter.style.left = (35 + Math.random() * 30) + "vw";
+                    letter.style.animationDuration = (Math.random() * 1.5 + 2.5) + "s";
+                    document.body.appendChild(letter);
+                    setTimeout(() => letter.remove(), 5000);
+                }, i * 300);
+            }
+        }
+
+        function triggerStarEffect() {
+            const centerX = window.innerWidth / 2;
+            const centerY = window.innerHeight / 2 + 100;
+            
+            for (let i = 0; i < 40; i++) {
+                const star = document.createElement("div");
+                star.className = "star-effect";
+                star.innerText = Math.random() > 0.5 ? "⭐" : "✨";
+                star.style.left = centerX + "px";
+                star.style.top = centerY + "px";
+                
+                const angle = Math.random() * Math.PI * 2;
+                const distance = Math.random() * 300 + 150;
+                star.style.setProperty('--dx', Math.cos(angle) * distance + 'px');
+                star.style.setProperty('--dy', Math.sin(angle) * distance + 'px');
+                
+                document.body.appendChild(star);
+                setTimeout(() => star.remove(), 2500);
+            }
+        }
+
         // 1. TƯỜNG ƯỚC NGUYỆN (GIẤY NOTE)
         const noteList = [
-            { text: "Thích char hệ thống nhà sốp lắm, mong sốp tạo thêm vài char hệ thống nữa ạ🥹", author: "Mây Mây", color: "note-yellow", rotate: "-2deg" },
-            { text: "Mong tiệm luôn ra nhiều cốt truyện hay và giữ vững phong độ nhaaa!", author: "Góc Bếp Có Con Mèo Béo", color: "note-pink", rotate: "3deg" },
-            { text: "Thích mấy char Việt Nam xưa của sốp lắm luôn.", author: "Khách qua đường", color: "note-green", rotate: "-3deg" },
-            { text: "Sốp tạo thêm char cung đấu nữa đi sốp ơi ~.", author: "Tiểu Vũ", color: "note-blue", rotate: "1deg" },
-            { text: "Mê nhạc nền của tiệm lắm luôn 🎶", author: "Cá Gỗ", color: "note-orange", rotate: "-1deg" },
-            { text: "Chúc Tiệm Nhà Hyperion luôn đông khách nhen ✨", author: "Bạn thân", color: "note-yellow", rotate: "2deg" },
-            { text: "Ước có thêm char nữ xịn xò bối cảnh Sài Gòn xưa!", author: "Hoa Giấy", color: "note-pink", rotate: "-2deg" }
+            { text: "Thích char hệ thống nhà sốp lắm, mong sốp tạo thêm vài char hệ thống nữa ạ🥹", author: "Mây Mây", color: "note-yellow", rotate: "-2deg", sticker: "🌸" },
+            { text: "Mong tiệm luôn ra nhiều cốt truyện hay và giữ vững phong độ nhaaa!", author: "Góc Bếp Có Con Mèo Béo", color: "note-pink", rotate: "3deg", sticker: "🐱" },
+            { text: "Thích mấy char Việt Nam xưa của sốp lắm luôn.", author: "Khách qua đường", color: "note-green", rotate: "-3deg", sticker: "🌙" },
+            { text: "Sốp tạo thêm char cung đấu nữa đi sốp ơi ~.", author: "Tiểu Vũ", color: "note-blue", rotate: "1deg", sticker: "🎀" },
+            { text: "Mê nhạc nền của tiệm lắm luôn 🎶", author: "Cá Gỗ", color: "note-orange", rotate: "-1deg", sticker: "⭐" },
+            { text: "Chúc Tiệm Nhà Hyperion luôn đông khách nhen ✨", author: "Bạn thân", color: "note-yellow", rotate: "2deg", sticker: "🍀" },
+            { text: "Ước có thêm char nữ xịn xò bối cảnh Sài Gòn xưa!", author: "Hoa Giấy", color: "note-pink", rotate: "-2deg", sticker: "" }
         ];
-
+        
         let notePage = 1;
         const notesPerPage = 6;
 
@@ -504,48 +725,76 @@
             board.innerHTML = "";
             const start = (page - 1) * notesPerPage;
             const pageNotes = noteList.slice(start, start + notesPerPage);
-
+            
             pageNotes.forEach(note => {
                 const card = document.createElement("div");
                 card.className = `note-card ${note.color}`;
                 card.style.transform = `rotate(${note.rotate})`;
-                card.innerHTML = `<div>${note.text}</div><div class="note-author">— ${note.author}</div>`;
+                
+                // Hiển thị sticker nếu có
+                const stickerHtml = note.sticker ? `<div class="note-sticker">${note.sticker}</div>` : '';
+                
+                card.innerHTML = `
+                    <div>${note.text}</div>
+                    ${stickerHtml}
+                    <div class="note-author">— ${note.author}</div>
+                `;
                 board.appendChild(card);
             });
             renderPagination("notePagination", noteList.length, notesPerPage, notePage, (p) => { notePage = p; renderNotes(p); });
         }
 
-        function openNoteForm() {
-            const text = prompt("Nhập lời ước nguyện / yêu cầu tạo char:");
-            if (text && text.trim() !== "") {
-                const author = prompt("Tên của bạn:") || "Ẩn danh";
-                const colors = ["note-yellow", "note-pink", "note-green", "note-blue", "note-orange"];
-                noteList.unshift({ text: text, author: author, color: colors[Math.floor(Math.random()*colors.length)], rotate: (Math.random()*6-3).toFixed(1)+"deg" });
-                notePage = 1;
-                renderNotes(notePage);
-            }
+        // ĐÓNG / MỞ MODAL NOTE
+        function openNoteModal() {
+            document.getElementById("noteModal").style.display = "flex";
         }
 
+        function closeNoteModal() {
+            document.getElementById("noteModal").style.display = "none";
+            // Đặt lại form trống
+            document.getElementById("newNoteText").value = "";
+            document.getElementById("newNoteAuthor").value = "";
+            document.getElementById("newNoteColor").value = "note-yellow";
+            document.getElementById("newNoteSticker").value = "";
+        }
+
+        // XỬ LÝ KHI BẤM "DÁN LÊN BẢNG" (Thêm Hiệu Ứng Hoa Đăng)
+        function submitNote() {
+            const text = document.getElementById("newNoteText").value.trim();
+            const author = document.getElementById("newNoteAuthor").value.trim() || "Ẩn danh";
+            const color = document.getElementById("newNoteColor").value;
+            const sticker = document.getElementById("newNoteSticker").value;
+
+            if (!text) {
+                showToast("⚠️ Bạn quên ghi nội dung ước nguyện rồi kìa!");
+                return;
+            }
+
+            // Gọi hiệu ứng lồng đèn bay lên
+            triggerLanternEffect();
+
+            // Thêm vào danh sách
+            noteList.unshift({
+                text: text,
+                author: author,
+                color: color,
+                sticker: sticker,
+                rotate: (Math.random() * 6 - 3).toFixed(1) + "deg"
+            });
+
+            // Render lại & đóng modal
+            notePage = 1;
+            renderNotes(notePage);
+            closeNoteModal();
+            showToast("✨ Giấy ước nguyện của bạn đã được dán lên tường!");
+        }
 
         // 2. KHU LỜI TÂM SỰ
         const tamSuList = [
-            {
-                author: "An Nhiên",
-                date: "20/07/2026",
-                text: "Mình theo dõi Tiệm Nhà Hyperion từ những ngày đầu luôn. Thật sự plot rất hay, từ bối cảnh đến từng NPC. Mong là chủ tiệm sẽ giữ mãi ngọn lửa đam mê này để cho ra mắt thêm nhiều char hay như này."
-            },
-            {
-                author: "Mây Lang Thang",
-                date: "16/07/2026",
-                text: "Chiều tối, em ngồi lướt từng nhân vật trong tiệm, thấy web vừa nhẹ nhàng vừa ấm, thích phong cách này ghê á."
-            },
-            {
-                author: "Eri",
-                date: "17/06/2026",
-                text: "Em theo sốp từ dokichat sang GGAI, em phát hiện mấy char drama gia đình hay cung đấu nhà sốp nó hay vl sốp ạ.🥰 "
-            }
+            { author: "An Nhiên", date: "20/07/2026", text: "Mình theo dõi Tiệm Nhà Hyperion từ những ngày đầu luôn. Thật sự plot rất hay, từ bối cảnh đến từng NPC. Mong là chủ tiệm sẽ giữ mãi ngọn lửa đam mê này để cho ra mắt thêm nhiều char hay như này." },
+            { author: "Mây Lang Thang", date: "16/07/2026", text: "Chiều tối, em ngồi lướt từng nhân vật trong tiệm, thấy web vừa nhẹ nhàng vừa ấm, thích phong cách này ghê á." },
+            { author: "Eri", date: "17/06/2026", text: "Em theo sốp từ dokichat sang GGAI, em phát hiện mấy char drama gia đình hay cung đấu nhà sốp nó hay vl sốp ạ.🥰 " }
         ];
-
         let tamSuPage = 1;
         const postsPerPage = 3;
 
@@ -554,12 +803,10 @@
             container.innerHTML = "";
             const start = (page - 1) * postsPerPage;
             const pagePosts = tamSuList.slice(start, start + postsPerPage);
-
             pagePosts.forEach((post, index) => {
                 const actualIndex = start + index;
                 const isLong = post.text.length > 120;
                 const shortText = isLong ? post.text.substring(0, 120) + "..." : post.text;
-
                 const card = document.createElement("div");
                 card.className = "post-card";
                 card.innerHTML = `
@@ -573,14 +820,20 @@
                 `;
                 container.appendChild(card);
             });
-
             renderPagination("tamSuPagination", tamSuList.length, postsPerPage, tamSuPage, (p) => { tamSuPage = p; renderTamSu(p); });
         }
 
         function addTamSu() {
             const author = document.getElementById("tsAuthor").value.trim() || "Ẩn danh";
             const text = document.getElementById("tsText").value.trim();
-            if(!text) return alert("Bạn chưa viết nội dung tâm sự kìa!");
+            
+            if(!text) {
+                showToast("⚠️ Bạn chưa viết nội dung tâm sự kìa!");
+                return;
+            }
+            
+            // Gọi hiệu ứng phong thư bay
+            triggerLetterEffect();
 
             const today = new Date().toLocaleDateString('vi-VN');
             tamSuList.unshift({ author: author, text: text, date: today });
@@ -588,32 +841,19 @@
             document.getElementById("tsAuthor").value = "";
             tamSuPage = 1;
             renderTamSu(tamSuPage);
-            alert("Đã đăng bài tâm sự của bạn lên trang!");
+            
+            // Hiển thị thông báo nhỏ thay vì bảng alert
+            setTimeout(() => {
+                showToast("✨ Đã đăng bài tâm sự của bạn lên trang!");
+            }, 800);
         }
-
 
         // 3. KHU FEEDBACK CHAR
         const feedbackList = [
-            {
-                author: "Vì Sao Trên Trời",
-                char: "Nguyễn Vĩnh Hiên",
-                date: "21/07/2026",
-                text: "Cực kỳ thích nhân vật Vĩnh Hiên luôn! Cách ảnh tương tác và lời thoại đúng chuẩn bối cảnh xưa. Mong tiệm làm thêm vài char về ông giáo như này ạ."
-            },
-            {
-                author: "Tiểu Hồ",
-                char: "Ninh Hữu Ngôn",
-                date: "19/07/2026",
-                text: "Ninh Hữu Ngôn dễ thương xỉu, đọc đoạn thoại mà em vừa ngại vừa thấy cưng muốn xỉu luôn á sốp ơi!"
-            },
-            {
-                author: "Bánh Bao",
-                char: "Ninh Hoài Thượng",
-                date: "12/07/2026",
-                text: "Plot cuốn quá, mong sốp ra thêm nhiều char thể loại cung đấu."
-            }
+            { author: "Vì Sao Trên Trời", char: "Nguyễn Vĩnh Hiên", date: "21/07/2026", text: "Cực kỳ thích nhân vật Vĩnh Hiên luôn! Cách ảnh tương tác và lời thoại đúng chuẩn bối cảnh xưa. Mong tiệm làm thêm vài char về ông giáo như này ạ." },
+            { author: "Tiểu Hồ", char: "Ninh Hữu Ngôn", date: "19/07/2026", text: "Ninh Hữu Ngôn dễ thương xỉu, đọc đoạn thoại mà em vừa ngại vừa thấy cưng muốn xỉu luôn á sốp ơi!" },
+            { author: "Bánh Bao", char: "Ninh Hoài Thượng", date: "12/07/2026", text: "Plot cuốn quá, mong sốp ra thêm nhiều char thể loại cung đấu." }
         ];
-
         let feedbackPage = 1;
 
         function renderFeedback(page) {
@@ -621,12 +861,10 @@
             container.innerHTML = "";
             const start = (page - 1) * postsPerPage;
             const pagePosts = feedbackList.slice(start, start + postsPerPage);
-
             pagePosts.forEach((post, index) => {
                 const actualIndex = start + index;
                 const isLong = post.text.length > 120;
                 const shortText = isLong ? post.text.substring(0, 120) + "..." : post.text;
-
                 const card = document.createElement("div");
                 card.className = "post-card";
                 card.style.borderLeftColor = "#e63946";
@@ -641,7 +879,6 @@
                 `;
                 container.appendChild(card);
             });
-
             renderPagination("feedbackPagination", feedbackList.length, postsPerPage, feedbackPage, (p) => { feedbackPage = p; renderFeedback(p); });
         }
 
@@ -649,7 +886,14 @@
             const author = document.getElementById("fbAuthor").value.trim() || "Ẩn danh";
             const charName = document.getElementById("fbChar").value.trim() || "Nhân vật chung";
             const text = document.getElementById("fbText").value.trim();
-            if(!text) return alert("Bạn chưa nhập nội dung feedback!");
+            
+            if(!text) {
+                showToast("⚠️ Bạn chưa nhập nội dung feedback!");
+                return;
+            }
+            
+            // Gọi hiệu ứng pháo hoa sao băng
+            triggerStarEffect();
 
             const today = new Date().toLocaleDateString('vi-VN');
             feedbackList.unshift({ author: author, char: charName, text: text, date: today });
@@ -658,15 +902,17 @@
             document.getElementById("fbChar").value = "";
             feedbackPage = 1;
             renderFeedback(feedbackPage);
-            alert("Cảm ơn bạn đã gửi feedback cho nhân vật!");
+            
+            // Hiện thông báo nhỏ thay vì bảng alert
+            setTimeout(() => {
+                showToast("✨ Cảm ơn bạn đã gửi feedback cho nhân vật!");
+            }, 800);
         }
-
 
         // 4. HÀM CHUNG
         function toggleText(contentId, btnId, fullText, shortText) {
             const content = document.getElementById(contentId);
             const btn = document.getElementById(btnId);
-
             if (btn.innerText === "Đọc tiếp...") {
                 content.innerText = fullText;
                 btn.innerText = "Rút gọn";
@@ -680,7 +926,6 @@
             const box = document.getElementById(boxId);
             box.innerHTML = "";
             const totalPages = Math.ceil(totalItems / itemsPerPage) || 1;
-
             for (let i = 1; i <= totalPages; i++) {
                 const btn = document.createElement("button");
                 btn.className = `page-btn ${i === currentPage ? 'active' : ''}`;
@@ -737,8 +982,8 @@
         const clickPaperImgSrc = "seu.png"; 
         const sparkleColors = ["#f3e5ab", "#c89b27", "#ffcdd2", "#c8e6c9", "#bbdefb", "#fff59d"];
         const tingSoundUrl = "https://assets.mixkit.co/active_storage/sfx/2568/2568-preview.mp3";
-
         let lastX = 0, lastY = 0;
+
         document.addEventListener("mousemove", (e) => {
             if (Math.abs(e.clientX - lastX) > 5 || Math.abs(e.clientY - lastY) > 5) {
                 createTrailParticle(e.clientX, e.clientY);
@@ -751,7 +996,6 @@
             const particle = document.createElement("div");
             const size = Math.random() * 6 + 4;
             const color = sparkleColors[Math.floor(Math.random() * sparkleColors.length)];
-
             particle.style.cssText = `
                 position: fixed;
                 left: ${x}px;
@@ -766,24 +1010,22 @@
                 transform: translate(-50%, -50%) rotate(${Math.random() * 360}deg);
                 transition: transform 0.8s ease-out, opacity 0.8s ease-out;
             `;
-
             document.body.appendChild(particle);
-
             requestAnimationFrame(() => {
                 particle.style.transform = `translate(-50%, ${20 + Math.random() * 20}px) rotate(${Math.random() * 360}deg) scale(0)`;
                 particle.style.opacity = "0";
             });
-
             setTimeout(() => particle.remove(), 800);
         }
 
         document.addEventListener("click", (e) => {
+            if(e.target.closest('.modal-content') || e.target.closest('.form-box') || e.target.closest('button')) return;
             try {
                 const sound = new Audio(tingSoundUrl);
                 sound.volume = 0.4;
                 sound.play().catch(err => console.log("Lỗi âm thanh:", err));
             } catch (err) {}
-
+            createBurstParticle(e.clientX, e.clientY);
             createClickImage(e.clientX, e.clientY);
         });
 
@@ -802,15 +1044,41 @@
                 transition: transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.5s ease-out;
                 opacity: 1;
             `;
-
             document.body.appendChild(img);
-
             requestAnimationFrame(() => {
                 img.style.transform = `translate(-50%, -80%) scale(1.2) rotate(${Math.random() * 40 - 20}deg)`;
                 img.style.opacity = "0";
             });
-
             setTimeout(() => img.remove(), 500);
+        }
+
+        function createBurstParticle(x, y) {
+            const particle = document.createElement("div");
+            const size = Math.random() * 8 + 4;
+            const color = sparkleColors[Math.floor(Math.random() * sparkleColors.length)];
+            const angle = Math.random() * Math.PI * 2;
+            const velocity = Math.random() * 60 + 20; 
+            const destX = Math.cos(angle) * velocity;
+            const destY = Math.sin(angle) * velocity;
+            particle.style.cssText = `
+                position: fixed;
+                left: ${x}px;
+                top: ${y}px;
+                width: ${size}px;
+                height: ${size}px;
+                background-color: ${color};
+                border-radius: ${Math.random() > 0.3 ? '50%' : '1px'};
+                pointer-events: none;
+                z-index: 9999;
+                transform: translate(-50%, -50%) scale(1);
+                transition: transform 0.6s ease-out, opacity 0.6s ease-out;
+            `;
+            document.body.appendChild(particle);
+            requestAnimationFrame(() => {
+                particle.style.transform = `translate(calc(-50% + ${destX}px), calc(-50% + ${destY}px)) scale(0)`;
+                particle.style.opacity = "0";
+            });
+            setTimeout(() => particle.remove(), 600);
         }
 
         // TẢI TRANG
@@ -819,9 +1087,7 @@
             renderTamSu(tamSuPage);
             renderFeedback(feedbackPage);
             createSparkles();
-
             playAudio();
-
             const startMusicOnInteraction = () => {
                 if (music && music.paused) {
                     playAudio();
@@ -829,46 +1095,9 @@
                 window.removeEventListener("click", startMusicOnInteraction);
                 window.removeEventListener("touchstart", startMusicOnInteraction);
             };
-
             window.addEventListener("click", startMusicOnInteraction);
             window.addEventListener("touchstart", startMusicOnInteraction);
         };
-
-    // Tạo các hạt nhỏ văng ra khi click
-    function createBurstParticle(x, y) {
-        const particle = document.createElement("div");
-        const size = Math.random() * 8 + 4;
-        const color = sparkleColors[Math.floor(Math.random() * sparkleColors.length)];
-        
-        // Tính toán góc văng ngẫu nhiên 360 độ
-        const angle = Math.random() * Math.PI * 2;
-        const velocity = Math.random() * 60 + 20; 
-        const destX = Math.cos(angle) * velocity;
-        const destY = Math.sin(angle) * velocity;
-
-        particle.style.cssText = `
-            position: fixed;
-            left: ${x}px;
-            top: ${y}px;
-            width: ${size}px;
-            height: ${size}px;
-            background-color: ${color};
-            border-radius: ${Math.random() > 0.3 ? '50%' : '1px'};
-            pointer-events: none;
-            z-index: 9999;
-            transform: translate(-50%, -50%) scale(1);
-            transition: transform 0.6s ease-out, opacity 0.6s ease-out;
-        `;
-
-        document.body.appendChild(particle);
-
-        requestAnimationFrame(() => {
-            particle.style.transform = `translate(calc(-50% + ${destX}px), calc(-50% + ${destY}px)) scale(0)`;
-            particle.style.opacity = "0";
-        });
-
-        setTimeout(() => particle.remove(), 600);
-    }
-</script>
+    </script>
 </body>
 </html>
