@@ -404,7 +404,7 @@
     <!-- ĐĨA THAN PHÁT NHẠC -->
     <div class="vinyl-player-box">
         <div class="vinyl-record" id="vinylRecord">
-            <img src="nhac.JPG" alt="Char" class="vinyl-img">
+            <img src="nhac.png" alt="Char" class="vinyl-img">
         </div>
         <div>
             <div style="font-size:11px; font-weight:bold;">Nhạc Tiệm 🎶</div>
@@ -509,6 +509,7 @@
             { text: "Ước có thêm char nữ xịn xò bối cảnh Sài Gòn xưa!", author: "Hoa Giấy", color: "note-pink", rotate: "-2deg" }
         ];
 
+
         let notePage = 1;
         const notesPerPage = 6;
 
@@ -542,7 +543,7 @@
 
         // 2. KHU LỜI TÂM SỰ
         const tamSuList = [
-            {
+ {
                 author: "An Nhiên",
                 date: "20/07/2026",
                 text: "Mình theo dõi Tiệm Nhà Hyperion từ những ngày đầu luôn. Thật sự các plot ở đây viết vô cùng sâu sắc, từ bối cảnh tới đĩa nhạc nền nghe vừa êm đềm vừa nhẹ nhàng. Mong là chủ tiệm sẽ giữ mãi ngọn lửa đam mê này để cho ra mắt thêm nhiều góc truyện chữa lành như thế này nhé!"
@@ -608,7 +609,7 @@
 
         // 3. KHU FEEDBACK CHAR
         const feedbackList = [
-            {
+             {
                 author: "Mê Nguội",
                 char: "Nguyễn Vĩnh Hiên",
                 date: "21/07/2026",
@@ -753,33 +754,22 @@
             renderFeedback(feedbackPage);
             createSparkles();
 
-			
-const music = document.getElementById("bgMusic");
-const musicPlayer = document.querySelector(".music-player");
+            // Thử tự động phát nhạc
+            playAudio();
 
-window.addEventListener("load", () => {
-    music.play()
-        .then(() => {
-            musicPlayer.classList.add("playing");
-        })
-        .catch(() => {
-            console.log("Autoplay bị trình duyệt chặn.");
-        });
-});
+            // Kích hoạt ngay khi người dùng click/chạm vào màn hình nếu trình duyệt chặn autoplay
+            const startMusicOnInteraction = () => {
+                if (music && music.paused) {
+                    playAudio();
+                }
+                window.removeEventListener("click", startMusicOnInteraction);
+                window.removeEventListener("touchstart", startMusicOnInteraction);
+            };
 
-function toggleMusic(){
-    if(music.paused){
-        music.play();
-        musicPlayer.classList.add("playing");
-    }else{
-        music.pause();
-        musicPlayer.classList.remove("playing");
-    }
-}
-
-</script>
-
-            
+            window.addEventListener("click", startMusicOnInteraction);
+            window.addEventListener("touchstart", startMusicOnInteraction);
+        };
+    </script>
 	<!-- THẺ AUDIO PHÁT ÂM THANH CLICK -->
 <!-- Thay LINK_AM_THANH_CUA_BAN.mp3 bằng đường dẫn file âm thanh ngắn của cậu (ví dụ tiếng pop, ting nhẹ) -->
 <audio id="clickSound" preload="auto" src="nhac.mp3"></audio>
@@ -787,7 +777,7 @@ function toggleMusic(){
 <script>
     // 1. CẤU HÌNH HÌNH ẢNH HẠT GIẤY KHI CLICK
     // Cậu có thể thay link hình ảnh hạt giấy / Sticker dạng PNG trong suốt ở đây:
-    const clickPaperImgSrc = "seu.jpg"; 
+    const clickPaperImgSrc = "nhac.png"; 
 
     // Mảng màu sắc cho hạt giấy dải ánh sáng rê chuột
     const sparkleColors = ["#f3e5ab", "#c89b27", "#ffcdd2", "#c8e6c9", "#bbdefb", "#fff59d"];
