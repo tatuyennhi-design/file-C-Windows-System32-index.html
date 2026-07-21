@@ -404,11 +404,11 @@
     <!-- ĐĨA THAN PHÁT NHẠC -->
     <div class="vinyl-player-box">
         <div class="vinyl-record" id="vinylRecord">
-            <img src="nhac.png" alt="Char" class="vinyl-img">
+            <img src="nhac.JPG" alt="Char" class="vinyl-img">
         </div>
         <div>
             <div style="font-size:11px; font-weight:bold;">Nhạc Tiệm 🎶</div>
-            <button class="music-btn" onclick="toggleMusic()">▶ Play</button>
+            <button class="music-btn" id="musicBtn" onclick="toggleMusic()">▶ Play</button>
         </div>
     </div>
     <audio id="bgMusic" loop src="nhac.mp3"></audio>
@@ -433,30 +433,21 @@
     <!-- MAIN CONTENT -->
     <main>
 
-        <!-- TAB 1: BẢNG GIẤY NOTE (NOTE Ở TRÊN -> FORM/NÚT BẤM BÊN DƯỚI) -->
+        <!-- TAB 1: BẢNG GIẤY NOTE -->
         <div id="uoc-nguyen" class="tab-content active">
-            <!-- 1. Bảng Note -->
             <div class="cork-board" id="corkBoard"></div>
-            
-            <!-- 2. Phân trang -->
             <div class="pagination" id="notePagination"></div>
-
-            <!-- 3. Nút dán note mới nằm bên dưới -->
             <div style="text-align: center; margin-top: 20px;">
                 <button class="nav-btn" style="background:var(--accent-gold); color:#fff; padding:10px 24px; font-size:15px;" onclick="openNoteForm()">✍️ Dán giấy ước nguyện mới</button>
             </div>
         </div>
 
 
-        <!-- TAB 2: KHU LỜI TÂM SỰ (BÀI VIẾT BÊN TRÊN -> FORM NHẮN Ở BÊN DƯỚI) -->
+        <!-- TAB 2: KHU LỜI TÂM SỰ -->
         <div id="tam-su" class="tab-content">
-            <!-- 1. Danh sách tâm sự cũ -->
             <div class="post-list" id="tamSuList"></div>
-            
-            <!-- 2. Phân trang -->
             <div class="pagination" id="tamSuPagination"></div>
 
-            <!-- 3. Form gửi tâm sự mới nằm ở DƯỚI CÙNG -->
             <div class="form-box">
                 <h4 style="color:var(--accent-gold);">✍️ Viết lời tâm sự mới gửi tiệm</h4>
                 <input type="text" id="tsAuthor" placeholder="Tên/Biệt danh của bạn (không bắt buộc)">
@@ -466,15 +457,11 @@
         </div>
 
 
-        <!-- TAB 3: KHU FEEDBACK CHAR (BÀI VIẾT BÊN TRÊN -> FORM NHẮN Ở BÊN DƯỚI) -->
+        <!-- TAB 3: KHU FEEDBACK CHAR -->
         <div id="feedback" class="tab-content">
-            <!-- 1. Danh sách Feedback cũ -->
             <div class="post-list" id="feedbackList"></div>
-            
-            <!-- 2. Phân trang -->
             <div class="pagination" id="feedbackPagination"></div>
 
-            <!-- 3. Form gửi feedback mới nằm ở DƯỚI CÙNG -->
             <div class="form-box">
                 <h4 style="color:var(--accent-gold);">✍️ Gửi Feedback Cho Nhân Vật</h4>
                 <div style="display:flex; gap:10px;">
@@ -496,19 +483,18 @@
     </footer>
 
 
-    <!-- SCRIPT -->
+    <!-- SCRIPT CHÍNH -->
     <script>
         // 1. TƯỜNG ƯỚC NGUYỆN (GIẤY NOTE)
         const noteList = [
-            { text: "Thích char hệ thống nhà sốp lắm, mong sốp tạo thêm vài char hệ thống nữa ạ🥹", author: "Mây Mây", color: "note-yellow", rotate: "-2deg" },
+            { text: "Thích char hệ thống nhà sốp lắm, mong sốp tạo thêm vài char hệ thống nữa ạ🥹", author: "Mây Mây", color: "note-yellow", rotate: "-2deg" },
             { text: "Mong tiệm luôn ra nhiều cốt truyện hay và giữ vững phong độ nhaaa!", author: "An An", color: "note-pink", rotate: "3deg" },
-            { text: "Thích mấy char Việt Nam xưa của sốp lắm luôn.", author: "Khách qua đường", color: "note-green", rotate: "-3deg" },
-            { text: "Sốp tạo thêm char cung đấu nữa đi sốp ơi ~." author: "Tiểu Vũ", color: "note-blue", rotate: "1deg" },
-            { text: "Mê nhạc nền của tiệm lắm luôn 🎶", author: "Cá Gỗ", color: "note-orange", rotate: "-1deg" },
+            { text: "Thích mấy char Việt Nam xưa của sốp lắm luôn.", author: "Khách qua đường", color: "note-green", rotate: "-3deg" },
+            { text: "Sốp tạo thêm char cung đấu nữa đi sốp ơi ~.", author: "Tiểu Vũ", color: "note-blue", rotate: "1deg" },
+            { text: "Mê nhạc nền của tiệm lắm luôn 🎶", author: "Cá Gỗ", color: "note-orange", rotate: "-1deg" },
             { text: "Chúc Tiệm Nhà Hyperion luôn đông khách nhen ✨", author: "Bạn thân", color: "note-yellow", rotate: "2deg" },
             { text: "Ước có thêm char nữ xịn xò bối cảnh Sài Gòn xưa!", author: "Hoa Giấy", color: "note-pink", rotate: "-2deg" }
         ];
-
 
         let notePage = 1;
         const notesPerPage = 6;
@@ -543,21 +529,20 @@
 
         // 2. KHU LỜI TÂM SỰ
         const tamSuList = [
- {
+            {
                 author: "An Nhiên",
                 date: "20/07/2026",
                 text: "Mình theo dõi Tiệm Nhà Hyperion từ những ngày đầu luôn. Thật sự các plot ở đây viết vô cùng sâu sắc, từ bối cảnh tới đĩa nhạc nền nghe vừa êm đềm vừa nhẹ nhàng. Mong là chủ tiệm sẽ giữ mãi ngọn lửa đam mê này để cho ra mắt thêm nhiều góc truyện chữa lành như thế này nhé!"
             },
-
             {
                 author: "Mây Lang Thang",
                 date: "16/07/2026",
-                text: "Chiều tối, em ngồi lướt từng nhân vật trong tiệm, thấy web vừa nhẹ nhàng vừa ấm, thích phong cách này lắm ạ!"
+                text: "Chiều tối, em ngồi lướt từng nhân vật trong tiệm, thấy web vừa nhẹ nhàng vừa ấm, thích phong cách này lắm ạ!"
             },
             {
                 author: "Eri",
                 date: "17/06/2026",
-                text: "Em theo sốp từ dokichat sang GGAI, em phát hiện mấy char drama gia đình hay cung đấu nhà sốp nó hay vl sốp ạ.🥰 "
+                text: "Em theo sốp từ dokichat sang GGAI, em phát hiện mấy char drama gia đình hay cung đấu nhà sốp nó hay vl sốp ạ.🥰 "
             }
         ];
 
@@ -609,23 +594,23 @@
 
         // 3. KHU FEEDBACK CHAR
         const feedbackList = [
-             {
+            {
                 author: "Mê Nguội",
                 char: "Nguyễn Vĩnh Hiên",
                 date: "21/07/2026",
-                text: "Mình cực kỳ thích nhân vật Vĩnh Hiên luôn! Cách ảnh tương tác và lời thoại đúng chuẩn không khí xưa. Mong tiệm làm thêm vài visual hoặc tình tiết phụ cho Vĩnh Hiên nha!"
+                text: "Mình cực kỳ thích nhân vật Vĩnh Hiên luôn! Cách ảnh tương tác và lời thoại đúng chuẩn không khí xưa. Mong tiệm làm thêm vài visual hoặc tình tiết phụ cho Vĩnh Hiên nha!"
             },
             {
                 author: "Tiểu Khái",
                 char: "Ninh Hữu Ngôn",
                 date: "19/07/2026",
-                text: "Ninh Hữu Ngôn dễ thương xỉu, đọc đoạn thoại mà em vừa ngại vừa thấy cưng muốn xỉu luôn á sốp ơi!"
+                text: "Ninh Hữu Ngôn dễ thương xỉu, đọc đoạn thoại mà em vừa ngại vừa thấy cưng muốn xỉu luôn á sốp ơi!"
             },
             {
                 author: "Bánh Bao",
-                char: "Ninh Hoài Thượng",
+                char: "Ninh Hoài Thượng",
                 date: "12/07/2026",
-                text: "Plot cuốn quá, mong sốp ra thêm nhiều char thể loại cung đấu"
+                text: "Plot cuốn quá, mong sốp ra thêm nhiều char thể loại cung đấu"
             }
         ];
 
@@ -712,7 +697,7 @@
             btn.classList.add('active');
         }
 
-       // 5. ĐĨA THAN & TỰ ĐỘNG PHÁT NHẠC
+        // 5. ĐĨA THAN & PHÁT NHẠC
         const music = document.getElementById("bgMusic");
         const record = document.getElementById("vinylRecord");
         const musicBtn = document.getElementById("musicBtn");
@@ -748,16 +733,95 @@
             }
         }
 
+        // 6. HIỆU ỨNG RÊ CHUỘT & CLICK CHUỘT
+        const clickPaperImgSrc = "seu.jpg"; 
+        const sparkleColors = ["#f3e5ab", "#c89b27", "#ffcdd2", "#c8e6c9", "#bbdefb", "#fff59d"];
+        const tingSoundUrl = "https://assets.mixkit.co/active_storage/sfx/2568/2568-preview.mp3";
+
+        let lastX = 0, lastY = 0;
+        document.addEventListener("mousemove", (e) => {
+            if (Math.abs(e.clientX - lastX) > 5 || Math.abs(e.clientY - lastY) > 5) {
+                createTrailParticle(e.clientX, e.clientY);
+                lastX = e.clientX;
+                lastY = e.clientY;
+            }
+        });
+
+        function createTrailParticle(x, y) {
+            const particle = document.createElement("div");
+            const size = Math.random() * 6 + 4;
+            const color = sparkleColors[Math.floor(Math.random() * sparkleColors.length)];
+
+            particle.style.cssText = `
+                position: fixed;
+                left: ${x}px;
+                top: ${y}px;
+                width: ${size}px;
+                height: ${size}px;
+                background-color: ${color};
+                border-radius: ${Math.random() > 0.5 ? '50%' : '2px'};
+                pointer-events: none;
+                z-index: 9999;
+                opacity: 0.9;
+                transform: translate(-50%, -50%) rotate(${Math.random() * 360}deg);
+                transition: transform 0.8s ease-out, opacity 0.8s ease-out;
+            `;
+
+            document.body.appendChild(particle);
+
+            requestAnimationFrame(() => {
+                particle.style.transform = `translate(-50%, ${20 + Math.random() * 20}px) rotate(${Math.random() * 360}deg) scale(0)`;
+                particle.style.opacity = "0";
+            });
+
+            setTimeout(() => particle.remove(), 800);
+        }
+
+        document.addEventListener("click", (e) => {
+            try {
+                const sound = new Audio(tingSoundUrl);
+                sound.volume = 0.4;
+                sound.play().catch(err => console.log("Lỗi âm thanh:", err));
+            } catch (err) {}
+
+            createClickImage(e.clientX, e.clientY);
+        });
+
+        function createClickImage(x, y) {
+            const img = document.createElement("img");
+            img.src = clickPaperImgSrc;
+            img.style.cssText = `
+                position: fixed;
+                left: ${x}px;
+                top: ${y}px;
+                width: 30px;
+                height: 30px;
+                pointer-events: none;
+                z-index: 10000;
+                transform: translate(-50%, -50%) scale(0.5) rotate(0deg);
+                transition: transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.5s ease-out;
+                opacity: 1;
+            `;
+
+            document.body.appendChild(img);
+
+            requestAnimationFrame(() => {
+                img.style.transform = `translate(-50%, -80%) scale(1.2) rotate(${Math.random() * 40 - 20}deg)`;
+                img.style.opacity = "0";
+            });
+
+            setTimeout(() => img.remove(), 500);
+        }
+
+        // TẢI TRANG
         window.onload = () => {
             renderNotes(notePage);
             renderTamSu(tamSuPage);
             renderFeedback(feedbackPage);
             createSparkles();
 
-            // Thử tự động phát nhạc
             playAudio();
 
-            // Kích hoạt ngay khi người dùng click/chạm vào màn hình nếu trình duyệt chặn autoplay
             const startMusicOnInteraction = () => {
                 if (music && music.paused) {
                     playAudio();
@@ -769,111 +833,6 @@
             window.addEventListener("click", startMusicOnInteraction);
             window.addEventListener("touchstart", startMusicOnInteraction);
         };
-    </script>
-	<!-- THẺ AUDIO PHÁT ÂM THANH CLICK -->
-<!-- Thay LINK_AM_THANH_CUA_BAN.mp3 bằng đường dẫn file âm thanh ngắn của cậu (ví dụ tiếng pop, ting nhẹ) -->
-<audio id="clickSound" preload="auto" src="nhac.mp3"></audio>
-
-<script>
-    // 1. CẤU HÌNH HÌNH ẢNH HẠT GIẤY KHI CLICK
-    // Cậu có thể thay link hình ảnh hạt giấy / Sticker dạng PNG trong suốt ở đây:
-    const clickPaperImgSrc = "nhac.png"; 
-
-    // Mảng màu sắc cho hạt giấy dải ánh sáng rê chuột
-    const sparkleColors = ["#f3e5ab", "#c89b27", "#ffcdd2", "#c8e6c9", "#bbdefb", "#fff59d"];
-
-    // 2. HIỆU ỨNG RÊ CHUỘT (DẢI ÁNH SÁNG HẠT GIẤY)
-    let lastX = 0, lastY = 0;
-    
-    document.addEventListener("mousemove", (e) => {
-        // Chỉ tạo hạt khi chuột di chuyển một khoảng nhất định để tránh giật lag
-        if (Math.abs(e.clientX - lastX) > 5 || Math.abs(e.clientY - lastY) > 5) {
-            createTrailParticle(e.clientX, e.clientY);
-            lastX = e.clientX;
-            lastY = e.clientY;
-        }
-    });
-
-    function createTrailParticle(x, y) {
-        const particle = document.createElement("div");
-        const size = Math.random() * 6 + 4; // Kích thước 4px - 10px
-        const color = sparkleColors[Math.floor(Math.random() * sparkleColors.length)];
-
-        particle.style.cssText = `
-            position: fixed;
-            left: ${x}px;
-            top: ${y}px;
-            width: ${size}px;
-            height: ${size}px;
-            background-color: ${color};
-            border-radius: ${Math.random() > 0.5 ? '50%' : '2px'}; /* Ngẫu nhiên hình tròn hoặc mảnh giấy vuông */
-            pointer-events: none;
-            z-index: 9999;
-            opacity: 0.9;
-            transform: translate(-50%, -50%) rotate(${Math.random() * 360}deg);
-            transition: transform 0.8s ease-out, opacity 0.8s ease-out;
-        `;
-
-        document.body.appendChild(particle);
-
-        // Hiệu ứng hạt nhỏ dần và biến mất
-        requestAnimationFrame(() => {
-            particle.style.transform = `translate(-50%, ${20 + Math.random() * 20}px) rotate(${Math.random() * 360}deg) scale(0)`;
-            particle.style.opacity = "0";
-        });
-
-        setTimeout(() => particle.remove(), 800);
-    }
-
-   // 3. HIỆU ỨNG CLICK CHUỘT (CÓ TIẾNG TING TING TRONG TRẺO)
-    // Link âm thanh tiếng TING TING chuông thủy tinh / phép thuật
-    const tingSoundUrl = "https://assets.mixkit.co/active_storage/sfx/2568/2568-preview.mp3";
-
-    document.addEventListener("click", (e) => {
-        // A. Phát âm thanh Ting Ting (Tạo Audio mới mỗi lần click để tiếng không bị nghẽn)
-        try {
-            const sound = new Audio(tingSoundUrl);
-            sound.volume = 0.6; // Độ lớn âm thanh (từ 0.0 đến 1.0)
-            sound.play().catch(err => console.log("Lỗi phát âm thanh:", err));
-        } catch (err) {
-            console.log("Audio không chạy được:", err);
-        }
-
-        // B. Tạo ảnh hạt giấy xuất hiện ngay điểm click
-        createClickImage(e.clientX, e.clientY);
-
-        // C. Bung tỏa dải hạt giấy xung quanh
-        for (let i = 0; i < 12; i++) {
-            createBurstParticle(e.clientX, e.clientY);
-        }
-    });
-
-    // Tạo hình ảnh hạt giấy nổ nhẹ ra khi click
-    function createClickImage(x, y) {
-        const img = document.createElement("img");
-        img.src = clickPaperImgSrc;
-        img.style.cssText = `
-            position: fixed;
-            left: ${x}px;
-            top: ${y}px;
-            width: 30px;
-            height: 30px;
-            pointer-events: none;
-            z-index: 10000;
-            transform: translate(-50%, -50%) scale(0.5) rotate(0deg);
-            transition: transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.5s ease-out;
-            opacity: 1;
-        `;
-
-        document.body.appendChild(img);
-
-        requestAnimationFrame(() => {
-            img.style.transform = `translate(-50%, -80%) scale(1.2) rotate(${Math.random() * 40 - 20}deg)`;
-            img.style.opacity = "0";
-        });
-
-        setTimeout(() => img.remove(), 500);
-    }
 
     // Tạo các hạt nhỏ văng ra khi click
     function createBurstParticle(x, y) {
