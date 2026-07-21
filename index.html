@@ -757,22 +757,33 @@
             renderFeedback(feedbackPage);
             createSparkles();
 
-            // Thử tự động phát nhạc
-            playAudio();
+			
+const music = document.getElementById("bgMusic");
+const musicPlayer = document.querySelector(".music-player");
 
-            // Kích hoạt ngay khi người dùng click/chạm vào màn hình nếu trình duyệt chặn autoplay
-            const startMusicOnInteraction = () => {
-                if (music && music.paused) {
-                    playAudio();
-                }
-                window.removeEventListener("click", startMusicOnInteraction);
-                window.removeEventListener("touchstart", startMusicOnInteraction);
-            };
+window.addEventListener("load", () => {
+    music.play()
+        .then(() => {
+            musicPlayer.classList.add("playing");
+        })
+        .catch(() => {
+            console.log("Autoplay bị trình duyệt chặn.");
+        });
+});
 
-            window.addEventListener("click", startMusicOnInteraction);
-            window.addEventListener("touchstart", startMusicOnInteraction);
-        };
-    </script>
+function toggleMusic(){
+    if(music.paused){
+        music.play();
+        musicPlayer.classList.add("playing");
+    }else{
+        music.pause();
+        musicPlayer.classList.remove("playing");
+    }
+}
+
+</script>
+
+            
 	<!-- THẺ AUDIO PHÁT ÂM THANH CLICK -->
 <!-- Thay LINK_AM_THANH_CUA_BAN.mp3 bằng đường dẫn file âm thanh ngắn của cậu (ví dụ tiếng pop, ting nhẹ) -->
 <audio id="clickSound" preload="auto" src="nhac.mp3"></audio>
