@@ -1,1006 +1,991 @@
 <!DOCTYPE html>
 <html lang="vi">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Góc Ước Nguyện Giao Lưu & Feedback Char - Tiệm Nhà Hyperion</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Góc Ước Nguyện Giao Lưu & Feedback Char - Tiệm Nhà Hyperion</title>
+    <!-- Font chữ -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Patrick+Hand&family=Quicksand:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-lemon: #fffdf0;
+            --main-yellow: #f3e5ab;
+            --accent-gold: #c89b27;
+            --text-color: #4a4231;
+        }
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Quicksand', sans-serif;
+        }
+        body {
+            background-color: var(--bg-lemon);
+            color: var(--text-color);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            position: relative;
+            overflow-x: hidden;
+        }
+        /* Hạt kim tuyến / giấy lấp lánh rơi */
+        .sparkle-particle {
+            position: fixed;
+            width: 6px;
+            height: 6px;
+            background: rgba(232, 203, 110, 0.6);
+            border-radius: 50%;
+            pointer-events: none;
+            animation: floatSparkle 8s infinite linear;
+            z-index: 1;
+        }
+        @keyframes floatSparkle {
+            0% { transform: translateY(100vh) rotate(0deg); opacity: 0; }
+            50% { opacity: 0.8; }
+            100% { transform: translateY(-10vh) rotate(360deg); opacity: 0; }
+        }
+        /* HEADER & MENU */
+        header {
+            width: 100%;
+            max-width: 1000px;
+            padding: 20px;
+            text-align: center;
+            z-index: 10;
+        }
+        .nav-bar {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 12px;
+            flex-wrap: wrap;
+            margin-bottom: 20px;
+        }
+        .nav-btn {
+            background: #ffffff;
+            border: 2px solid var(--main-yellow);
+            padding: 8px 16px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-weight: 600;
+            color: var(--text-color);
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+            text-decoration: none;
+            font-size: 14px;
+        }
+        .nav-btn:hover, .nav-btn.active {
+            background: var(--main-yellow);
+            color: #fff;
+            transform: translateY(-2px);
+        }
+        .nav-btn.back-home {
+            border-color: var(--accent-gold);
+            background: #fef7dc;
+            color: var(--accent-gold);
+        }
+        .banner {
+            background: #ffffff;
+            border: 2px dashed var(--accent-gold);
+            padding: 20px;
+            border-radius: 16px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 12px rgba(200, 155, 39, 0.1);
+        }
+        .banner h1 {
+            font-family: 'Patrick Hand', cursive;
+            font-size: 30px;
+            color: var(--accent-gold);
+            margin-bottom: 6px;
+        }
+        .banner p {
+            font-size: 13px;
+            color: #786a4e;
+        }
+        /* MAIN CONTENT */
+        main {
+            width: 100%;
+            max-width: 900px;
+            padding: 0 20px;
+            flex: 1;
+            z-index: 10;
+        }
+        .tab-content {
+            display: none;
+        }
+        .tab-content.active {
+            display: block;
+        }
+        /* BẢNG GIẤY NOTE (TAB 1) */
+        .cork-board {
+            background: #fcf8e8;
+            border: 8px solid #e2d2a4;
+            border-radius: 16px;
+            padding: 25px;
+            min-height: 440px;
+            box-shadow: inset 0 0 15px rgba(0,0,0,0.05);
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+            gap: 20px;
+            align-content: start;
+        }
+        .note-card {
+            padding: 18px;
+            border-radius: 4px;
+            box-shadow: 3px 5px 10px rgba(0,0,0,0.1);
+            position: relative;
+            font-family: 'Patrick Hand', cursive;
+            font-size: 18px;
+            line-height: 1.4;
+            min-height: 170px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            transition: transform 0.2s ease;
+        }
+        .note-card.note-yellow { background: #fff59d; }
+        .note-card.note-pink { background: #ffcdd2; }
+        .note-card.note-green { background: #c8e6c9; }
+        .note-card.note-blue { background: #bbdefb; }
+        .note-card.note-orange { background: #ffe0b2; }
 
-<!-- Font chữ -->
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Patrick+Hand&family=Quicksand:wght@400;600&display=swap" rel="stylesheet">
-
-<style>
-:root {
-    --bg-lemon: #fffdf0;
-    --main-yellow: #f3e5ab;
-    --accent-gold: #c89b27;
-    --text-color: #4a4231;
-}
-
-* {
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0;
-    font-family: 'Quicksand', sans-serif;
-}
-
-body {
-    background-color: var(--bg-lemon);
-    color: var(--text-color);
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    position: relative;
-    overflow-x: hidden;
-}
-
-/* Hạt kim tuyến rơi */
-.sparkle-particle {
-    position: fixed;
-    width: 6px;
-    height: 6px;
-    background: rgba(232, 203, 110, 0.6);
-    border-radius: 50%;
-    pointer-events: none;
-    animation: floatSparkle 8s infinite linear;
-    z-index: 1;
-}
-
-@keyframes floatSparkle {
-    0% { transform: translateY(100vh) rotate(0deg); opacity: 0; }
-    50% { opacity: 0.8; }
-    100% { transform: translateY(-10vh) rotate(360deg); opacity: 0; }
-}
-
-/* HEADER & MENU */
-header {
-    width: 100%;
-    max-width: 1000px;
-    padding: 20px;
-    text-align: center;
-    z-index: 10;
-}
-
-.nav-bar {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 12px;
-    flex-wrap: wrap;
-    margin-bottom: 20px;
-}
-
-.nav-btn {
-    background: #ffffff;
-    border: 2px solid var(--main-yellow);
-    padding: 8px 16px;
-    border-radius: 20px;
-    cursor: pointer;
-    font-weight: 600;
-    color: var(--text-color);
-    transition: all 0.3s ease;
-    box-shadow: 0 2px 6px rgba(0,0,0,0.05);
-    text-decoration: none;
-    font-size: 14px;
-}
-
-.nav-btn:hover, .nav-btn.active {
-    background: var(--main-yellow);
-    color: #fff;
-    transform: translateY(-2px);
-}
-
-.nav-btn.back-home {
-    border-color: var(--accent-gold);
-    background: #fef7dc;
-    color: var(--accent-gold);
-}
-
-.banner {
-    background: #ffffff;
-    border: 2px dashed var(--accent-gold);
-    padding: 20px;
-    border-radius: 16px;
-    margin-bottom: 20px;
-    box-shadow: 0 4px 12px rgba(200, 155, 39, 0.1);
-}
-
-.banner h1 {
-    font-family: 'Patrick Hand', cursive;
-    font-size: 30px;
-    color: var(--accent-gold);
-    margin-bottom: 6px;
-}
-
-.banner p {
-    font-size: 13px;
-    color: #786a4e;
-}
-
-/* MAIN CONTENT */
-main {
-    width: 100%;
-    max-width: 900px;
-    padding: 0 20px;
-    flex: 1;
-    z-index: 10;
-}
-
-.tab-content {
-    display: none;
-}
-
-.tab-content.active {
-    display: block;
-}
-
-/* BẢNG GIẤY NOTE (TAB 1) */
-.cork-board {
-    background: #fcf8e8;
-    border: 8px solid #e2d2a4;
-    border-radius: 16px;
-    padding: 25px;
-    min-height: 440px;
-    box-shadow: inset 0 0 15px rgba(0,0,0,0.05);
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
-    gap: 20px;
-    align-content: start;
-}
-
-.note-card {
-    padding: 18px;
-    border-radius: 4px;
-    box-shadow: 3px 5px 10px rgba(0,0,0,0.1);
-    position: relative;
-    font-family: 'Patrick Hand', cursive;
-    font-size: 18px;
-    line-height: 1.4;
-    min-height: 170px;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    transition: transform 0.2s ease;
-}
-
-.note-card.note-yellow { background: #fff59d; }
-.note-card.note-pink { background: #ffcdd2; }
-.note-card.note-green { background: #c8e6c9; }
-.note-card.note-blue { background: #bbdefb; }
-.note-card.note-orange { background: #ffe0b2; }
-
-.note-card:hover {
-    transform: scale(1.03) rotate(0deg) !important;
-    z-index: 5;
-}
-
-/* KẸP GIẤY ĐỘNG */
-.paper-clip {
-    position: absolute;
-    top: -12px;
-    width: 14px;
-    height: 32px;
-    border: 3px solid #c89b27;
-    border-radius: 10px;
-    background: transparent;
-    box-shadow: 1px 1px 3px rgba(0,0,0,0.15);
-    z-index: 6;
-    transition: all 0.3s ease;
-}
-
-.paper-clip::after {
-    content: "";
-    position: absolute;
-    top: 4px;
-    left: 1px;
-    width: 6px;
-    height: 18px;
-    border: 2px solid #e0a96d;
-    border-bottom: none;
-    border-radius: 5px 5px 0 0;
-}
-
-.note-author {
-    font-size: 14px;
-    text-align: right;
-    color: #666;
-    margin-top: 8px;
-}
-
-/* KHU BÀI VIẾT TÂM SỰ & FEEDBACK DẠNG DANH SÁCH */
-.post-list {
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
-    min-height: 320px;
-}
-
-.post-card {
-    background: #ffffff;
-    border: 1px solid #ebdca8;
-    border-left: 5px solid var(--accent-gold);
-    padding: 16px;
-    border-radius: 10px;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.03);
-    position: relative;
-}
-
-.post-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 8px;
-    font-size: 13px;
-}
-
-.post-author {
-    font-weight: bold;
-    color: var(--accent-gold);
-}
-
-.post-tag {
-    background: #fff8d6;
-    color: #8d7237;
-    padding: 2px 8px;
-    border-radius: 10px;
-    font-size: 11px;
-    font-weight: 600;
-}
-
-.post-content {
-    font-size: 14px;
-    line-height: 1.6;
-    color: #4a4231;
-    white-space: pre-line;
-}
-
-/* NÚT ĐỌC TIẾP / RÚT GỌN */
-.toggle-btn {
-    background: none;
-    border: none;
-    color: var(--accent-gold);
-    font-weight: bold;
-    cursor: pointer;
-    font-size: 13px;
-    margin-top: 6px;
-    padding: 0;
-    display: inline-block;
-}
-
-.toggle-btn:hover {
-    text-decoration: underline;
-}
-
-.post-date {
-    font-size: 11px;
-    color: #aaa;
-    margin-top: 8px;
-    text-align: right;
-}
-
-/* FORM ĐẶT PHÍA DƯỚI CÙNG */
-.form-box {
-    background: #ffffff;
-    border: 2px solid var(--main-yellow);
-    padding: 20px;
-    border-radius: 14px;
-    margin-top: 30px;
-    margin-bottom: 15px;
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.03);
-}
-
-.form-box input, .form-box textarea {
-    padding: 10px 14px;
-    border: 1px solid #e0d0a0;
-    border-radius: 8px;
-    font-size: 13px;
-    outline: none;
-    background: #fffef8;
-}
-
-.form-box button {
-    background: var(--accent-gold);
-    color: #fff;
-    border: none;
-    padding: 9px 18px;
-    border-radius: 8px;
-    cursor: pointer;
-    font-weight: bold;
-    font-size: 13px;
-    align-self: flex-end;
-    transition: background 0.2s ease;
-}
-
-.form-box button:hover {
-    background: #b0841a;
-}
-
-/* THANH PHÂN TRANG */
-.pagination {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 8px;
-    margin-top: 20px;
-    margin-bottom: 10px;
-}
-
-.page-btn {
-    background: #fff;
-    border: 1px solid var(--accent-gold);
-    padding: 6px 12px;
-    border-radius: 8px;
-    cursor: pointer;
-    font-size: 13px;
-    font-weight: 600;
-    color: var(--accent-gold);
-}
-
-.page-btn.active {
-    background: var(--accent-gold);
-    color: #fff;
-}
-
-/* POPUP MODAL */
-.modal-overlay {
-    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-    background: rgba(0,0,0,0.4); display: none; justify-content: center;
-    align-items: center; z-index: 999;
-}
-
-.modal-overlay.active { display: flex; }
-
-.modal-box {
-    background: white; padding: 25px; border-radius: 15px;
-    max-width: 400px; width: 90%; text-align: center;
-    box-shadow: 0 5px 20px rgba(0,0,0,0.2); border: 2px solid var(--accent-gold);
-}
-
-.modal-box input, .modal-box textarea {
-    width: 100%; padding: 10px; margin-bottom: 10px;
-    border: 1px solid #e0d0a0; border-radius: 8px; outline: none;
-}
-
-.color-picker { display: flex; gap: 10px; justify-content: center; margin-bottom: 12px; }
-.color-opt { width: 25px; height: 25px; border-radius: 50%; cursor: pointer; border: 2px solid transparent; }
-.color-opt.selected { border-color: #333; transform: scale(1.1); }
-
-.sticker-choices { display: flex; gap: 12px; justify-content: center; font-size: 22px; margin-bottom: 6px; }
-.sticker-choice { cursor: pointer; transition: transform 0.2s; user-select: none; }
-.sticker-choice:hover { transform: scale(1.25); }
-
-.pos-btn {
-    background: #fdf8e6; border: 1px solid var(--accent-gold);
-    padding: 8px; border-radius: 8px; cursor: pointer; font-size: 12px;
-    color: var(--text-color); font-weight: 600;
-}
-.pos-btn:hover { background: var(--main-yellow); }
-
-/* ĐĨA THAN */
-.vinyl-player-box {
-    position: fixed;
-    bottom: 20px;
-    left: 20px;
-    background: rgba(255, 255, 255, 0.9);
-    border: 2px solid var(--main-yellow);
-    padding: 8px 12px;
-    border-radius: 16px;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-    z-index: 100;
-    backdrop-filter: blur(5px);
-}
-
-.vinyl-record {
-    width: 50px;
-    height: 50px;
-    background: #111;
-    border-radius: 50%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    border: 2px solid #333;
-    animation: spin 5s linear infinite;
-    animation-play-state: paused;
-}
-
-.vinyl-record.playing {
-    animation-play-state: running;
-}
-
-.vinyl-img {
-    width: 22px;
-    height: 22px;
-    border-radius: 50%;
-    object-fit: cover;
-    border: 2px solid #fff;
-}
-
-@keyframes spin {
-    100% { transform: rotate(360deg); }
-}
-
-.music-btn {
-    background: var(--main-yellow);
-    border: none;
-    padding: 5px 10px;
-    border-radius: 10px;
-    cursor: pointer;
-    font-size: 11px;
-    font-weight: bold;
-    color: #555;
-}
-
-/* FOOTER */
-footer {
-    width: 100%;
-    text-align: center;
-    padding: 25px;
-    margin-top: 40px;
-    background: #faf4df;
-    border-top: 1px dashed var(--accent-gold);
-    font-size: 13px;
-    color: #776a4a;
-    z-index: 10;
-}
-</style>
+        .note-card:hover {
+            transform: scale(1.03) rotate(0deg) !important;
+            z-index: 5;
+        }
+        /* KẸP GIẤY ĐỘNG */
+        .paper-clip {
+            position: absolute;
+            top: -12px;
+            width: 14px;
+            height: 32px;
+            border: 3px solid #c89b27;
+            border-radius: 10px;
+            background: transparent;
+            box-shadow: 1px 1px 3px rgba(0,0,0,0.15);
+            z-index: 6;
+            transition: all 0.3s ease;
+        }
+        .paper-clip::after {
+            content: '';
+            position: absolute;
+            top: 4px;
+            left: 1px;
+            width: 6px;
+            height: 18px;
+            border: 2px solid #e0a96d;
+            border-bottom: none;
+            border-radius: 5px 5px 0 0;
+        }
+        .note-author {
+            font-size: 14px;
+            text-align: right;
+            color: #666;
+            margin-top: 8px;
+        }
+        /* KHU BÀI VIẾT TÂM SỰ & FEEDBACK DẠNG DANH SÁCH */
+        .post-list {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            min-height: 320px;
+        }
+        .post-card {
+            background: #ffffff;
+            border: 1px solid #ebdca8;
+            border-left: 5px solid var(--accent-gold);
+            padding: 16px;
+            border-radius: 10px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.03);
+            position: relative;
+        }
+        .post-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+            font-size: 13px;
+        }
+        .post-author {
+            font-weight: bold;
+            color: var(--accent-gold);
+        }
+        .post-tag {
+            background: #fff8d6;
+            color: #8d7237;
+            padding: 2px 8px;
+            border-radius: 10px;
+            font-size: 11px;
+            font-weight: 600;
+        }
+        .post-content {
+            font-size: 14px;
+            line-height: 1.6;
+            color: #4a4231;
+            white-space: pre-line;
+        }
+        .toggle-btn {
+            background: none;
+            border: none;
+            color: var(--accent-gold);
+            font-weight: bold;
+            cursor: pointer;
+            font-size: 12px;
+            margin-top: 6px;
+            padding: 0;
+            display: inline-block;
+        }
+        .post-date {
+            font-size: 11px;
+            color: #aaa;
+            margin-top: 8px;
+            text-align: right;
+        }
+        /* FORM ĐẶT PHÍA DƯỚI CÙNG */
+        .form-box {
+            background: #ffffff;
+            border: 2px solid var(--main-yellow);
+            padding: 20px;
+            border-radius: 14px;
+            margin-top: 30px;
+            margin-bottom: 15px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.03);
+        }
+        .form-box input, .form-box textarea {
+            padding: 10px 14px;
+            border: 1px solid #e0d0a0;
+            border-radius: 8px;
+            font-size: 13px;
+            outline: none;
+            background: #fffef8;
+        }
+        .form-box button {
+            background: var(--accent-gold);
+            color: #fff;
+            border: none;
+            padding: 9px 18px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 13px;
+            align-self: flex-end;
+            transition: background 0.2s ease;
+        }
+        .form-box button:hover {
+            background: #b0841a;
+        }
+        /* THANH PHÂN TRANG */
+        .pagination {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 8px;
+            margin-top: 20px;
+            margin-bottom: 10px;
+        }
+        .page-btn {
+            background: #fff;
+            border: 1px solid var(--accent-gold);
+            padding: 6px 12px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--accent-gold);
+        }
+        .page-btn.active {
+            background: var(--accent-gold);
+            color: #fff;
+        }
+        /* POPUP MODAL CHO TƯỜNG ƯỚC NGUYỆN */
+        .modal-overlay { 
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
+            background: rgba(0,0,0,0.4); display: none; justify-content: center; 
+            align-items: center; z-index: 999; 
+        }
+        .modal-overlay.active { display: flex; }
+        .modal-box { 
+            background: white; padding: 25px; border-radius: 15px; 
+            max-width: 400px; width: 90%; text-align: center; 
+            box-shadow: 0 5px 20px rgba(0,0,0,0.2); border: 2px solid var(--accent-gold); 
+        }
+        .modal-box input, .modal-box textarea { 
+            width: 100%; padding: 10px; margin-bottom: 10px; 
+            border: 1px solid #e0d0a0; border-radius: 8px; outline: none; 
+        }
+        .color-picker { display: flex; gap: 10px; justify-content: center; margin-bottom: 12px; }
+        .color-opt { width: 25px; height: 25px; border-radius: 50%; cursor: pointer; border: 2px solid transparent; }
+        .color-opt.selected { border-color: #333; transform: scale(1.1); }
+        .sticker-choices { display: flex; gap: 12px; justify-content: center; font-size: 22px; margin-bottom: 6px; }
+        .sticker-choice { cursor: pointer; transition: transform 0.2s; user-select: none; }
+        .sticker-choice:hover { transform: scale(1.25); }
+        .pos-btn {
+            background: #fdf8e6; border: 1px solid var(--accent-gold); 
+            padding: 8px; border-radius: 8px; cursor: pointer; font-size: 12px; 
+            color: var(--text-color); font-weight: 600;
+        }
+        .pos-btn:hover { background: var(--main-yellow); }
+        /* ĐĨA THAN */
+        .vinyl-player-box {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            background: rgba(255, 255, 255, 0.9);
+            border: 2px solid var(--main-yellow);
+            padding: 8px 12px;
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            z-index: 100;
+            backdrop-filter: blur(5px);
+        }
+        .vinyl-record {
+            width: 50px;
+            height: 50px;
+            background: #111;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border: 2px solid #333;
+            animation: spin 5s linear infinite;
+            animation-play-state: paused;
+        }
+        .vinyl-record.playing {
+            animation-play-state: running;
+        }
+        .vinyl-img {
+            width: 22px;
+            height: 22px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid #fff;
+        }
+        @keyframes spin {
+            100% { transform: rotate(360deg); }
+        }
+        .music-btn {
+            background: var(--main-yellow);
+            border: none;
+            padding: 5px 10px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 11px;
+            font-weight: bold;
+            color: #555;
+        }
+        /* FOOTER */
+        footer {
+            width: 100%;
+            text-align: center;
+            padding: 25px;
+            margin-top: 40px;
+            background: #faf4df;
+            border-top: 1px dashed var(--accent-gold);
+            font-size: 13px;
+            color: #776a4a;
+            z-index: 10;
+        }
+    </style>
 </head>
 <body>
-
-<!-- ĐĨA THAN PHÁT NHẠC -->
-<div class="vinyl-player-box">
-    <div class="vinyl-record" id="vinylRecord">
-        <img src="nhac.JPG" alt="Char" class="vinyl-img">
-    </div>
-    <div>
-        <div style="font-size:11px; font-weight:bold;">Nhạc Tiệm</div>
-        <button class="music-btn" id="musicBtn" onclick="toggleMusic()">▶ Play</button>
-    </div>
-</div>
-<audio id="bgMusic" loop src="nhac.mp3"></audio>
-
-<!-- HEADER & SLOGAN -->
-<header>
-    <div class="nav-bar">
-        <a href="https://tatuyennhi-design.github.io/index.html/" class="nav-btn back-home">Quay về Tiệm chính</a>
-        <button class="nav-btn active" onclick="switchTab('uoc-nguyen', this)">Tường Ước Nguyện</button>
-        <button class="nav-btn" onclick="switchTab('tam-su', this)">Lời Tâm Sự</button>
-        <button class="nav-btn" onclick="switchTab('feedback', this)">Feedback Char</button>
-    </div>
-    <div class="banner">
-        <h1>Góc Ước Nguyện Giao Lưu & Feedback Char</h1>
-        <p>Nơi gửi gắm suy nghĩ, góc nhỏ tâm sự và lời góp ý dễ thương từ mọi người ghé thăm Tiệm Nhà Hyperion.</p>
-    </div>
-</header>
-
-<!-- MAIN CONTENT -->
-<main>
-    <!-- TAB 1: BẢNG GIẤY NOTE -->
-    <div id="uoc-nguyen" class="tab-content active">
-        <div class="cork-board" id="corkBoard"></div>
-        <div class="pagination" id="notePagination"></div>
-        <div style="text-align: center; margin-top: 20px;">
-            <button class="nav-btn" style="background:var(--accent-gold); color:#fff; padding:10px 24px; font-size:15px;" onclick="openNoteModal()">Dán giấy ước nguyện mới</button>
+    <!-- ĐĨA THAN PHÁT NHẠC -->
+    <div class="vinyl-player-box">
+        <div class="vinyl-record" id="vinylRecord">
+            <img src="nhac.JPG" alt="Char" class="vinyl-img">
+        </div>
+        <div>
+            <div style="font-size:11px; font-weight:bold;">Nhạc Tiệm 🎶</div>
+            <button class="music-btn" id="musicBtn" onclick="toggleMusic()">▶ Play</button>
         </div>
     </div>
+    <audio id="bgMusic" loop src="nhac.mp3"></audio>
 
-    <!-- TAB 2: KHU LỜI TÂM SỰ -->
-    <div id="tam-su" class="tab-content">
-        <div class="post-list" id="tamSuList"></div>
-        <div class="pagination" id="tamSuPagination"></div>
-        <div class="form-box">
-            <h4 style="color:var(--accent-gold);">Viết lời tâm sự mới gửi tiệm</h4>
-            <input type="text" id="tsAuthor" placeholder="Tên/Biệt danh của bạn (không bắt buộc)">
-            <textarea id="tsText" rows="3" placeholder="Viết những câu chuyện hay lời gửi gắm tới chủ tiệm..."></textarea>
-            <button type="button" onclick="addTamSu()">Đăng Tâm Sự</button>
+    <!-- HEADER & SLOGAN -->
+    <header>
+        <div class="nav-bar">
+            <a href="https://tatuyennhi-design.github.io/index.html/" class="nav-btn back-home">🏠 Quay về Tiệm chính</a>
+            <button class="nav-btn active" onclick="switchTab('uoc-nguyen', this)">✨ Tường Ước Nguyện</button>
+            <button class="nav-btn" onclick="switchTab('tam-su', this)">💌 Lời Tâm Sự</button>
+            <button class="nav-btn" onclick="switchTab('feedback', this)">🌱 Feedback Char</button>
         </div>
-    </div>
+        <div class="banner">
+            <h1> Góc Ước Nguyện Giao Lưu & Feedback Char✨</h1>
+            <p>Nơi gửi gắm suy nghĩ, góc nhỏ tâm sự và lời góp ý dễ thương từ mọi người ghé thăm Tiệm Nhà Hyperion.</p>
+        </div>
+    </header>
 
-    <!-- TAB 3: KHU FEEDBACK CHAR -->
-    <div id="feedback" class="tab-content">
-        <div class="post-list" id="feedbackList"></div>
-        <div class="pagination" id="feedbackPagination"></div>
-        <div class="form-box">
-            <h4 style="color:var(--accent-gold);">Gửi Feedback Cho Nhân Vật</h4>
-            <div style="display: flex; gap: 10px;">
-                <input type="text" id="fbAuthor" placeholder="Tên của bạn" style="flex:1;">
-                <input type="text" id="fbChar" placeholder="Tên Nhân Vật bạn muốn feedback" style="flex:1;">
+    <!-- MAIN CONTENT -->
+    <main>
+        <!-- TAB 1: BẢNG GIẤY NOTE -->
+        <div id="uoc-nguyen" class="tab-content active">
+            <div class="cork-board" id="corkBoard"></div>
+            <div class="pagination" id="notePagination"></div>
+            <div style="text-align: center; margin-top: 20px;">
+                <button class="nav-btn" style="background:var(--accent-gold); color:#fff; padding:10px 24px; font-size:15px;" onclick="openNoteModal()">✍️ Dán giấy ước nguyện mới</button>
             </div>
-            <textarea id="fbText" rows="3" placeholder="Góp ý về tính cách, cốt truyện hoặc cảm xúc của bạn..."></textarea>
-            <button type="button" onclick="addFeedback()">Gửi Feedback</button>
         </div>
-    </div>
-</main>
 
-<!-- POPUP NOTE ƯỚC NGUYỆN -->
-<div id="noteModal" class="modal-overlay">
-    <div class="modal-box" style="max-width:400px; padding: 15px;">
-        <h3 style="color:var(--accent-gold); margin-bottom:8px; font-size:16px;">Gửi Điều Ước</h3>
-        <input type="text" id="modalNoteAuthor" placeholder="Tên bạn (ẩn danh thì bỏ trống)" style="font-size: 12px; padding:6px;">
-        <textarea id="modalNoteText" rows="2" placeholder="Nhập lời ước nguyện..." style="font-size: 12px; padding:6px; margin-bottom:8px;"></textarea>
-        
-        <p style="font-size:0.8em; margin-bottom: 4px;">Chọn màu giấy:</p>
-        <div class="color-picker" style="margin-bottom:8px; display:flex; gap:8px;">
-            <div class="color-opt selected" style="background:#fff59d;" onclick="selectColor('note-yellow', this)"></div>
-            <div class="color-opt" style="background:#ffcdd2;" onclick="selectColor('note-pink', this)"></div>
-            <div class="color-opt" style="background:#c8e6c9;" onclick="selectColor('note-green', this)"></div>
-            <div class="color-opt" style="background:#bbdefb;" onclick="selectColor('note-blue', this)"></div>
-            <div class="color-opt" style="background:#ffe0b2;" onclick="selectColor('note-orange', this)"></div>
-        </div>
-        
-        <p style="font-size:0.8em; margin-bottom: 4px;">Chọn Sticker (Tối đa 3):</p>
-        <div id="stickerSelectionArea" style="margin-bottom:10px;">
-            <div class="sticker-choices">
-                <span class="sticker-choice" onclick="selectStickerForPos('🌸')">🌸</span>
-                <span class="sticker-choice" onclick="selectStickerForPos('⭐')">⭐</span>
-                <span class="sticker-choice" onclick="selectStickerForPos('🍀')">🍀</span>
-                <span class="sticker-choice" onclick="selectStickerForPos('🎈')">🎈</span>
-                <span class="sticker-choice" onclick="selectStickerForPos('✨')">✨</span>
+        <!-- TAB 2: KHU LỜI TÂM SỰ -->
+        <div id="tam-su" class="tab-content">
+            <div class="post-list" id="tamSuList"></div>
+            <div class="pagination" id="tamSuPagination"></div>
+            <div class="form-box">
+                <h4 style="color:var(--accent-gold);">✍️ Viết lời tâm sự mới gửi tiệm</h4>
+                <input type="text" id="tsAuthor" placeholder="Tên/Biệt danh của bạn (không bắt buộc)">
+                <textarea id="tsText" rows="3" placeholder="Viết những câu chuyện hay lời gửi gắm tới chủ tiệm..."></textarea>
+                <button type="button" onclick="addTamSu()">Đăng Tâm Sự</button>
             </div>
-            <div id="selectedStickersList" style="margin-top:8px; font-size: 11px; color:#666; display:flex; flex-direction:column; gap:4px; align-items:center;"></div>
         </div>
-        
-        <div style="display: flex; gap:10px;">
-            <button class="nav-btn" style="background:var(--accent-gold); color:white; border:none; flex:1;" onclick="submitNote()">Gửi Ước Nguyện</button>
-            <button class="nav-btn" style="background:#aaa; color:white; border:none; flex:1;" onclick="closeNoteModal()">Hủy</button>
+
+        <!-- TAB 3: KHU FEEDBACK CHAR -->
+        <div id="feedback" class="tab-content">
+            <div class="post-list" id="feedbackList"></div>
+            <div class="pagination" id="feedbackPagination"></div>
+            <div class="form-box">
+                <h4 style="color:var(--accent-gold);">✍️ Gửi Feedback Cho Nhân Vật</h4>
+                <div style="display:flex; gap:10px;">
+                    <input type="text" id="fbAuthor" placeholder="Tên của bạn" style="flex:1;">
+                    <input type="text" id="fbChar" placeholder="Tên Nhân Vật bạn muốn feedback" style="flex:1;">
+                </div>
+                <textarea id="fbText" rows="3" placeholder="Góp ý về tính cách, cốt truyện hoặc cảm xúc của bạn..."></textarea>
+                <button type="button" onclick="addFeedback()">Gửi Feedback</button>
+            </div>
+        </div>
+    </main>
+
+    <!-- POPUP NỐT ƯỚC NGUYỆN NÂNG CẤP CHỌN VỊ TRÍ TỪNG STICKER -->
+    <div id="noteModal" class="modal-overlay">
+        <div class="modal-box" style="max-width:400px; padding:15px;">
+            <h3 style="color:var(--accent-gold); margin-bottom:8px; font-size:16px;">Gửi Điều Ước ✨</h3>
+            <input type="text" id="modalNoteAuthor" placeholder="Tên bạn (ẩn danh thì bỏ trống)" style="font-size:12px; padding:6px;">
+            <textarea id="modalNoteText" rows="2" placeholder="Nhập lời ước nguyện..." style="font-size:12px; padding:6px; margin-bottom:8px;"></textarea>
+            
+            <p style="font-size:0.8em; margin-bottom: 4px;">Chọn màu giấy:</p>
+            <div class="color-picker" style="margin-bottom:8px; display:flex; gap:8px;">
+                <div class="color-opt selected" style="background:#fff59d;" onclick="selectColor('note-yellow', this)"></div>
+                <div class="color-opt" style="background:#ffcdd2;" onclick="selectColor('note-pink', this)"></div>
+                <div class="color-opt" style="background:#c8e6c9;" onclick="selectColor('note-green', this)"></div>
+                <div class="color-opt" style="background:#bbdefb;" onclick="selectColor('note-blue', this)"></div>
+                <div class="color-opt" style="background:#ffe0b2;" onclick="selectColor('note-orange', this)"></div>
+            </div>
+
+            <p style="font-size:0.8em; margin-bottom: 4px;">Chọn Sticker (Tối đa 3, bấm vào sticker để chọn vị trí):</p>
+            <div id="stickerSelectionArea" style="margin-bottom:10px;">
+                <div class="sticker-choices">
+                    <span class="sticker-choice" onclick="selectStickerForPos('🌸')">🌸</span>
+                    <span class="sticker-choice" onclick="selectStickerForPos('⭐')">⭐</span>
+                    <span class="sticker-choice" onclick="selectStickerForPos('🍀')">🍀</span>
+                    <span class="sticker-choice" onclick="selectStickerForPos('🎀')">🎀</span>
+                    <span class="sticker-choice" onclick="selectStickerForPos('🌙')">🌙</span>
+                </div>
+                <!-- Vùng hiển thị các sticker đã chọn kèm vị trí -->
+                <div id="selectedStickersList" style="margin-top:8px; font-size:11px; color:#666; display:flex; flex-direction:column; gap:4px; align-items:center;"></div>
+            </div>
+
+            <div style="display:flex; gap:10px;">
+                <button class="nav-btn" style="background:var(--accent-gold); color:white; border:none; flex:1;" onclick="submitNote()">Gửi Ước Nguyện</button>
+                <button class="nav-btn" style="background:#aaa; color:white; border:none; flex:1;" onclick="closeNoteModal()">Hủy</button>
+            </div>
         </div>
     </div>
-</div>
 
-<!-- POPUP CHỌN VỊ TRÍ STICKER -->
-<div id="posModal" class="modal-overlay" style="z-index: 1001; background: rgba(0,0,0,0.5);">
-    <div class="modal-box" style="max-width:280px; padding: 15px; border:2px solid var(--accent-gold);">
-        <p style="font-size:0.9em; margin-bottom: 10px; color:var(--accent-gold); font-weight:bold;">Chọn góc dán cho <span id="currentStickerText"></span>?</p>
-        <div style="display:grid; grid-template-columns: 1fr 1fr; gap: 8px;">
-            <button class="pos-btn" onclick="confirmStickerPos('top-left')">Góc trên - Trái</button>
-            <button class="pos-btn" onclick="confirmStickerPos('top-right')">Góc trên - Phải</button>
-            <button class="pos-btn" onclick="confirmStickerPos('bottom-left')">Góc dưới - Trái</button>
-            <button class="pos-btn" onclick="confirmStickerPos('bottom-right')">Góc dưới - Phải</button>
+    <!-- POPUP NHỎ CHỌN VỊ TRÍ CHO STICKER ĐANG CHỌN -->
+    <div id="posModal" class="modal-overlay" style="z-index: 1001; background: rgba(0,0,0,0.5);">
+        <div class="modal-box" style="max-width:280px; padding:15px; border:2px solid var(--accent-gold);">
+            <p style="font-size:0.9em; margin-bottom: 10px; color:var(--accent-gold); font-weight:bold;">Chọn góc dán cho <span id="currentStickerText"></span>?</p>
+            <div style="display:grid; grid-template-columns: 1fr 1fr; gap: 8px;">
+                <button class="pos-btn" onclick="confirmStickerPos('top-left')">Góc trên - Trái</button>
+                <button class="pos-btn" onclick="confirmStickerPos('top-right')">Góc trên - Phải</button>
+                <button class="pos-btn" onclick="confirmStickerPos('bottom-left')">Góc dưới - Trái</button>
+                <button class="pos-btn" onclick="confirmStickerPos('bottom-right')">Góc dưới - Phải</button>
+            </div>
+            <button class="nav-btn" style="background:#aaa; color:white; border:none; width:100%; margin-top:10px;" onclick="closePosModal()">Hủy</button>
         </div>
-        <button class="nav-btn" style="background:#aaa; color:white; border:none; width:100%; margin-top:10px;" onclick="closePosModal()">Hủy</button>
     </div>
-</div>
 
-<!-- POPUP THÔNG BÁO CUSTOM -->
-<div id="customNotice" class="modal-overlay">
-    <div class="modal-box">
-        <p class="notice-message" style="margin-bottom: 15px; font-weight: bold;">Thông báo</p>
-        <button class="nav-btn" style="background:var(--accent-gold); color:white; border:none;" onclick="closeNotice()">Đóng</button>
+    <!-- POPUP THÔNG BÁO CUSTOM -->
+    <div id="customNotice" class="modal-overlay">
+        <div class="modal-box">
+            <p class="notice-message" style="margin-bottom: 15px; font-weight: bold;">Thông báo</p>
+            <button class="nav-btn" style="background:var(--accent-gold); color:white; border:none;" onclick="closeNotice()">Đóng</button>
+        </div>
     </div>
-</div>
 
-<!-- FOOTER -->
-<footer>
-    <p>✨ Cảm ơn bạn rất nhiều vì đã ghé thăm và để lại dấu chân tại Tiệm Nhà Hyperion ✨</p>
-    <p style="margin-top:5px; font-size:11px; color:#aaa;">© 2026 Tiệm Nhà Hyperion - Góc Ước Nguyện Giao Lưu & Feedback Char</p>
-</footer>
+    <!-- FOOTER -->
+    <footer>
+        <p>✨ Cảm ơn bạn rất nhiều vì đã ghé thăm và để lại dấu chân tại Tiệm Nhà Hyperion ✨</p>
+        <p style="margin-top:5px; font-size:11px; color:#aaa;">© 2026 Tiệm Nhà Hyperion - Góc Ước Nguyện Giao Lưu & Feedback Char</p>
+    </footer>
 
-<!-- SCRIPT CHÍNH -->
-<script>
-const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzY_tk0yDQDJlyRrV406xSc5qc71xA-EZV_SROWTrLZgnPRtoi9VA8fvfn6D29IXNLV/exec";
-
-let noteList = [];
-let tamSuList = [];
-let feedbackList = [];
-
-let notePage = 1, tamSuPage = 1, feedbackPage = 1;
-const notesPerPage = 6, postsPerPage = 3;
-
-let selectedNoteColor = "note-yellow";
-let selectedStickersData = []; 
-let stickerToAssignPos = "";
-
-// 1. TẢI DỮ LIỆU TỪ GOOGLE SHEET
-function loadDataFromSheet() {
-    fetch(`${SCRIPT_URL}?action=getNotes`)
-        .then(res => res.json())
-        .then(data => {
-            if (Array.isArray(data)) {
-                noteList = data.map(item => ({
-                    text: item.text,
-                    author: item.author,
-                    color: item.color || "note-yellow",
-                    stickers: item.stickers || [],
-                    rotate: (Math.random() * 6 - 3).toFixed(1) + "deg"
-                }));
-                renderNotes(notePage);
-            }
-        }).catch(e => console.log("Lỗi tải Ước Nguyện:", e));
-
-    fetch(`${SCRIPT_URL}?action=getTamSu`)
-        .then(res => res.json())
-        .then(data => {
-            if (Array.isArray(data)) {
-                tamSuList = data;
-                renderTamSu(tamSuPage);
-            }
-        }).catch(e => console.log("Lỗi tải Tâm Sự:", e));
-
-    fetch(`${SCRIPT_URL}?action=getFeedback`)
-        .then(res => res.json())
-        .then(data => {
-            if (Array.isArray(data)) {
-                feedbackList = data;
-                renderFeedback(feedbackPage);
-            }
-        }).catch(e => console.log("Lỗi tải Feedback:", e));
-}
-
-// 2. GỬI DỮ LIỆU LÊN GOOGLE SHEET
-function sendToSheet(data, onSuccess) {
-    fetch(SCRIPT_URL, {
-        method: "POST",
-        headers: { "Content-Type": "text/plain;charset=utf-8" },
-        body: JSON.stringify(data)
-    })
-    .then(res => res.json())
-    .then(res => {
-        if (res.result === "success") {
-            if (onSuccess) onSuccess();
-            loadDataFromSheet();
-        } else {
-            showNotice("Có lỗi từ máy chủ, hãy kiểm tra lại Apps Script nhé!");
-            console.error(res);
-        }
-    })
-    .catch(err => {
-        console.error("Lỗi gửi dữ liệu:", err);
-        showNotice("Không thể gửi dữ liệu, kiểm tra kết nối mạng nha!");
-    });
-}
-
-// 3. POPUP MODAL & THÔNG BÁO
-function showNotice(msg) {
-    const modal = document.getElementById("customNotice");
-    modal.querySelector(".notice-message").innerText = msg;
-    modal.classList.add("active");
-}
-
-function closeNotice() {
-    document.getElementById("customNotice").classList.remove("active"); 
-}
-
-function openNoteModal() {
-    document.getElementById("noteModal").classList.add("active");
-}
-
-function closeNoteModal() {
-    document.getElementById("noteModal").classList.remove("active");
-    selectedStickersData = [];
-    renderSelectedStickersList();
-    closePosModal();
-}
-
-function selectColor(color, el) {
-    selectedNoteColor = color;
-    document.querySelectorAll('.color-opt').forEach(b => b.classList.remove('selected'));
-    el.classList.add('selected');
-}
-
-// 4. QUẢN LÝ TỰ CHỌN STICKER & VỊ TRÍ
-function selectStickerForPos(st) {
-    if (selectedStickersData.length >= 3) {
-        return showNotice("Bạn chỉ được chọn tối đa 3 sticker thôi nha!");
-    }
-    if (selectedStickersData.some(item => item.st === st)) {
-        return showNotice("Bạn đã chọn sticker này rồi, hãy chọn cái khác nha!");
-    }
-    stickerToAssignPos = st;
-    document.getElementById("currentStickerText").innerText = st;
-    document.getElementById("posModal").classList.add("active");
-}
-
-function confirmStickerPos(pos) {
-    if (selectedStickersData.some(item => item.pos === pos)) {
-        return showNotice("Góc này đã có một sticker rồi, hãy chọn góc khác nha!");
-    }
-    selectedStickersData.push({ st: stickerToAssignPos, pos: pos });
-    stickerToAssignPos = "";
-    closePosModal();
-    renderSelectedStickersList();
-}
-
-function closePosModal() {
-    document.getElementById("posModal").classList.remove("active");
-}
-
-function renderSelectedStickersList() {
-    const listEl = document.getElementById("selectedStickersList");
-    if (!listEl) return;
-    listEl.innerHTML = "";
-    if (selectedStickersData.length === 0) return;
-    listEl.innerHTML = selectedStickersData.map((item, index) => {
-        let posText = "";
-        if (item.pos === 'top-left') posText = "Góc trên-Trái";
-        if (item.pos === 'top-right') posText = "Góc trên-Phải";
-        if (item.pos === 'bottom-left') posText = "Góc dưới-Trái";
-        if (item.pos === 'bottom-right') posText = "Góc dưới-Phải";
-        return `<div style="display:flex; align-items:center; gap:5px; background:#f5f5f5; padding:2px 8px; border-radius: 10px;">
-            <span>${item.st}</span> <span>(${posText})</span>
-            <span style="color:red; cursor:pointer; font-weight:bold; margin-left:5px;" onclick="removeSelectedSticker(${index})">×</span>
-        </div>`;
-    }).join("");
-}
-
-function removeSelectedSticker(index) {
-    selectedStickersData.splice(index, 1);
-    renderSelectedStickersList();
-}
-
-function submitNote() {
-    const text = document.getElementById("modalNoteText").value.trim();
-    const author = document.getElementById("modalNoteAuthor").value.trim() || "Ẩn danh";
-    if (!text) return showNotice("Bạn chưa viết điều ước!");
-
-    const formattedStickers = (selectedStickersData || []).map(item => ({
-        st: item.st || item.sticker || item.icon || item,
-        pos: item.pos || item.position || "top-left"
-    }));
-
-    sendToSheet({
-        sheet: "UocNguyen",
-        text: text,
-        author: author,
-        color: selectedNoteColor,
-        stickers: formattedStickers
-    }, () => {
-        document.getElementById("modalNoteText").value = "";
-        document.getElementById("modalNoteAuthor").value = "";
-        selectedStickersData = [];
-        renderSelectedStickersList();
-        closeNoteModal();
-        showNotice("Gửi lời ước nguyện thành công rồi nha!");
-    });
-}
-
-// 5. RENDER TƯỜNG ƯỚC NGUYỆN
-function renderNotes(page) {
-    const board = document.getElementById("corkBoard");
-    if (!board) return;
-    board.innerHTML = "";
-    
-    const items = noteList.slice((page - 1) * notesPerPage, page * notesPerPage);
-    items.forEach((item) => {
-        const card = document.createElement("div");
-        card.className = `note-card ${item.color || 'note-yellow'}`;
-        card.style.transform = `rotate(${item.rotate || '-2deg'})`;
+    <!-- SCRIPT CHÍNH -->
+    <script>
+        const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzY_tk0yDQDJlyRrV4O6xSc5qc71xA-EZV_SR0WTrLZgnPRtoi9VA8fvfn6D29IXNLV/exec";
         
-        let stickersArr = item.stickers || [];
-        let clipStyle = "left: 50%; transform: translateX(-50%);";
-        const topStickers = stickersArr.filter(s => s.pos && s.pos.startsWith('top'));
+        let noteList = [];
+        let tamSuList = [];
+        let feedbackList = [];
+        let notePage = 1, tamSuPage = 1, feedbackPage = 1;
+        const notesPerPage = 6, postsPerPage = 3;
         
-        if (topStickers.some(s => s.pos === 'top-left') && !topStickers.some(s => s.pos === 'top-right')) {
-            clipStyle = "left: 75%; transform: rotate(6deg);";
-        } else if (topStickers.some(s => s.pos === 'top-right') && !topStickers.some(s => s.pos === 'top-left')) {
-            clipStyle = "left: 25%; transform: rotate(-6deg);";
+        let selectedNoteColor = "note-yellow";
+        let selectedStickersData = []; // Mảng chứa object: { st: '🌸', pos: 'top-left' }
+        let stickerToAssignPos = ""; 
+
+        // 1. TẢI DỮ LIỆU TỪ GOOGLE SHEET
+        function loadDataFromSheet() {
+            fetch(`${SCRIPT_URL}?action=getNotes`)
+                .then(res => res.json())
+                .then(data => {
+                    if (Array.isArray(data)) {
+                        noteList = data.map(item => ({
+                            text: item.text,
+                            author: item.author,
+                            color: item.color || "note-yellow",
+                            stickers: item.stickers || [], 
+                            rotate: (Math.random() * 6 - 3).toFixed(1) + "deg"
+                        }));
+                        renderNotes(notePage);
+                    }
+                }).catch(e => console.log("Lỗi tải Ước Nguyện:", e));
+
+            fetch(`${SCRIPT_URL}?action=getTamSu`)
+                .then(res => res.json())
+                .then(data => {
+                    if (Array.isArray(data)) {
+                        tamSuList = data;
+                        renderTamSu(tamSuPage);
+                    }
+                }).catch(e => console.log("Lỗi tải Tâm Sự:", e));
+
+            fetch(`${SCRIPT_URL}?action=getFeedback`)
+                .then(res => res.json())
+                .then(data => {
+                    if (Array.isArray(data)) {
+                        feedbackList = data;
+                        renderFeedback(feedbackPage);
+                    }
+                }).catch(e => console.log("Lỗi tải Feedback:", e));
         }
 
-        let stickerHTML = "";
-        stickersArr.forEach(sticker => {
-            let posCSS = "";
-            if (sticker.pos === "top-right") posCSS = "top: -8px; right: -5px;";
-            else if (sticker.pos === "top-left") posCSS = "top: -8px; left: -5px;";
-            else if (sticker.pos === "bottom-right") posCSS = "bottom: 5px; right: 5px;";
-            else if (sticker.pos === "bottom-left") posCSS = "bottom: 5px; left: 5px;";
-            else posCSS = "top: -8px; left: -5px;";
+        // 2. GỬI DỮ LIỆU LÊN GOOGLE SHEET
+        function sendToSheet(data, onSuccess) {
+            fetch(SCRIPT_URL, {
+                method: "POST",
+                headers: { "Content-Type": "text/plain;charset=utf-8" },
+                body: JSON.stringify(data)
+            })
+            .then(res => res.json())
+            .then(res => {
+                if (res.result === "success") {
+                    if (onSuccess) onSuccess();
+                    loadDataFromSheet(); // Reload lại bảng
+                } else {
+                    showNotice("Có lỗi từ máy chủ, hãy kiểm tra lại Apps Script nhé!");
+                    console.error(res);
+                }
+            })
+            .catch(err => {
+                console.error("Lỗi gửi dữ liệu:", err);
+                showNotice("Không thể gửi dữ liệu, kiểm tra kết nối mạng nha!");
+            });
+        } 
 
-            if (sticker.st) {
-                stickerHTML += `<span style="position:absolute; ${posCSS} font-size:18px; z-index:8;">${sticker.st}</span>`;
+        // 3. POPUP MODAL & THÔNG BÁO
+        function showNotice(msg) {
+            const modal = document.getElementById("customNotice");
+            modal.querySelector(".notice-message").innerText = msg;
+            modal.classList.add("active");
+        }
+        function closeNotice() { document.getElementById("customNotice").classList.remove("active"); }
+        
+        function openNoteModal() { 
+            document.getElementById("noteModal").classList.add("active"); 
+        }
+        function closeNoteModal() {
+            document.getElementById("noteModal").classList.remove("active");
+            selectedStickersData = []; 
+            renderSelectedStickersList();
+            closePosModal();
+        } 
+
+        function selectColor(color, el) {
+            selectedNoteColor = color;
+            document.querySelectorAll('.color-opt').forEach(b => b.classList.remove('selected'));
+            el.classList.add('selected');
+        }
+
+        // 4. QUẢN LÝ TỰ CHỌN STICKER & VỊ TRÍ
+        function selectStickerForPos(st) {
+            if (selectedStickersData.length >= 3) {
+                return showNotice("Bạn chỉ được chọn tối đa 3 sticker thôi nha!");
+            }
+            if (selectedStickersData.some(item => item.st === st)) {
+                return showNotice("Bạn đã chọn sticker này rồi, hãy chọn cái khác nha!");
+            }
+            stickerToAssignPos = st;
+            document.getElementById("currentStickerText").innerText = st;
+            document.getElementById("posModal").classList.add("active");
+        }
+
+        function confirmStickerPos(pos) {
+            if (selectedStickersData.some(item => item.pos === pos)) {
+                return showNotice("Góc này đã có một sticker rồi, hãy chọn góc khác nha!");
+            }
+            selectedStickersData.push({ st: stickerToAssignPos, pos: pos });
+            stickerToAssignPos = "";
+            closePosModal();
+            renderSelectedStickersList();
+        }
+
+        function closePosModal() { 
+            document.getElementById("posModal").classList.remove("active"); 
+        }
+
+        function renderSelectedStickersList() {
+            const listEl = document.getElementById("selectedStickersList");
+            if (!listEl) return;
+            listEl.innerHTML = "";
+            if (selectedStickersData.length === 0) return;
+            
+            listEl.innerHTML = selectedStickersData.map((item, index) => {
+                let posText = "";
+                if (item.pos === 'top-left') posText = "Góc trên-Trái";
+                if (item.pos === 'top-right') posText = "Góc trên-Phải";
+                if (item.pos === 'bottom-left') posText = "Góc dưới-Trái";
+                if (item.pos === 'bottom-right') posText = "Góc dưới-Phải";
+                
+                return `<div style="display:flex; align-items:center; gap:5px; background:#f5f5f5; padding:2px 8px; border-radius:10px;">
+                          <span>${item.st}</span> <span>(${posText})</span> 
+                          <span style="color:red; cursor:pointer; font-weight:bold; margin-left:5px;" onclick="removeSelectedSticker(${index})">×</span>
+                        </div>`;
+            }).join('');
+        }
+
+        function removeSelectedSticker(index) {
+            selectedStickersData.splice(index, 1);
+            renderSelectedStickersList();
+        }
+
+        function submitNote() {
+            const text = document.getElementById("modalNoteText").value.trim();
+            const author = document.getElementById("modalNoteAuthor").value.trim() || "Ẩn danh";
+            
+            if (!text) return showNotice("Bạn chưa viết điều ước!");
+            
+            sendToSheet({ 
+                sheet: "UocNguyen", 
+                text: text, 
+                author: author, 
+                color: selectedNoteColor, 
+                stickers: selectedStickersData
+            }, () => {
+                document.getElementById("modalNoteText").value = "";
+                document.getElementById("modalNoteAuthor").value = "";
+                closeNoteModal();
+                showNotice("Gửi lời ước nguyện thành công rồi nha! ✨");
+            });
+        }
+
+        // 5. RENDER TƯỜNG ƯỚC NGUYỆN
+        function renderNotes(page) {
+            const board = document.getElementById("corkBoard");
+            if (!board) return; 
+            board.innerHTML = "";
+            
+            const items = noteList.slice((page - 1) * notesPerPage, page * notesPerPage);
+            
+            items.forEach((item) => {
+                const card = document.createElement("div");
+                card.className = `note-card ${item.color || 'note-yellow'}`;
+                card.style.transform = `rotate(${item.rotate || '-2deg'})`;
+                
+                let stickersArr = item.stickers || [];
+                
+                // TỰ ĐỘNG CÂN BẰNG KẸP GIẤY
+                let clipStyle = "left: 50%; transform: translateX(-50%);";
+                const topStickers = stickersArr.filter(s => s.pos && s.pos.startsWith('top'));
+                
+                if (topStickers.some(s => s.pos === 'top-left') && !topStickers.some(s => s.pos === 'top-right')) {
+                    clipStyle = "left: 75%; transform: rotate(6deg);";
+                } else if (topStickers.some(s => s.pos === 'top-right') && !topStickers.some(s => s.pos === 'top-left')) {
+                    clipStyle = "left: 25%; transform: rotate(-6deg);";
+                }
+
+                // Render sticker theo vị trí
+                let stickerHTML = "";
+                stickersArr.forEach(sticker => {
+                    let posCSS = "";
+                    if (sticker.pos === "top-right") posCSS = "top: -8px; right: -5px;";
+                    else if (sticker.pos === "top-left") posCSS = "top: -8px; left: -5px;";
+                    else if (sticker.pos === "bottom-right") posCSS = "bottom: 5px; right: 5px;";
+                    else if (sticker.pos === "bottom-left") posCSS = "bottom: 5px; left: 5px;";
+                    else posCSS = "top: -8px; left: -5px;";
+
+                    if (sticker.st) {
+                        stickerHTML += `<span style="position:absolute; ${posCSS} font-size:18px; z-index:8;">${sticker.st}</span>`;
+                    }
+                });
+
+                card.innerHTML = `
+                    ${stickerHTML}
+                    <div class="paper-clip" style="${clipStyle}"></div>
+                    <div style="margin-top:10px; padding: 0 5px;">${item.text}</div>
+                    <div class="note-author">— ${item.author}</div>
+                `;
+                board.appendChild(card);
+            });
+            
+            renderPagination("notePagination", noteList.length, notesPerPage, notePage, (p) => { notePage = p; renderNotes(p); });
+        }
+
+        // 6. RENDER LỜI TÂM SỰ
+        function renderTamSu(page) {
+            const container = document.getElementById("tamSuList");
+            if (!container) return; 
+            container.innerHTML = "";
+            
+            const items = tamSuList.slice((page - 1) * postsPerPage, page * postsPerPage);
+            items.forEach((post, i) => {
+                const idx = (page - 1) * postsPerPage + i;
+                const isLong = post.text.length > 120;
+                const shortTxt = isLong ? post.text.substring(0, 120) + "..." : post.text;
+                const card = document.createElement("div");
+                card.className = "post-card";
+                card.innerHTML = `
+                    <div class="post-header">
+                        <span class="post-author">💌 ${post.author}</span>
+                        <span class="post-tag">Tâm sự</span>
+                    </div>
+                    <div class="post-content" id="ts-c-${idx}">${shortTxt}</div>
+                    ${isLong ? `<button class="toggle-btn" id="ts-b-${idx}" onclick="toggleText('ts-c-${idx}', 'ts-b-${idx}', \`${post.text.replace(/`/g, '')}\`, \`${shortTxt.replace(/`/g, '')}\`)">Đọc tiếp...</button>` : ''}
+                    <div class="post-date">${post.date || ''}</div>
+                `;
+                container.appendChild(card);
+            });
+            renderPagination("tamSuPagination", tamSuList.length, postsPerPage, tamSuPage, (p) => { tamSuPage = p; renderTamSu(p); });
+        }
+
+        function addTamSu() {
+            const author = document.getElementById("tsAuthor").value.trim() || "Ẩn danh";
+            const text = document.getElementById("tsText").value.trim();
+            if (!text) return showNotice("Bạn chưa viết nội dung tâm sự kìa!");
+            sendToSheet({ sheet: "TamSu", text: text, author: author }, () => {
+                document.getElementById("tsText").value = "";
+                document.getElementById("tsAuthor").value = "";
+                showNotice("Đã gửi tâm sự thành công! 💌");
+            });
+        }
+
+        // 7. RENDER FEEDBACK CHAR
+        function renderFeedback(page) {
+            const container = document.getElementById("feedbackList");
+            if (!container) return; 
+            container.innerHTML = "";
+            
+            const items = feedbackList.slice((page - 1) * postsPerPage, page * postsPerPage);
+            items.forEach((post, i) => {
+                const idx = (page - 1) * postsPerPage + i;
+                const isLong = post.text.length > 120;
+                const shortTxt = isLong ? post.text.substring(0, 120) + "..." : post.text;
+                const card = document.createElement("div");
+                card.className = "post-card";
+                card.style.borderLeftColor = "#e63946";
+                card.innerHTML = `
+                    <div class="post-header">
+                        <span class="post-author" style="color:#e63946;">🌱 ${post.author}</span>
+                        <span class="post-tag" style="background:#ffebee; color:#c62828;">Char: ${post.char || 'Chung'}</span>
+                    </div>
+                    <div class="post-content" id="fb-c-${idx}">${shortTxt}</div>
+                    ${isLong ? `<button class="toggle-btn" style="color:#e63946;" id="fb-b-${idx}" onclick="toggleText('fb-c-${idx}', 'fb-b-${idx}', \`${post.text.replace(/`/g, '')}\`, \`${shortTxt.replace(/`/g, '')}\`)">Đọc tiếp...</button>` : ''}
+                    <div class="post-date">${post.date || ''}</div>
+                `;
+                container.appendChild(card);
+            });
+            renderPagination("feedbackPagination", feedbackList.length, postsPerPage, feedbackPage, (p) => { feedbackPage = p; renderFeedback(p); });
+        }
+
+        function addFeedback() {
+            const author = document.getElementById("fbAuthor").value.trim() || "Ẩn danh";
+            const charName = document.getElementById("fbChar").value.trim() || "Nhân vật chung";
+            const text = document.getElementById("fbText").value.trim();
+            if (!text) return showNotice("Bạn chưa nhập nội dung feedback!");
+            sendToSheet({ sheet: "Feedback", text: text, author: author, char: charName }, () => {
+                document.getElementById("fbText").value = "";
+                document.getElementById("fbAuthor").value = "";
+                document.getElementById("fbChar").value = "";
+                showNotice("Đã gửi feedback thành công! 🌱");
+            });
+        }
+
+        // 8. HÀM DÙNG CHUNG & PHÂN TRANG
+        function toggleText(contentId, btnId, fullText, shortText) {
+            const content = document.getElementById(contentId);
+            const btn = document.getElementById(btnId);
+            if (btn.innerText === "Đọc tiếp...") {
+                content.innerText = fullText;
+                btn.innerText = "Rút gọn";
+            } else {
+                content.innerText = shortText;
+                btn.innerText = "Đọc tiếp...";
+            }
+        }
+
+        function renderPagination(boxId, totalItems, itemsPerPage, currentPage, onPageChange) {
+            const box = document.getElementById(boxId); 
+            if (!box) return; 
+            box.innerHTML = "";
+            const totalPages = Math.ceil(totalItems / itemsPerPage) || 1;
+            for (let i = 1; i <= totalPages; i++) {
+                const btn = document.createElement("button");
+                btn.className = `page-btn ${i === currentPage ? 'active' : ''}`;
+                btn.innerText = `Trang ${i}`;
+                btn.onclick = () => onPageChange(i);
+                box.appendChild(btn);
+            }
+        }
+
+        function switchTab(tabId, btn) {
+            document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
+            document.querySelectorAll('.nav-bar .nav-btn').forEach(b => b.classList.remove('active'));
+            document.getElementById(tabId).classList.add('active');
+            btn.classList.add('active');
+        }
+
+        // 9. ĐĨA THAN, NHẠC VÀ HIỆU ỨNG GỐC
+        const music = document.getElementById("bgMusic");
+        const record = document.getElementById("vinylRecord");
+        const musicBtn = document.getElementById("musicBtn");
+
+        function playAudio() {
+            if (!music) return;
+            music.play().then(() => {
+                if (record) record.classList.add("playing");
+                if (musicBtn) musicBtn.innerText = "⏸ Pause";
+            }).catch(error => console.log("Autoplay bị chặn..."));
+        }
+
+        function toggleMusic() {
+            if (music.paused) playAudio();
+            else {
+                music.pause();
+                if (record) record.classList.remove("playing");
+                if (musicBtn) musicBtn.innerText = "▶ Play";
+            }
+        } 
+
+        function createSparkles() {
+            for (let i = 0; i < 20; i++) {
+                const particle = document.createElement("div");
+                particle.className = "sparkle-particle";
+                particle.style.left = Math.random() * 100 + "vw";
+                particle.style.animationDelay = Math.random() * 5 + "s";
+                particle.style.animationDuration = (Math.random() * 5 + 5) + "s";
+                document.body.appendChild(particle);
+            }
+        }
+
+        // Hiệu ứng rê chuột & click
+        const clickPaperImgSrc = "seu.png"; 
+        const sparkleColors = ["#f3e5ab", "#c89b27", "#ffcdd2", "#c8e6c9", "#bbdefb", "#fff59d"];
+        const tingSoundUrl = "https://assets.mixkit.co/active_storage/sfx/2568/2568-preview.mp3";
+        let lastX = 0, lastY = 0;
+
+        document.addEventListener("mousemove", (e) => {
+            if (Math.abs(e.clientX - lastX) > 5 || Math.abs(e.clientY - lastY) > 5) {
+                createTrailParticle(e.clientX, e.clientY);
+                lastX = e.clientX; lastY = e.clientY;
             }
         });
 
-        card.innerHTML = `
-            ${stickerHTML}
-            <div class="paper-clip" style="${clipStyle}"></div>
-            <div style="margin-top: 10px; padding: 0 5px;">${item.text}</div>
-            <div class="note-author">- ${item.author}</div>
-        `;
-        board.appendChild(card);
-    });
+        function createTrailParticle(x, y) {
+            const particle = document.createElement("div");
+            const size = Math.random() * 6 + 4;
+            const color = sparkleColors[Math.floor(Math.random() * sparkleColors.length)];
+            particle.style.cssText = `
+                position: fixed; left: ${x}px; top: ${y}px; width: ${size}px; height: ${size}px;
+                background-color: ${color}; border-radius: ${Math.random() > 0.5 ? '50%' : '2px'};
+                pointer-events: none; z-index: 9999; opacity: 0.9;
+                transform: translate(-50%, -50%) rotate(${Math.random() * 360}deg);
+                transition: transform 0.8s ease-out, opacity 0.8s ease-out;
+            `;
+            document.body.appendChild(particle);
+            requestAnimationFrame(() => {
+                particle.style.transform = `translate(-50%, ${20 + Math.random() * 20}px) rotate(${Math.random() * 360}deg) scale(0)`;
+                particle.style.opacity = "0";
+            });
+            setTimeout(() => particle.remove(), 800);
+        }
 
-    renderPagination("notePagination", noteList.length, notesPerPage, notePage, (p) => {
-        notePage = p; 
-        renderNotes(p); 
-    });
-}
+        document.addEventListener("click", (e) => {
+            try {
+                const sound = new Audio(tingSoundUrl);
+                sound.volume = 0.4;
+                sound.play().catch(err => {});
+            } catch (err) {}
+            createClickImage(e.clientX, e.clientY);
+            createBurstParticle(e.clientX, e.clientY);
+        });
 
-// 6. RENDER LỜI TÂM SỰ (THÊM XỬ LÝ ĐỌC TIẾP/RÚT GỌN)
-function renderTamSu(page) {
-    const container = document.getElementById("tamSuList");
-    if (!container) return;
-    container.innerHTML = "";
-    
-    const items = tamSuList.slice((page - 1) * postsPerPage, page * postsPerPage);
-    items.forEach((post, i) => {
-        const idx = (page - 1) * postsPerPage + i;
-        const rawText = post.text || "";
-        const isLong = rawText.length > 120;
-        const shortTxt = isLong ? rawText.substring(0, 120) + "..." : rawText;
-        
-        const card = document.createElement("div");
-        card.className = "post-card";
-        
-        let btnHTML = isLong ? `<button class="toggle-btn" id="ts-btn-${idx}" onclick="togglePostText('ts-cnt-${idx}', 'ts-btn-${idx}', ${idx}, 'tamSu')">Đọc tiếp...</button>` : '';
+        function createClickImage(x, y) {
+            const img = document.createElement("img");
+            img.src = clickPaperImgSrc;
+            img.style.cssText = `
+                position: fixed; left: ${x}px; top: ${y}px; width: 30px; height: 30px;
+                pointer-events: none; z-index: 10000; opacity: 1;
+                transform: translate(-50%, -50%) scale(0.5) rotate(0deg);
+                transition: transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.5s ease-out;
+            `;
+            document.body.appendChild(img);
+            requestAnimationFrame(() => {
+                img.style.transform = `translate(-50%, -80%) scale(1.2) rotate(${Math.random() * 40 - 20}deg)`;
+                img.style.opacity = "0";
+            });
+            setTimeout(() => img.remove(), 500);
+        }
 
-        card.innerHTML = `
-            <div class="post-header">
-                <span class="post-author">${post.author || 'Ẩn danh'}</span>
-                <span class="post-tag">Tâm sự</span>
-            </div>
-            <div class="post-content" id="ts-cnt-${idx}">${shortTxt}</div>
-            ${btnHTML}
-            <div class="post-date">${post.date || ''}</div>
-        `;
-        container.appendChild(card);
-    });
+        function createBurstParticle(x, y) {
+            const particle = document.createElement("div");
+            const size = Math.random() * 8 + 4;
+            const color = sparkleColors[Math.floor(Math.random() * sparkleColors.length)];
+            const angle = Math.random() * Math.PI * 2;
+            const velocity = Math.random() * 60 + 20; 
+            const destX = Math.cos(angle) * velocity;
+            const destY = Math.sin(angle) * velocity;
+            particle.style.cssText = `
+                position: fixed; left: ${x}px; top: ${y}px; width: ${size}px; height: ${size}px;
+                background-color: ${color}; border-radius: ${Math.random() > 0.3 ? '50%' : '1px'};
+                pointer-events: none; z-index: 9999; transform: translate(-50%, -50%) scale(1);
+                transition: transform 0.6s ease-out, opacity 0.6s ease-out;
+            `;
+            document.body.appendChild(particle);
+            requestAnimationFrame(() => {
+                particle.style.transform = `translate(calc(-50% + ${destX}px), calc(-50% + ${destY}px)) scale(0)`;
+                particle.style.opacity = "0";
+            });
+            setTimeout(() => particle.remove(), 600);
+        }
 
-    renderPagination("tamSuPagination", tamSuList.length, postsPerPage, tamSuPage, (p) => { 
-        tamSuPage = p; 
-        renderTamSu(p); 
-    });
-}
-
-function addTamSu() {
-    const author = document.getElementById("tsAuthor").value.trim() || "Ẩn danh";
-    const text = document.getElementById("tsText").value.trim();
-    if (!text) return showNotice("Bạn chưa viết nội dung tâm sự kìa!");
-    sendToSheet({ sheet: "TamSu", text: text, author: author }, () => {
-        document.getElementById("tsText").value = "";
-        document.getElementById("tsAuthor").value = "";
-        showNotice("Đã gửi tâm sự thành công!");
-    });
-}
-
-// 7. RENDER FEEDBACK CHAR (THÊM XỬ LÝ ĐỌC TIẾP/RÚT GỌN)
-function renderFeedback(page) {
-    const container = document.getElementById("feedbackList");
-    if (!container) return;
-    container.innerHTML = "";
-    
-    const items = feedbackList.slice((page - 1) * postsPerPage, page * postsPerPage);
-    items.forEach((post, i) => {
-        const idx = (page - 1) * postsPerPage + i;
-        const rawText = post.text || "";
-        const isLong = rawText.length > 120;
-        const shortTxt = isLong ? rawText.substring(0, 120) + "..." : rawText;
-        
-        const card = document.createElement("div");
-        card.className = "post-card";
-        card.style.borderLeftColor = "#e63946";
-        
-        let btnHTML = isLong ? `<button class="toggle-btn" style="color:#e63946;" id="fb-btn-${idx}" onclick="togglePostText('fb-cnt-${idx}', 'fb-btn-${idx}', ${idx}, 'feedback')">Đọc tiếp...</button>` : '';
-
-        card.innerHTML = `
-            <div class="post-header">
-                <span class="post-author" style="color:#e63946;">${post.author || 'Ẩn danh'}</span>
-                <span class="post-tag" style="background:#ffebee; color:#c62828;">Char: ${post.char || 'Chung'}</span>
-            </div>
-            <div class="post-content" id="fb-cnt-${idx}">${shortTxt}</div>
-            ${btnHTML}
-            <div class="post-date">${post.date || ''}</div>
-        `;
-        container.appendChild(card);
-    });
-
-    renderPagination("feedbackPagination", feedbackList.length, postsPerPage, feedbackPage, (p) => { 
-        feedbackPage = p; 
-        renderFeedback(p); 
-    });
-}
-
-function addFeedback() {
-    const author = document.getElementById("fbAuthor").value.trim() || "Ẩn danh";
-    const charName = document.getElementById("fbChar").value.trim() || "Nhân vật chung";
-    const text = document.getElementById("fbText").value.trim();
-    if (!text) return showNotice("Bạn chưa nhập nội dung feedback!");
-    sendToSheet({ sheet: "Feedback", text: text, author: author, char: charName }, () => {
-        document.getElementById("fbText").value = "";
-        document.getElementById("fbAuthor").value = "";
-        document.getElementById("fbChar").value = "";
-        showNotice("Đã gửi feedback thành công!");
-    });
-}
-
-// 8. HÀM ĐỌC TIẾP / RÚT GỌN (AN TOÀN TUYỆT ĐỐI)
-function togglePostText(contentId, btnId, index, type) {
-    const content = document.getElementById(contentId);
-    const btn = document.getElementById(btnId);
-    let targetList = (type === 'tamSu') ? tamSuList : feedbackList;
-    
-    if (!content || !btn || !targetList[index]) return;
-    
-    let fullText = targetList[index].text || "";
-    let shortText = fullText.substring(0, 120) + "...";
-
-    if (btn.innerText === "Đọc tiếp...") {
-        content.innerText = fullText;
-        btn.innerText = "Rút gọn";
-    } else {
-        content.innerText = shortText;
-        btn.innerText = "Đọc tiếp...";
-    }
-}
-
-// PHÂN TRANG DÙNG CHUNG
-function renderPagination(boxId, totalItems, itemsPerPage, currentPage, onPageChange) {
-    const box = document.getElementById(boxId);
-    if (!box) return;
-    box.innerHTML = "";
-    
-    const totalPages = Math.ceil(totalItems / itemsPerPage) || 1;
-    if (totalPages <= 1) return;
-
-    for (let i = 1; i <= totalPages; i++) {
-        const btn = document.createElement("button");
-        btn.className = `page-btn ${i === currentPage ? 'active' : ''}`;
-        btn.innerText = `Trang ${i}`;
-        btn.onclick = () => onPageChange(i);
-        box.appendChild(btn);
-    }
-}
-
-function switchTab(tabId, btn) {
-    document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
-    document.querySelectorAll('.nav-bar .nav-btn').forEach(b => b.classList.remove('active'));
-    
-    document.getElementById(tabId).classList.add('active');
-    btn.classList.add('active');
-}
-
-// 9. ĐĨA THAN, NHẠC VÀ HIỆU ỨNG GỐC
-const music = document.getElementById("bgMusic");
-const record = document.getElementById("vinylRecord");
-const musicBtn = document.getElementById("musicBtn");
-
-function playAudio() {
-    if (!music) return;
-    music.play().then(() => {
-        if (record) record.classList.add("playing");
-        if (musicBtn) musicBtn.innerText = "❚❚ Pause";
-    }).catch(error => console.log("Autoplay bị chặn..."));
-}
-
-function toggleMusic() {
-    if (music.paused) {
-        playAudio();
-    } else {
-        music.pause();
-        if (record) record.classList.remove("playing");
-        if (musicBtn) musicBtn.innerText = "▶ Play";
-    }
-}
-
-function createSparkles() {
-    for (let i = 0; i < 20; i++) {
-        const particle = document.createElement("div");
-        particle.className = "sparkle-particle";
-        particle.style.left = Math.random() * 100 + "vw";
-        particle.style.animationDelay = Math.random() * 5 + "s";
-        particle.style.animationDuration = (Math.random() * 5 + 5) + "s";
-        document.body.appendChild(particle);
-    }
-}
-
-// TẢI TRANG
-window.onload = () => {
-    loadDataFromSheet();
-    createSparkles();
-    
-    const startMusicOnInteraction = () => {
-        if (music && music.paused) playAudio();
-        window.removeEventListener("click", startMusicOnInteraction);
-        window.removeEventListener("touchstart", startMusicOnInteraction);
-    };
-    window.addEventListener("click", startMusicOnInteraction);
-    window.addEventListener("touchstart", startMusicOnInteraction);
-};
-</script>
+        // TẢI TRANG
+        window.onload = () => {
+            loadDataFromSheet();
+            createSparkles();
+            playAudio();
+            const startMusicOnInteraction = () => {
+                if (music && music.paused) playAudio();
+                window.removeEventListener("click", startMusicOnInteraction);
+                window.removeEventListener("touchstart", startMusicOnInteraction);
+            };
+            window.addEventListener("click", startMusicOnInteraction);
+            window.addEventListener("touchstart", startMusicOnInteraction);
+        };
+    </script>
 </body>
 </html>
