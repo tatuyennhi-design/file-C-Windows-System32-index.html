@@ -149,48 +149,30 @@
             transform: scale(1.03) rotate(0deg) !important;
             z-index: 5;
         }
-     /* KẸP GIẤY NGHIÊNG NHẸ VỊ TRÍ 1/3 TỜ GIẤY */
-.note-card::before {
-    content: '';
+     	 /* KẸP GIẤY ĐỘNG */
+.paper-clip {
     position: absolute;
-    top: -10px;
-    left: 22%; /* Đặt vị trí 1/3 tờ giấy */
-    transform: rotate(-6deg); /* Nghiêng nhẹ 6 độ mềm mại */
+    top: -12px;
     width: 14px;
     height: 32px;
     border: 3px solid #c89b27;
     border-radius: 10px;
     background: transparent;
-    box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.15);
+    box-shadow: 1px 1px 3px rgba(0,0,0,0.15);
     z-index: 6;
+    transition: all 0.3s ease;
 }
-
-.note-card::after {
+.paper-clip::after {
     content: '';
     position: absolute;
-    top: -4px;
-    left: calc(22% + 3px);
-    transform: rotate(-6deg);
-    width: 8px;
-    height: 20px;
+    top: 4px;
+    left: 1px;
+    width: 6px;
+    height: 18px;
     border: 2px solid #e0a96d;
     border-bottom: none;
-    border-radius: 6px 6px 0 0;
-    z-index: 7;
+    border-radius: 5px 5px 0 0;
 }
-        .note-yellow { background: #fff59d; }
-        .note-pink   { background: #ffcdd2; }
-        .note-green  { background: #c8e6c9; }
-        .note-blue   { background: #bbdefb; }
-        .note-orange { background: #ffe0b2; }
-        .note-author {
-            font-size: 13px;
-            font-family: 'Quicksand', sans-serif;
-            text-align: right;
-            font-weight: bold;
-            color: #555;
-            margin-top: 10px;
-        }
 
         /* KHU BÀI VIẾT TÂM SỰ & FEEDBACK DẠNG DANH SÁCH */
         .post-list {
@@ -454,35 +436,56 @@
         </div>
     </main>
 
-    <!-- POPUP NỐT ƯỚC NGUYỆN -->
-    <div id="noteModal" class="modal-overlay">
-        <div class="modal-box">
-            <h3 style="color:var(--accent-gold); margin-bottom:10px;">Gửi Điều Ước ✨</h3>
-            <input type="text" id="modalNoteAuthor" placeholder="Tên bạn (ẩn danh thì bỏ trống)">
-            <textarea id="modalNoteText" rows="3" placeholder="Nhập lời ước nguyện / yêu cầu tạo char..."></textarea>
+     <!-- POPUP NỐT ƯỚC NGUYỆN NÂNG CẤP CHỌN VỊ TRÍ TỪNG STICKER -->
+<div id="noteModal" class="modal-overlay">
+    <div class="modal-box" style="max-width:400px; padding:15px;">
+        <h3 style="color:var(--accent-gold); margin-bottom:8px; font-size:16px;">Gửi Điều Ước ✨</h3>
+        <input type="text" id="modalNoteAuthor" placeholder="Tên bạn (ẩn danh thì bỏ trống)" style="font-size:12px; padding:6px;">
+        <textarea id="modalNoteText" rows="2" placeholder="Nhập lời ước nguyện..." style="font-size:12px; padding:6px; margin-bottom:8px;"></textarea>
 
-            <p style="font-size:0.85em; margin-bottom: 5px;">Chọn màu giấy:</p>
-            <div class="color-picker">
-                <div class="color-opt selected" style="background:#fff59d;" onclick="selectColor('note-yellow', this)"></div>
-                <div class="color-opt" style="background:#ffcdd2;" onclick="selectColor('note-pink', this)"></div>
-                <div class="color-opt" style="background:#c8e6c9;" onclick="selectColor('note-green', this)"></div>
-                <div class="color-opt" style="background:#bbdefb;" onclick="selectColor('note-blue', this)"></div>
-                <div class="color-opt" style="background:#ffe0b2;" onclick="selectColor('note-orange', this)"></div>
+        <p style="font-size:0.8em; margin-bottom: 4px;">Chọn màu giấy:</p>
+<div class="color-picker" style="margin-bottom:8px; display:flex; gap:8px;">
+    <div class="color-opt selected" style="background:#fff59d; width:22px; height:22px; border-radius:50%; cursor:pointer;" onclick="selectColor('note-yellow', this)"></div>
+    <div class="color-opt" style="background:#ffcdd2; width:22px; height:22px; border-radius:50%; cursor:pointer;" onclick="selectColor('note-pink', this)"></div>
+    <div class="color-opt" style="background:#c8e6c9; width:22px; height:22px; border-radius:50%; cursor:pointer;" onclick="selectColor('note-green', this)"></div>
+    <div class="color-opt" style="background:#bbdefb; width:22px; height:22px; border-radius:50%; cursor:pointer;" onclick="selectColor('note-blue', this)"></div>
+    <div class="color-opt" style="background:#ffe0b2; width:22px; height:22px; border-radius:50%; cursor:pointer;" onclick="selectColor('note-orange', this)"></div>
+</div>
+
+        <p style="font-size:0.8em; margin-bottom: 4px;">Chọn Sticker (Tối đa 3, chọn xong chọn vị trí):</p>
+        <div id="stickerSelectionArea" style="margin-bottom:10px;">
+            <div class="sticker-choices">
+                <span class="sticker-choice" onclick="selectStickerForPos('🌸')">🌸</span>
+                <span class="sticker-choice" onclick="selectStickerForPos('⭐')">⭐</span>
+                <span class="sticker-choice" onclick="selectStickerForPos('🍀')">🍀</span>
+                <span class="sticker-choice" onclick="selectStickerForPos('🎀')">🎀</span>
+                <span class="sticker-choice" onclick="selectStickerForPos('🌙')">🌙</span>
             </div>
+            
+            <!-- Vùng hiển thị các sticker đã chọn kèm vị trí -->
+            <div id="selectedStickersList" style="margin-top:8px; font-size:11px; color:#666;"></div>
+        </div>
 
-            <p style="font-size:0.85em; margin-bottom: 5px;">Chọn Sticker trang trí:</p>
-            <div class="sticker-picker">
-                <span class="sticker-opt selected" onclick="selectSticker('', this)">🚫</span>
-                <span class="sticker-opt" onclick="selectSticker('🌸', this)">🌸</span>
-                <span class="sticker-opt" onclick="selectSticker('⭐', this)">⭐</span>
-                <span class="sticker-opt" onclick="selectSticker('🍀', this)">🍀</span>
-                <span class="sticker-opt" onclick="selectSticker('🎀', this)">🎀</span>
-            </div>
-
-            <button class="nav-btn" style="background:var(--accent-gold); color:white; border:none;" onclick="submitNote()">Gửi Ước Nguyện</button>
-            <button class="nav-btn" style="background:#aaa; color:white; border:none;" onclick="closeNoteModal()">Hủy</button>
+        <div style="display:flex; gap:10px;">
+            <button class="nav-btn" style="background:var(--accent-gold); color:white; border:none; flex:1;" onclick="submitNote()">Gửi Ước Nguyện</button>
+            <button class="nav-btn" style="background:#aaa; color:white; border:none; flex:1;" onclick="closeNoteModal()">Hủy</button>
         </div>
     </div>
+</div>
+
+<!-- POPUP NHỎ CHỌN VỊ TRÍ CHO STICKER ĐANG CHỌN (Sẽ hiện khi bấm vào sticker) -->
+<div id="posModal" class="modal-overlay" style="z-index: 1001; background: rgba(0,0,0,0.5); display:none;">
+    <div class="modal-box" style="max-width:280px; padding:15px; border:2px solid var(--accent-gold);">
+        <p style="font-size:0.9em; margin-bottom: 10px; color:var(--accent-gold); font-weight:bold;">Chọn góc dán cho <span id="currentStickerText"></span>?</p>
+        <div style="display:grid; grid-template-columns: 1fr 1fr; gap: 8px;">
+            <button class="pos-btn" onclick="confirmStickerPos('top-left')">Góc trên - Trái</button>
+            <button class="pos-btn" onclick="confirmStickerPos('top-right')">Góc trên - Phải</button>
+            <button class="pos-btn" onclick="confirmStickerPos('bottom-left')">Góc dưới - Trái</button>
+            <button class="pos-btn" onclick="confirmStickerPos('bottom-right')">Góc dưới - Phải</button>
+        </div>
+        <button class="nav-btn" style="background:#aaa; color:white; border:none; width:100%; margin-top:10px;" onclick="closePosModal()">Hủy</button>
+    </div>
+</div>
 
     <!-- POPUP THÔNG BÁO CUSTOM -->
     <div id="customNotice" class="modal-overlay">
@@ -577,41 +580,187 @@
             el.classList.add('selected');
         }
 
-        function selectSticker(st, el) {
-            selectedSticker = st;
-            document.querySelectorAll('.sticker-opt').forEach(b => b.classList.remove('selected'));
-            el.classList.add('selected');
+       let selectedStickers = [];
+
+ function toggleSticker(st, el) {
+    const idx = selectedStickers.indexOf(st);
+    if (idx > -1) {
+        selectedStickers.splice(idx, 1);
+        el.classList.remove('selected');
+    } else {
+        if (selectedStickers.length >= 3) {
+            alert("Bạn chỉ được chọn tối đa 3 sticker thôi nha!");
+            return;
+        }
+        selectedStickers.push(st);
+        el.classList.add('selected');
+    }
+} 
+
+        
+        
+	   let selectedStickersData = []; // Mảng chứa các object: { st: '🌸', pos: 'top-left' }
+let stickerToAssignPos = ""; // Biến tạm lưu sticker đang chờ chọn vị trí
+
+// 1. Chọn Sticker và vị trí
+function selectStickerForPos(st) {
+    if (selectedStickersData.length >= 3) {
+        return showNotice("Bạn chỉ được chọn tối đa 3 sticker thôi nha!");
+    }
+    if (selectedStickersData.some(item => item.st === st)) {
+        return showNotice("Bạn đã chọn sticker này rồi, hãy chọn cái khác nha!");
+    }
+    stickerToAssignPos = st;
+    document.getElementById("currentStickerText").innerText = st;
+    document.getElementById("posModal").style.display = "flex";
+}
+
+// 2. Xác nhận góc dán
+function confirmStickerPos(pos) {
+    if (selectedStickersData.some(item => item.pos === pos)) {
+        return showNotice("Góc này đã có một sticker rồi, hãy chọn góc khác nha!");
+    }
+    selectedStickersData.push({ st: stickerToAssignPos, pos: pos });
+    stickerToAssignPos = "";
+    closePosModal();
+    renderSelectedStickersList();
+}
+
+// 3. Gửi Ước Nguyện & Hiện Thông Báo Thành Công
+function submitNote() {
+    const text = document.getElementById("modalNoteText").value.trim();
+    const author = document.getElementById("modalNoteAuthor").value.trim() || "Ẩn danh";
+    
+    if (!text) return showNotice("Bạn chưa viết điều ước!");
+
+    sendToSheet({ 
+        sheet: "UocNguyen", 
+        text: text, 
+        author: author, 
+        color: selectedNoteColor, 
+        stickers: selectedStickersData 
+    }, () => {
+        document.getElementById("modalNoteText").value = "";
+        document.getElementById("modalNoteAuthor").value = "";
+        closeNoteModal();
+        showNotice("Gửi lời ước nguyện thành công rồi nha! ✨");
+    });
+}
+
+// 3. Render danh sách các sticker đã chọn trong Popup để người dùng xem
+function renderSelectedStickersList() {
+    const listEl = document.getElementById("selectedStickersList");
+    if (!listEl) return;
+    listEl.innerHTML = "";
+    if (selectedStickersData.length === 0) return;
+
+    listEl.innerHTML = selectedStickersData.map((item, index) => {
+        let posText = "";
+        if (item.pos === 'top-left') posText = "Góc trên-Trái";
+        if (item.pos === 'top-right') posText = "Góc trên-Phải";
+        if (item.pos === 'bottom-left') posText = "Góc dưới-Trái";
+        if (item.pos === 'bottom-right') posText = "Góc dưới-Phải";
+        
+        return `<div style="display:flex; align-items:center; gap:5px;">
+                  <span>${item.st}</span> <span>(${posText})</span> 
+                  <span style="color:red; cursor:pointer;" onclick="removeSelectedSticker(${index})">×</span>
+                </div>`;
+    }).join('');
+}
+
+// 4. Xóa sticker đã chọn khỏi danh sách
+function removeSelectedSticker(index) {
+    selectedStickersData.splice(index, 1);
+    renderSelectedStickersList();
+}
+
+function closePosModal() { document.getElementById("posModal").style.display = "none"; }
+
+function closeNoteModal() {
+    document.getElementById("noteModal").style.display = "none";
+    selectedStickersData = []; // Reset dữ liệu
+    renderSelectedStickersList();
+    closePosModal();
+}
+
+// 5. Render Tường Ước Nguyện Thông Minh
+function renderNotes(page) {
+    const board = document.getElementById("corkBoard");
+    if (!board) return; board.innerHTML = "";
+    const items = noteList.slice((page - 1) * notesPerPage, page * notesPerPage);
+
+    items.forEach((item) => {
+        const card = document.createElement("div");
+        card.className = `note-card ${item.color || 'note-yellow'}`;
+        card.style.transform = `rotate(${item.rotate || '-2deg'})`;
+
+        // Đọc mảng stickers kèm vị trí
+        let stickersArr = item.stickers || [];
+        
+        // 🎯 TỰ ĐỘNG CÂN BẰNG KẸP GIẤY (Chỉ xét các sticker ở Góc TRÊN để né kẹp)
+        let clipStyle = "";
+        const topStickers = stickersArr.filter(s => s.pos.startsWith('top'));
+        
+        if (topStickers.length === 0) {
+            clipStyle = "left: 50%; transform: translateX(-50%);"; // Không sticker trên -> Chính giữa
+        } else if (topStickers.some(s => s.pos === 'top-left') && topStickers.some(s => s.pos === 'top-right')) {
+            clipStyle = "left: 50%; transform: translateX(-50%);"; // Có cả 2 góc -> Cứ để chính giữa hoặc đẩy xuống
+        } else if (topStickers.some(s => s.pos === 'top-left')) {
+            clipStyle = "left: 75%; transform: rotate(6deg);"; // Có sticker góc TRÁI -> Kẹp nghiêng PHẢI
+        } else {
+            clipStyle = "left: 25%; transform: rotate(-6deg);"; // Có sticker góc PHẢI -> Kẹp nghiêng TRÁI
         }
 
-        // 4. RENDER TƯỜNG ƯỚC NGUYỆN
-        function renderNotes(page) {
-            const board = document.getElementById("corkBoard");
-            if (!board) return; board.innerHTML = "";
-            const items = noteList.slice((page - 1) * notesPerPage, page * notesPerPage);
+        // Render từng sticker ở vị trí riêng biệt
+        let stickerHTML = "";
+        stickersArr.forEach(sticker => {
+            let posCSS = "";
+            if (sticker.pos === "top-right") posCSS = "top: -8px; right: -5px;";
+            if (sticker.pos === "top-left") posCSS = "top: -8px; left: -5px;";
+            if (sticker.pos === "bottom-right") posCSS = "bottom: 5px; right: 5px;";
+            if (sticker.pos === "bottom-left") posCSS = "bottom: 5px; left: 5px;";
 
-            items.forEach(item => {
-                const card = document.createElement("div");
-                card.className = `note-card ${item.color}`;
-                card.style.transform = `rotate(${item.rotate})`;
-                let st = item.sticker ? `<span style="position:absolute; top:-10px; right:-5px; font-size:24px;">${item.sticker}</span>` : '';
-                card.innerHTML = `${st}<div>${item.text}</div><div class="note-author">— ${item.author}</div>`;
-                board.appendChild(card);
-            });
-            renderPagination("notePagination", noteList.length, notesPerPage, notePage, (p) => { notePage = p; renderNotes(p); });
-        }
+            stickerHTML += `<span style="position:absolute; ${posCSS} font-size:18px; z-index:8;">${sticker.st}</span>`;
+        });
 
-        function submitNote() {
-            const text = document.getElementById("modalNoteText").value.trim();
-            const author = document.getElementById("modalNoteAuthor").value.trim() || "Ẩn danh";
-            if (!text) return showNotice("Bạn chưa viết điều ước!");
+        card.innerHTML = `
+            ${stickerHTML}
+            <div class="paper-clip" style="${clipStyle}"></div>
+            <div style="margin-top:10px; padding: 0 5px;">${item.text}</div>
+            <div class="note-author">— ${item.author}</div>
+        `;
+        board.appendChild(card);
+    });
 
-            sendToSheet({ sheet: "UocNguyen", text: text, author: author, color: selectedNoteColor, sticker: selectedSticker }, () => {
-                document.getElementById("modalNoteText").value = "";
-                document.getElementById("modalNoteAuthor").value = "";
-                closeNoteModal();
-            });
-        }
+    renderPagination("notePagination", noteList.length, notesPerPage, notePage, (p) => { notePage = p; renderNotes(p); });
+}
 
+// 6. Gửi Ước Nguyện (Gửi mảng stickers phức tạp)
+function submitNote() {
+    const text = document.getElementById("modalNoteText").value.trim();
+    const author = document.getElementById("modalNoteAuthor").value.trim() || "Ẩn danh";
+    
+    if (!text) return alert("Bạn chưa viết điều ước!");
+
+    sendToSheet({ 
+        sheet: "UocNguyen", 
+        text: text, 
+        author: author, 
+        color: selectedNoteColor, 
+        stickers: selectedStickersData // Gửi mảng chứa object {st, pos}
+    }, () => {
+        document.getElementById("modalNoteText").value = "";
+        document.getElementById("modalNoteAuthor").value = "";
+        closeNoteModal();
+    });
+}
+ 
+ function closeNoteModal() {
+    document.getElementById("noteModal").style.display = "none";
+    selectedStickers = []; // Reset sticker đã chọn
+    document.querySelectorAll('.sticker-opt').forEach(b => b.classList.remove('selected'));
+	
+} 
         // 5. RENDER LỜI TÂM SỰ
         function renderTamSu(page) {
             const container = document.getElementById("tamSuList");
