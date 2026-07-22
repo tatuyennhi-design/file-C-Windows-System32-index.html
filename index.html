@@ -173,96 +173,6 @@
             color: #555;
             margin-top: 10px;
         }
-        .note-sticker {
-            position: absolute;
-            bottom: 10px;
-            left: 10px;
-            font-size: 28px;
-            opacity: 0.8;
-            pointer-events: none;
-            z-index: 1;
-            transform: rotate(-10deg);
-        }
-
-        /* POPUP TẠO NOTE MỚI */
-        .modal-overlay {
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.4);
-            z-index: 1000;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            backdrop-filter: blur(2px);
-        }
-        .modal-content {
-            background: #fff;
-            padding: 25px;
-            border-radius: 16px;
-            width: 90%;
-            max-width: 400px;
-            border: 2px solid var(--accent-gold);
-            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-        }
-        .modal-content h3 {
-            color: var(--accent-gold);
-            text-align: center;
-            font-family: 'Patrick Hand', cursive;
-            font-size: 24px;
-        }
-        .modal-content input, .modal-content textarea, .modal-content select {
-            padding: 10px 14px;
-            border: 1px solid #e0d0a0;
-            border-radius: 8px;
-            font-size: 13px;
-            outline: none;
-            background: #fffef8;
-            width: 100%;
-        }
-        .form-row {
-            display: flex;
-            gap: 10px;
-        }
-        .form-row > div {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            gap: 5px;
-        }
-        .form-row label {
-            font-size: 12px;
-            font-weight: bold;
-            color: #776a4a;
-        }
-        .modal-buttons {
-            display: flex;
-            justify-content: flex-end;
-            gap: 10px;
-            margin-top: 5px;
-        }
-        .btn-cancel {
-            background: #f5f5f5;
-            color: #555;
-            border: 1px solid #ccc;
-            padding: 8px 16px;
-            border-radius: 8px;
-            cursor: pointer;
-            font-weight: bold;
-        }
-        .btn-submit {
-            background: var(--accent-gold);
-            color: #fff;
-            border: none;
-            padding: 8px 16px;
-            border-radius: 8px;
-            cursor: pointer;
-            font-weight: bold;
-        }
-        .btn-submit:hover { background: #b0841a; }
-
         /* KHU BÀI VIẾT TÂM SỰ & FEEDBACK DẠNG DANH SÁCH */
         .post-list {
             display: flex;
@@ -431,28 +341,6 @@
             font-weight: bold;
             color: #555;
         }
-        /* HIỆU ỨNG THÔNG BÁO & BAY */
-        .custom-toast {
-            position: fixed;
-            top: 20px;
-            left: 50%;
-            transform: translateX(-50%) translateY(-30px);
-            background: var(--accent-gold);
-            color: #fff;
-            padding: 12px 24px;
-            border-radius: 30px;
-            font-size: 14px;
-            font-weight: bold;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
-            z-index: 99999;
-            opacity: 0;
-            pointer-events: none;
-            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-        }
-        .custom-toast.show {
-            transform: translateX(-50%) translateY(0);
-            opacity: 1;
-        }
         /* FOOTER */
         footer {
             width: 100%;
@@ -501,46 +389,7 @@
             <div class="cork-board" id="corkBoard"></div>
             <div class="pagination" id="notePagination"></div>
             <div style="text-align: center; margin-top: 20px;">
-                <button class="nav-btn" style="background:var(--accent-gold); color:#fff; padding:10px 24px; font-size:15px;" onclick="openNoteModal()">✍️ Dán giấy ước nguyện mới</button>
-            </div>
-        </div>
-
-        <!-- MODAL TẠO NOTE MỚI -->
-        <div id="noteModal" class="modal-overlay" style="display: none;">
-            <div class="modal-content">
-                <h3>✍️ Tạo Giấy Note Mới</h3>
-                <input type="text" id="newNoteAuthor" placeholder="Tên của bạn (hoặc để trống)">
-                <textarea id="newNoteText" rows="3" placeholder="Nhập lời ước nguyện hoặc yêu cầu tạo char..."></textarea>
-                
-                <div class="form-row">
-                    <div>
-                        <label>🎨 Màu giấy:</label>
-                        <select id="newNoteColor">
-                            <option value="note-yellow">💛 Vàng</option>
-                            <option value="note-pink">💖 Hồng</option>
-                            <option value="note-green">💚 Xanh lá</option>
-                            <option value="note-blue">💙 Xanh dương</option>
-                            <option value="note-orange">🧡 Cam</option>
-                        </select>
-                    </div>
-                    <div>
-                        <label>✨ Sticker:</label>
-                        <select id="newNoteSticker">
-                            <option value="">Không dán</option>
-                            <option value="🌸">🌸 Hoa Đào</option>
-                            <option value="🌙">🌙 Trăng Khuyết</option>
-                            <option value="⭐">⭐ Ngôi Sao</option>
-                            <option value="🍀">🍀 Cỏ 4 Lá</option>
-                            <option value="🎀">🎀 Nơ Hồng</option>
-                            <option value="🐱">🐱 Mèo Con</option>
-                        </select>
-                    </div>
-                </div>
-
-                <div class="modal-buttons">
-                    <button class="btn-cancel" onclick="closeNoteModal()">Hủy</button>
-                    <button class="btn-submit" onclick="submitNote()">Dán Lên Bảng</button>
-                </div>
+                <button class="nav-btn" style="background:var(--accent-gold); color:#fff; padding:10px 24px; font-size:15px;" onclick="openNoteForm()">✍️ Dán giấy ước nguyện mới</button>
             </div>
         </div>
 
@@ -578,118 +427,103 @@
         <p style="margin-top:5px; font-size:11px; color:#aaa;">© 2026 Tiệm Nhà Hyperion - Góc Ước Nguyện Giao Lưu & Feedback Char</p>
     </footer>
 
-    <!-- SCRIPT KẾT NỐI GOOGLE SHEETS -->
+    <!-- SCRIPT CHÍNH (ĐÃ KẾT NỐI REALTIME CẢ 3 TAB VỚI GOOGLE SHEET) -->
     <script>
+        // LINK GOOGLE APPS SCRIPT CỦA CẬU
         const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwGajsm_8A7Ds0QGZJvSS6lOyfpEI2Xd9SU1JeMXlAldGumM-EGMFnpsQ58ugUoGKFv/exec";
 
-        function showToast(message) {
-            const toast = document.createElement("div");
-            toast.className = "custom-toast";
-            toast.innerText = message;
-            document.body.appendChild(toast);
-            requestAnimationFrame(() => toast.classList.add("show"));
-            setTimeout(() => {
-                toast.classList.remove("show");
-                setTimeout(() => toast.remove(), 400);
-            }, 3000);
-        }
-
+        // Mảng dữ liệu tải trực tiếp từ Sheet
         let noteList = [];
         let tamSuList = [];
         let feedbackList = [];
-        
+
         let notePage = 1;
+        const notesPerPage = 6;
         let tamSuPage = 1;
         let feedbackPage = 1;
-        const notesPerPage = 6;
         const postsPerPage = 3;
 
-        // TẢI DỮ LIỆU TỪ GOOGLE SHEETS
-        async function loadAllData() {
-            try {
-                let resNotes = await fetch(`${SCRIPT_URL}?action=getNotes`);
-                noteList = await resNotes.json();
-                renderNotes(notePage);
+        // 📥 TẢI DỮ LIỆU TỪ GOOGLE SHEET CHÍNH THỨC
+        function loadDataFromSheet() {
+            fetch(SCRIPT_URL)
+                .then(res => res.json())
+                .then(data => {
+                    const colors = ["note-yellow", "note-pink", "note-green", "note-blue", "note-orange"];
+                    
+                    // Phân loại dữ liệu theo cột type
+                    noteList = data.filter(item => item.type === "uoc-nguyen").map(item => ({
+                        text: item.text,
+                        author: item.author || "Ẩn danh",
+                        color: colors[Math.floor(Math.random() * colors.length)],
+                        rotate: (Math.random() * 6 - 3).toFixed(1) + "deg"
+                    }));
 
-                let resTamSu = await fetch(`${SCRIPT_URL}?action=getTamSu`);
-                tamSuList = await resTamSu.json();
-                renderTamSu(tamSuPage);
+                    tamSuList = data.filter(item => item.type === "tam-su").map(item => ({
+                        author: item.author || "Ẩn danh",
+                        text: item.text,
+                        date: item.date
+                    }));
 
-                let resFb = await fetch(`${SCRIPT_URL}?action=getFeedback`);
-                feedbackList = await resFb.json();
-                renderFeedback(feedbackPage);
-            } catch (err) {
-                console.log("Lỗi tải dữ liệu từ Google Sheets:", err);
-            }
+                    feedbackList = data.filter(item => item.type === "feedback").map(item => ({
+                        author: item.author || "Ẩn danh",
+                        char: item.char || "Chung",
+                        text: item.text,
+                        date: item.date
+                    }));
+
+                    renderNotes(notePage);
+                    renderTamSu(tamSuPage);
+                    renderFeedback(feedbackPage);
+                })
+                .catch(err => console.error("Lỗi khi kết nối Google Sheet:", err));
         }
 
-        // RENDER GIẤY NOTE
+        // 📤 GỬI DỮ LIỆU MỚI VÀO GOOGLE SHEET
+        function sendToSheet(payload, callback) {
+            fetch(SCRIPT_URL, {
+                method: "POST",
+                mode: "no-cors",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(payload)
+            }).then(() => {
+                alert("Đã ghim bài viết của bạn lên trang vĩnh viễn!");
+                loadDataFromSheet();
+                if (callback) callback();
+            }).catch(err => alert("Có lỗi xảy ra khi kết nối!"));
+        }
+
+        // 1. TƯỜNG ƯỚC NGUYỆN
         function renderNotes(page) {
             const board = document.getElementById("corkBoard");
             board.innerHTML = "";
             const start = (page - 1) * notesPerPage;
             const pageNotes = noteList.slice(start, start + notesPerPage);
-            
             pageNotes.forEach(note => {
                 const card = document.createElement("div");
-                card.className = `note-card ${note.color || 'note-yellow'}`;
-                let hash = 0;
-                for (let i = 0; i < (note.text || '').length; i++) hash = note.text.charCodeAt(i) + ((hash << 5) - hash);
-                let rot = (hash % 6 - 3).toFixed(1) + "deg";
-                card.style.transform = `rotate(${rot})`;
-
-                const stickerHtml = note.sticker ? `<div class="note-sticker">${note.sticker}</div>` : '';
-                card.innerHTML = `
-                    <div>${note.text || ''}</div>
-                    ${stickerHtml}
-                    <div class="note-author">— ${note.name || 'Ẩn danh'}</div>
-                `;
+                card.className = `note-card ${note.color}`;
+                card.style.transform = `rotate(${note.rotate})`;
+                card.innerHTML = `<div>${note.text}</div><div class="note-author">— ${note.author}</div>`;
                 board.appendChild(card);
             });
             renderPagination("notePagination", noteList.length, notesPerPage, notePage, (p) => { notePage = p; renderNotes(p); });
         }
 
-        function openNoteModal() {
-            document.getElementById("noteModal").style.display = "flex";
-        }
-
-        function closeNoteModal() {
-            document.getElementById("noteModal").style.display = "none";
-            document.getElementById("newNoteText").value = "";
-            document.getElementById("newNoteAuthor").value = "";
-            document.getElementById("newNoteColor").value = "note-yellow";
-            document.getElementById("newNoteSticker").value = "";
-        }
-
-        async function submitNote() {
-            const text = document.getElementById("newNoteText").value.trim();
-            const author = document.getElementById("newNoteAuthor").value.trim() || "Ẩn danh";
-            const color = document.getElementById("newNoteColor").value;
-            const sticker = document.getElementById("newNoteSticker").value;
-
-            if (!text) {
-                showToast("⚠️ Bạn quên ghi nội dung ước nguyện rồi kìa!");
-                return;
-            }
-
-            closeNoteModal();
-            showToast("✨ Đang gửi giấy ước nguyện lên tiệm...");
-
-            try {
-                await fetch(SCRIPT_URL, {
-                    method: 'POST',
-                    mode: 'no-cors',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ sheet: "UocNguyen", author: author, text: text, color: color, sticker: sticker })
+        function openNoteForm() {
+            const text = prompt("Nhập lời ước nguyện / yêu cầu tạo char:");
+            if (text && text.trim() !== "") {
+                const author = prompt("Tên của bạn:") || "Ẩn danh";
+                const today = new Date().toLocaleDateString('vi-VN');
+                
+                sendToSheet({
+                    type: "uoc-nguyen",
+                    text: text,
+                    author: author,
+                    date: today
                 });
-                showToast("✨ Dán giấy ước nguyện thành công!");
-                setTimeout(loadAllData, 1500);
-            } catch (err) {
-                showToast("⚠️ Lỗi kết nối!");
             }
         }
 
-        // RENDER TÂM SỰ
+        // 2. KHU LỜI TÂM SỰ
         function renderTamSu(page) {
             const container = document.getElementById("tamSuList");
             container.innerHTML = "";
@@ -697,52 +531,42 @@
             const pagePosts = tamSuList.slice(start, start + postsPerPage);
             pagePosts.forEach((post, index) => {
                 const actualIndex = start + index;
-                const txt = post.text || '';
-                const isLong = txt.length > 120;
-                const shortText = isLong ? txt.substring(0, 120) + "..." : txt;
+                const isLong = post.text.length > 120;
+                const shortText = isLong ? post.text.substring(0, 120) + "..." : post.text;
                 const card = document.createElement("div");
                 card.className = "post-card";
                 card.innerHTML = `
                     <div class="post-header">
-                        <span class="post-author">💌 ${post.name || 'Ẩn danh'}</span>
+                        <span class="post-author">💌 ${post.author}</span>
                         <span class="post-tag">Tâm sự</span>
                     </div>
                     <div class="post-content" id="ts-content-${actualIndex}">${shortText}</div>
-                    ${isLong ? `<button class="toggle-btn" id="ts-btn-${actualIndex}" onclick="toggleText('ts-content-${actualIndex}', 'ts-btn-${actualIndex}', \`${txt.replace(/`/g, '')}\`, \`${shortText.replace(/`/g, '')}\`)">Đọc tiếp...</button>` : ''}
-                    <div class="post-date">${post.date || ''}</div>
+                    ${isLong ? `<button class="toggle-btn" id="ts-btn-${actualIndex}" onclick="toggleText('ts-content-${actualIndex}', 'ts-btn-${actualIndex}', \`${post.text.replace(/`/g, '')}\`, \`${shortText.replace(/`/g, '')}\`)">Đọc tiếp...</button>` : ''}
+                    <div class="post-date">${post.date}</div>
                 `;
                 container.appendChild(card);
             });
             renderPagination("tamSuPagination", tamSuList.length, postsPerPage, tamSuPage, (p) => { tamSuPage = p; renderTamSu(p); });
         }
 
-        async function addTamSu() {
+        function addTamSu() {
             const author = document.getElementById("tsAuthor").value.trim() || "Ẩn danh";
             const text = document.getElementById("tsText").value.trim();
-            if(!text) {
-                showToast("⚠️ Bạn chưa viết nội dung tâm sự kìa!");
-                return;
-            }
-            
-            document.getElementById("tsText").value = "";
-            document.getElementById("tsAuthor").value = "";
-            showToast("✨ Đang gửi lời tâm sự...");
+            if(!text) return alert("Bạn chưa viết nội dung tâm sự kìa!");
+            const today = new Date().toLocaleDateString('vi-VN');
 
-            try {
-                await fetch(SCRIPT_URL, {
-                    method: 'POST',
-                    mode: 'no-cors',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ sheet: "TamSu", author: author, text: text })
-                });
-                showToast("✨ Đã đăng bài tâm sự lên trang!");
-                setTimeout(loadAllData, 1500);
-            } catch (err) {
-                showToast("⚠️ Lỗi kết nối!");
-            }
+            sendToSheet({
+                type: "tam-su",
+                text: text,
+                author: author,
+                date: today
+            }, () => {
+                document.getElementById("tsText").value = "";
+                document.getElementById("tsAuthor").value = "";
+            });
         }
 
-        // RENDER FEEDBACK
+        // 3. KHU FEEDBACK CHAR
         function renderFeedback(page) {
             const container = document.getElementById("feedbackList");
             container.innerHTML = "";
@@ -750,52 +574,43 @@
             const pagePosts = feedbackList.slice(start, start + postsPerPage);
             pagePosts.forEach((post, index) => {
                 const actualIndex = start + index;
-                const txt = post.text || '';
-                const isLong = txt.length > 120;
-                const shortText = isLong ? txt.substring(0, 120) + "..." : txt;
+                const isLong = post.text.length > 120;
+                const shortText = isLong ? post.text.substring(0, 120) + "..." : post.text;
                 const card = document.createElement("div");
                 card.className = "post-card";
                 card.style.borderLeftColor = "#e63946";
                 card.innerHTML = `
                     <div class="post-header">
-                        <span class="post-author" style="color:#e63946;">🌱 ${post.name || 'Ẩn danh'}</span>
-                        <span class="post-tag" style="background:#ffebee; color:#c62828;">Char: ${post.char || 'Chung'}</span>
+                        <span class="post-author" style="color:#e63946;">🌱 ${post.author}</span>
+                        <span class="post-tag" style="background:#ffebee; color:#c62828;">Char: ${post.char}</span>
                     </div>
                     <div class="post-content" id="fb-content-${actualIndex}">${shortText}</div>
-                    ${isLong ? `<button class="toggle-btn" style="color:#e63946;" id="fb-btn-${actualIndex}" onclick="toggleText('fb-content-${actualIndex}', 'fb-btn-${actualIndex}', \`${txt.replace(/`/g, '')}\`, \`${shortText.replace(/`/g, '')}\`)">Đọc tiếp...</button>` : ''}
-                    <div class="post-date">${post.date || ''}</div>
+                    ${isLong ? `<button class="toggle-btn" style="color:#e63946;" id="fb-btn-${actualIndex}" onclick="toggleText('fb-content-${actualIndex}', 'fb-btn-${actualIndex}', \`${post.text.replace(/`/g, '')}\`, \`${shortText.replace(/`/g, '')}\`)">Đọc tiếp...</button>` : ''}
+                    <div class="post-date">${post.date}</div>
                 `;
                 container.appendChild(card);
             });
             renderPagination("feedbackPagination", feedbackList.length, postsPerPage, feedbackPage, (p) => { feedbackPage = p; renderFeedback(p); });
         }
 
-        async function addFeedback() {
+        function addFeedback() {
             const author = document.getElementById("fbAuthor").value.trim() || "Ẩn danh";
             const charName = document.getElementById("fbChar").value.trim() || "Nhân vật chung";
             const text = document.getElementById("fbText").value.trim();
-            if(!text) {
-                showToast("⚠️ Bạn chưa nhập nội dung feedback!");
-                return;
-            }
-            
-            document.getElementById("fbText").value = "";
-            document.getElementById("fbAuthor").value = "";
-            document.getElementById("fbChar").value = "";
-            showToast("✨ Đang gửi feedback...");
+            if(!text) return alert("Bạn chưa nhập nội dung feedback!");
+            const today = new Date().toLocaleDateString('vi-VN');
 
-            try {
-                await fetch(SCRIPT_URL, {
-                    method: 'POST',
-                    mode: 'no-cors',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ sheet: "Feedback", author: author, char: charName, text: text })
-                });
-                showToast("✨ Cảm ơn bạn đã gửi feedback cho nhân vật!");
-                setTimeout(loadAllData, 1500);
-            } catch (err) {
-                showToast("⚠️ Lỗi kết nối!");
-            }
+            sendToSheet({
+                type: "feedback",
+                text: text,
+                author: author,
+                char: charName,
+                date: today
+            }, () => {
+                document.getElementById("fbText").value = "";
+                document.getElementById("fbAuthor").value = "";
+                document.getElementById("fbChar").value = "";
+            });
         }
 
         // HÀM CHUNG
@@ -842,7 +657,7 @@
                 if (record) record.classList.add("playing");
                 if (musicBtn) musicBtn.innerText = "⏸ Pause";
             }).catch(error => {
-                console.log("Autoplay bị trình duyệt chặn, đợi người dùng tương tác...");
+                console.log("Autoplay bị chặn, chờ tương tác...");
             });
         }
 
@@ -867,9 +682,10 @@
             }
         }
 
-        // HIỆU ỨNG CHUỘT
+        // HIỆU ỨNG RÊ CHUỘT & CLICK
         const clickPaperImgSrc = "seu.png"; 
         const sparkleColors = ["#f3e5ab", "#c89b27", "#ffcdd2", "#c8e6c9", "#bbdefb", "#fff59d"];
+        const tingSoundUrl = "https://assets.mixkit.co/active_storage/sfx/2568/2568-preview.mp3";
         let lastX = 0, lastY = 0;
 
         document.addEventListener("mousemove", (e) => {
@@ -907,7 +723,11 @@
         }
 
         document.addEventListener("click", (e) => {
-            if(e.target.closest('.modal-content') || e.target.closest('.form-box') || e.target.closest('button')) return;
+            try {
+                const sound = new Audio(tingSoundUrl);
+                sound.volume = 0.4;
+                sound.play().catch(err => {});
+            } catch (err) {}
             createClickImage(e.clientX, e.clientY);
         });
 
@@ -936,7 +756,7 @@
 
         // TẢI TRANG
         window.onload = () => {
-            loadAllData();
+            loadDataFromSheet();
             createSparkles();
             playAudio();
             const startMusicOnInteraction = () => {
