@@ -392,7 +392,6 @@
             color: #776a4a;
             z-index: 10;
         }
-
         /* ================= HIỆU ỨNG TƯƠNG TÁC GỬI THƯ ================= */
         /* 1. Đèn trời */
         .lantern-effect {
@@ -424,7 +423,6 @@
             50% { transform: translateY(-60vh) scale(1) translateX(15px); opacity: 0.9; }
             100% { transform: translateY(-120vh) scale(0.7) translateX(-15px); opacity: 0; }
         }
-
         /* 2. Quả bóng bay cột lá thư */
         .balloon-letter-container {
             position: fixed;
@@ -468,7 +466,6 @@
             from { transform: rotate(-10deg); }
             to { transform: rotate(10deg); }
         }
-
         /* 3. Ngôi sao nổ lấp lánh (Feedback) */
         .flying-star {
             position: fixed;
@@ -498,7 +495,6 @@
         </div>
     </div>
     <audio id="bgMusic" loop src="nhac.mp3"></audio>
-
     <!-- HEADER & SLOGAN -->
     <header>
         <div class="nav-bar">
@@ -512,7 +508,6 @@
             <p>Nơi gửi gắm suy nghĩ, góc nhỏ tâm sự và lời góp ý dễ thương từ mọi người ghé thăm Tiệm Nhà Hyperion.</p>
         </div>
     </header>
-
     <!-- MAIN CONTENT -->
     <main>
         <!-- TAB 1: BẢNG GIẤY NOTE -->
@@ -523,7 +518,6 @@
                 <button class="nav-btn" style="background:var(--accent-gold); color:#fff; padding:10px 24px; font-size:15px;" onclick="openNoteModal()">✍️ Dán giấy ước nguyện mới</button>
             </div>
         </div>
-
         <!-- TAB 2: KHU LỜI TÂM SỰ -->
         <div id="tam-su" class="tab-content">
             <div class="post-list" id="tamSuList"></div>
@@ -535,7 +529,6 @@
                 <button type="button" onclick="addTamSu()">Đăng Tâm Sự</button>
             </div>
         </div>
-
         <!-- TAB 3: KHU FEEDBACK CHAR -->
         <div id="feedback" class="tab-content">
             <div class="post-list" id="feedbackList"></div>
@@ -551,7 +544,6 @@
             </div>
         </div>
     </main>
-
     <!-- POPUP NỐT ƯỚC NGUYỆN -->
     <div id="noteModal" class="modal-overlay">
         <div class="modal-box" style="max-width:400px; padding:15px;">
@@ -584,7 +576,6 @@
             </div>
         </div>
     </div>
-
     <!-- POPUP CHỌN VỊ TRÍ STICKER -->
     <div id="posModal" class="modal-overlay" style="z-index: 1001; background: rgba(0,0,0,0.5);">
         <div class="modal-box" style="max-width:280px; padding:15px; border:2px solid var(--accent-gold);">
@@ -598,7 +589,6 @@
             <button class="nav-btn" style="background:#aaa; color:white; border:none; width:100%; margin-top:10px;" onclick="closePosModal()">Hủy</button>
         </div>
     </div>
-
     <!-- POPUP THÔNG BÁO -->
     <div id="customNotice" class="modal-overlay">
         <div class="modal-box">
@@ -606,16 +596,14 @@
             <button class="nav-btn" style="background:var(--accent-gold); color:white; border:none;" onclick="closeNotice()">Đóng</button>
         </div>
     </div>
-
     <!-- FOOTER -->
     <footer>
         <p>✨ Cảm ơn bạn rất nhiều vì đã ghé thăm và để lại dấu chân tại Tiệm Nhà Hyperion ✨</p>
         <p style="margin-top:5px; font-size:11px; color:#aaa;">© 2026 Tiệm Nhà Hyperion - Góc Ước Nguyện Giao Lưu & Feedback Char</p>
     </footer>
-
     <!-- SCRIPT CHÍNH -->
     <script>
-        const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzY_tk0yDQDJlyRrV4O6xSc5qc71xA-EZV_SR0WTrLZgnPRtoi9VA8fvfn6D29IXNLV/exec";
+        const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyGkJwxJfPBIh5cuyZhZKVk38oa55GZlSOMtxOLc1N2b01UCWqwWg9-CimzA4rxQLrx/exec";
         
         let noteList = [];
         let tamSuList = [];
@@ -626,6 +614,27 @@
         let selectedNoteColor = "note-yellow";
         let selectedStickersData = []; 
         let stickerToAssignPos = ""; 
+
+        // Hàm fallback xử lý ngày tháng hiển thị tào lao ở Frontend
+        function formatDateUI(dateStr) {
+            if (!dateStr) return "";
+            // Nếu Apps Script đã format chuẩn (có dấu gạch chéo) thì dùng luôn
+            if (typeof dateStr === 'string' && dateStr.includes('/')) return dateStr;
+            
+            // Nếu là chuỗi ISO hoặc chuỗi gốc bị lọt xuống, tự ép lại định dạng
+            try {
+                let d = new Date(dateStr);
+                if (isNaN(d.getTime())) return dateStr;
+                let day = ("0" + d.getDate()).slice(-2);
+                let month = ("0" + (d.getMonth() + 1)).slice(-2);
+                let year = d.getFullYear();
+                let hrs = ("0" + d.getHours()).slice(-2);
+                let mins = ("0" + d.getMinutes()).slice(-2);
+                return `${day}/${month}/${year} ${hrs}:${mins}`;
+            } catch(e) {
+                return dateStr;
+            }
+        }
 
         // 1. TẢI DỮ LIỆU TỪ GOOGLE SHEET (CÓ .reverse() ĐỂ ĐẨY TIN MỚI LÊN ĐẦU)
         function loadDataFromSheet() {
@@ -638,12 +647,12 @@
                             author: item.author,
                             color: item.color || "note-yellow",
                             stickers: item.stickers || [], 
+                            date: item.date || "", // Lấy ngày tháng từ Google Sheet
                             rotate: (Math.random() * 6 - 3).toFixed(1) + "deg"
                         })).reverse();
                         renderNotes(notePage);
                     }
                 }).catch(e => console.log("Lỗi tải Ước Nguyện:", e));
-
             fetch(`${SCRIPT_URL}?action=getTamSu`)
                 .then(res => res.json())
                 .then(data => {
@@ -652,7 +661,6 @@
                         renderTamSu(tamSuPage);
                     }
                 }).catch(e => console.log("Lỗi tải Tâm Sự:", e));
-
             fetch(`${SCRIPT_URL}?action=getFeedback`)
                 .then(res => res.json())
                 .then(data => {
@@ -662,7 +670,6 @@
                     }
                 }).catch(e => console.log("Lỗi tải Feedback:", e));
         }
-
         // 2. GỬI DỮ LIỆU LÊN GOOGLE SHEET
         function sendToSheet(data, onSuccess) {
             fetch(SCRIPT_URL, {
@@ -685,7 +692,6 @@
                 showNotice("Không thể gửi dữ liệu, kiểm tra kết nối mạng nha!");
             });
         } 
-
         // 3. HÀM TẠO HIỆU ỨNG (LANTERN, BALLOON-STRING-LETTER, STAR)
         function triggerLanternEffect() {
             for (let i = 0; i < 8; i++) {
@@ -701,7 +707,6 @@
                 }, i * 350);
             }
         }
-
         function triggerBalloonEffect() {
             let container = document.createElement('div');
             container.className = 'balloon-letter-container';
@@ -714,7 +719,6 @@
             document.body.appendChild(container);
             setTimeout(() => container.remove(), 6500);
         }
-
         function triggerStarEffect() {
             const emojis = ['✨', '⭐', '🌟'];
             for (let i = 0; i < 28; i++) {
@@ -733,7 +737,6 @@
                 setTimeout(() => star.remove(), 2200);
             }
         }
-
         // 4. POPUP MODAL & THÔNG BÁO
         function showNotice(msg) {
             const modal = document.getElementById("customNotice");
@@ -756,7 +759,6 @@
             document.querySelectorAll('.color-opt').forEach(b => b.classList.remove('selected'));
             el.classList.add('selected');
         }
-
         // 5. QUẢN LÝ TỰ CHỌN STICKER
         function selectStickerForPos(st) {
             if (selectedStickersData.length >= 3) {
@@ -804,19 +806,15 @@
             selectedStickersData.splice(index, 1);
             renderSelectedStickersList();
         }
-
         function submitNote() {
             const text = document.getElementById("modalNoteText").value.trim();
             const author = document.getElementById("modalNoteAuthor").value.trim() || "Ẩn danh";
             if (!text) return showNotice("Bạn chưa viết điều ước!");
-
             triggerLanternEffect();
-
             const formattedStickers = (selectedStickersData || []).map(item => ({
                 st: item.st || item.sticker || item.icon || item,
                 pos: item.pos || item.position || "top-left"
             }));
-
             sendToSheet({
                 sheet: "UocNguyen",
                 text: text,
@@ -832,7 +830,6 @@
                 showNotice("Gửi lời ước nguyện thành công rồi nha! ✨");
             });
         }
-
         // 6. RENDER TƯỜNG ƯỚC NGUYỆN
         function renderNotes(page) {
             const board = document.getElementById("corkBoard");
@@ -855,7 +852,6 @@
                 } else if (topStickers.some(s => s.pos === 'top-right') && !topStickers.some(s => s.pos === 'top-left')) {
                     clipStyle = "left: 25%; transform: rotate(-6deg);";
                 }
-
                 let stickerHTML = "";
                 stickersArr.forEach(sticker => {
                     let posCSS = "";
@@ -872,14 +868,16 @@
                     ${stickerHTML}
                     <div class="paper-clip" style="${clipStyle}"></div>
                     <div style="margin-top:10px; padding: 0 5px;">${item.text}</div>
-                    <div class="note-author">— ${item.author}</div>
+                    <div class="note-author">
+                        — ${item.author}
+                        <div style="font-size: 11px; color: #999; margin-top: 4px;">${formatDateUI(item.date)}</div>
+                    </div>
                 `;
                 board.appendChild(card);
             });
             
             renderPagination("notePagination", noteList.length, notesPerPage, notePage, (p) => { notePage = p; renderNotes(p); });
         }
-
         // 7. RENDER & THÊM LỜI TÂM SỰ
         function renderTamSu(page) {
             const container = document.getElementById("tamSuList");
@@ -900,27 +898,23 @@
                     </div>
                     <div class="post-content" id="ts-c-${idx}">${shortTxt}</div>
                     ${isLong ? `<button class="toggle-btn" id="ts-b-${idx}" onclick="toggleText('ts-c-${idx}', 'ts-b-${idx}', \`${post.text.replace(/`/g, '')}\`, \`${shortTxt.replace(/`/g, '')}\`)">Đọc tiếp...</button>` : ''}
-                    <div class="post-date">${post.date || ''}</div>
+                    <div class="post-date">${formatDateUI(post.date)}</div>
                 `;
                 container.appendChild(card);
             });
             renderPagination("tamSuPagination", tamSuList.length, postsPerPage, tamSuPage, (p) => { tamSuPage = p; renderTamSu(p); });
         }
-
         function addTamSu() {
             const author = document.getElementById("tsAuthor").value.trim() || "Ẩn danh";
             const text = document.getElementById("tsText").value.trim();
             if (!text) return showNotice("Bạn chưa viết nội dung tâm sự kìa!");
-
             triggerBalloonEffect();
-
             sendToSheet({ sheet: "TamSu", text: text, author: author }, () => {
                 document.getElementById("tsText").value = "";
                 document.getElementById("tsAuthor").value = "";
                 showNotice("Đã gửi tâm sự thành công! 💌");
             });
         }
-
         // 8. RENDER & THÊM FEEDBACK CHAR
         function renderFeedback(page) {
             const container = document.getElementById("feedbackList");
@@ -942,21 +936,18 @@
                     </div>
                     <div class="post-content" id="fb-c-${idx}">${shortTxt}</div>
                     ${isLong ? `<button class="toggle-btn" style="color:#e63946;" id="fb-b-${idx}" onclick="toggleText('fb-c-${idx}', 'fb-b-${idx}', \`${post.text.replace(/`/g, '')}\`, \`${shortTxt.replace(/`/g, '')}\`)">Đọc tiếp...</button>` : ''}
-                    <div class="post-date">${post.date || ''}</div>
+                    <div class="post-date">${formatDateUI(post.date)}</div>
                 `;
                 container.appendChild(card);
             });
             renderPagination("feedbackPagination", feedbackList.length, postsPerPage, feedbackPage, (p) => { feedbackPage = p; renderFeedback(p); });
         }
-
         function addFeedback() {
             const author = document.getElementById("fbAuthor").value.trim() || "Ẩn danh";
             const charName = document.getElementById("fbChar").value.trim() || "Nhân vật chung";
             const text = document.getElementById("fbText").value.trim();
             if (!text) return showNotice("Bạn chưa nhập nội dung feedback!");
-
             triggerStarEffect();
-
             sendToSheet({ sheet: "Feedback", text: text, author: author, char: charName }, () => {
                 document.getElementById("fbText").value = "";
                 document.getElementById("fbAuthor").value = "";
@@ -964,7 +955,6 @@
                 showNotice("Đã gửi feedback thành công! 🌱");
             });
         }
-
         // 9. HÀM DÙNG CHUNG & PHÂN TRANG
         function toggleText(contentId, btnId, fullText, shortText) {
             const content = document.getElementById(contentId);
@@ -977,7 +967,6 @@
                 btn.innerText = "Đọc tiếp...";
             }
         }
-
         function renderPagination(boxId, totalItems, itemsPerPage, currentPage, onPageChange) {
             const box = document.getElementById(boxId); 
             if (!box) return; 
@@ -991,19 +980,16 @@
                 box.appendChild(btn);
             }
         }
-
         function switchTab(tabId, btn) {
             document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
             document.querySelectorAll('.nav-bar .nav-btn').forEach(b => b.classList.remove('active'));
             document.getElementById(tabId).classList.add('active');
             btn.classList.add('active');
         }
-
         // 10. ĐĨA THAN, NHẠC VÀ HIỆU ỨNG CHUỘT
         const music = document.getElementById("bgMusic");
         const record = document.getElementById("vinylRecord");
         const musicBtn = document.getElementById("musicBtn");
-
         function playAudio() {
             if (!music) return;
             music.play().then(() => {
@@ -1011,7 +997,6 @@
                 if (musicBtn) musicBtn.innerText = "⏸ Pause";
             }).catch(error => console.log("Autoplay bị chặn..."));
         }
-
         function toggleMusic() {
             if (music.paused) playAudio();
             else {
@@ -1020,7 +1005,6 @@
                 if (musicBtn) musicBtn.innerText = "▶ Play";
             }
         } 
-
         function createSparkles() {
             for (let i = 0; i < 20; i++) {
                 const particle = document.createElement("div");
@@ -1031,19 +1015,16 @@
                 document.body.appendChild(particle);
             }
         }
-
         const clickPaperImgSrc = "seu.png"; 
         const sparkleColors = ["#f3e5ab", "#c89b27", "#ffcdd2", "#c8e6c9", "#bbdefb", "#fff59d"];
         const tingSoundUrl = "https://assets.mixkit.co/active_storage/sfx/2568/2568-preview.mp3";
         let lastX = 0, lastY = 0;
-
         document.addEventListener("mousemove", (e) => {
             if (Math.abs(e.clientX - lastX) > 5 || Math.abs(e.clientY - lastY) > 5) {
                 createTrailParticle(e.clientX, e.clientY);
                 lastX = e.clientX; lastY = e.clientY;
             }
         });
-
         function createTrailParticle(x, y) {
             const particle = document.createElement("div");
             const size = Math.random() * 6 + 4;
@@ -1062,7 +1043,6 @@
             });
             setTimeout(() => particle.remove(), 800);
         }
-
         document.addEventListener("click", (e) => {
             try {
                 const sound = new Audio(tingSoundUrl);
@@ -1072,7 +1052,6 @@
             createClickImage(e.clientX, e.clientY);
             createBurstParticle(e.clientX, e.clientY);
         });
-
         function createClickImage(x, y) {
             const img = document.createElement("img");
             img.src = clickPaperImgSrc;
@@ -1089,7 +1068,6 @@
             });
             setTimeout(() => img.remove(), 500);
         }
-
         function createBurstParticle(x, y) {
             const particle = document.createElement("div");
             const size = Math.random() * 8 + 4;
@@ -1111,7 +1089,6 @@
             });
             setTimeout(() => particle.remove(), 600);
         }
-
         // TẢI TRANG
         window.onload = () => {
             loadDataFromSheet();
