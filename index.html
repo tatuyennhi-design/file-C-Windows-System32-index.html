@@ -256,6 +256,7 @@ main {
     white-space: pre-line;
 }
 
+/* NÚT ĐỌC TIẾP / RÚT GỌN */
 .toggle-btn {
     background: none;
     border: none;
@@ -810,7 +811,7 @@ function renderNotes(page) {
     });
 }
 
-// 6. RENDER LỜI TÂM SỰ
+// 6. RENDER LỜI TÂM SỰ (THÊM XỬ LÝ ĐỌC TIẾP/RÚT GỌN)
 function renderTamSu(page) {
     const container = document.getElementById("tamSuList");
     if (!container) return;
@@ -819,21 +820,22 @@ function renderTamSu(page) {
     const items = tamSuList.slice((page - 1) * postsPerPage, page * postsPerPage);
     items.forEach((post, i) => {
         const idx = (page - 1) * postsPerPage + i;
-        const isLong = post.text && post.text.length > 120;
-        const shortTxt = isLong ? post.text.substring(0, 120) + "..." : (post.text || "");
+        const rawText = post.text || "";
+        const isLong = rawText.length > 120;
+        const shortTxt = isLong ? rawText.substring(0, 120) + "..." : rawText;
         
         const card = document.createElement("div");
         card.className = "post-card";
         
-        let buttonHTML = isLong ? `<button class="toggle-btn" id="ts-b-${idx}" onclick="togglePostText('ts-c-${idx}', 'ts-b-${idx}', ${idx}, 'tamSuList')">Đọc tiếp...</button>` : '';
+        let btnHTML = isLong ? `<button class="toggle-btn" id="ts-btn-${idx}" onclick="togglePostText('ts-cnt-${idx}', 'ts-btn-${idx}', ${idx}, 'tamSu')">Đọc tiếp...</button>` : '';
 
         card.innerHTML = `
             <div class="post-header">
                 <span class="post-author">${post.author || 'Ẩn danh'}</span>
                 <span class="post-tag">Tâm sự</span>
             </div>
-            <div class="post-content" id="ts-c-${idx}">${shortTxt}</div>
-            ${buttonHTML}
+            <div class="post-content" id="ts-cnt-${idx}">${shortTxt}</div>
+            ${btnHTML}
             <div class="post-date">${post.date || ''}</div>
         `;
         container.appendChild(card);
@@ -856,7 +858,7 @@ function addTamSu() {
     });
 }
 
-// 7. RENDER FEEDBACK CHAR
+// 7. RENDER FEEDBACK CHAR (THÊM XỬ LÝ ĐỌC TIẾP/RÚT GỌN)
 function renderFeedback(page) {
     const container = document.getElementById("feedbackList");
     if (!container) return;
@@ -865,22 +867,23 @@ function renderFeedback(page) {
     const items = feedbackList.slice((page - 1) * postsPerPage, page * postsPerPage);
     items.forEach((post, i) => {
         const idx = (page - 1) * postsPerPage + i;
-        const isLong = post.text && post.text.length > 120;
-        const shortTxt = isLong ? post.text.substring(0, 120) + "..." : (post.text || "");
+        const rawText = post.text || "";
+        const isLong = rawText.length > 120;
+        const shortTxt = isLong ? rawText.substring(0, 120) + "..." : rawText;
         
         const card = document.createElement("div");
         card.className = "post-card";
         card.style.borderLeftColor = "#e63946";
         
-        let buttonHTML = isLong ? `<button class="toggle-btn" style="color:#e63946;" id="fb-b-${idx}" onclick="togglePostText('fb-c-${idx}', 'fb-b-${idx}', ${idx}, 'feedbackList')">Đọc tiếp...</button>` : '';
+        let btnHTML = isLong ? `<button class="toggle-btn" style="color:#e63946;" id="fb-btn-${idx}" onclick="togglePostText('fb-cnt-${idx}', 'fb-btn-${idx}', ${idx}, 'feedback')">Đọc tiếp...</button>` : '';
 
         card.innerHTML = `
             <div class="post-header">
                 <span class="post-author" style="color:#e63946;">${post.author || 'Ẩn danh'}</span>
                 <span class="post-tag" style="background:#ffebee; color:#c62828;">Char: ${post.char || 'Chung'}</span>
             </div>
-            <div class="post-content" id="fb-c-${idx}">${shortTxt}</div>
-            ${buttonHTML}
+            <div class="post-content" id="fb-cnt-${idx}">${shortTxt}</div>
+            ${btnHTML}
             <div class="post-date">${post.date || ''}</div>
         `;
         container.appendChild(card);
@@ -905,12 +908,15 @@ function addFeedback() {
     });
 }
 
-// 8. HÀM ĐỌC TIẾP / THU GỌN CHUẨN XỬ LÝ TEXT
+// 8. HÀM ĐỌC TIẾP / RÚT GỌN (AN TOÀN TUYỆT ĐỐI)
 function togglePostText(contentId, btnId, index, type) {
     const content = document.getElementById(contentId);
     const btn = document.getElementById(btnId);
-    let targetList = (type === 'tamSuList') ? tamSuList : feedbackList;
-    let fullText = targetList[index].text;
+    let targetList = (type === 'tamSu') ? tamSuList : feedbackList;
+    
+    if (!content || !btn || !targetList[index]) return;
+    
+    let fullText = targetList[index].text || "";
     let shortText = fullText.substring(0, 120) + "...";
 
     if (btn.innerText === "Đọc tiếp...") {
@@ -929,7 +935,7 @@ function renderPagination(boxId, totalItems, itemsPerPage, currentPage, onPageCh
     box.innerHTML = "";
     
     const totalPages = Math.ceil(totalItems / itemsPerPage) || 1;
-    if (totalPages <= 1) return; // Nếu chỉ có 1 trang thì ẩn phân trang cho đẹp
+    if (totalPages <= 1) return;
 
     for (let i = 1; i <= totalPages; i++) {
         const btn = document.createElement("button");
