@@ -149,17 +149,35 @@
             transform: scale(1.03) rotate(0deg) !important;
             z-index: 5;
         }
-        .note-card::before {
-            content: '';
-            position: absolute;
-            top: -8px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 12px;
-            height: 12px;
-            background: #e63946;
-            border-radius: 50%;
-        }
+       /* ĐỒ KẸP GIẤY VÀNG ĐỒNG VINTAGE */
+.note-card::before {
+    content: '';
+    position: absolute;
+    top: -12px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 14px;
+    height: 32px;
+    border: 3px solid #c89b27; /* Màu vàng đồng cổ */
+    border-radius: 10px;
+    background: transparent;
+    box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.15);
+    z-index: 6;
+}
+
+.note-card::after {
+    content: '';
+    position: absolute;
+    top: -6px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 8px;
+    height: 20px;
+    border: 2px solid #e0a96d; /* Lõi kẹp màu sáng hơn tạo độ bóng */
+    border-bottom: none;
+    border-radius: 6px 6px 0 0;
+    z-index: 7;
+} 
         .note-yellow { background: #fff59d; }
         .note-pink   { background: #ffcdd2; }
         .note-green  { background: #c8e6c9; }
