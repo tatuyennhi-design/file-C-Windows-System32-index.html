@@ -675,24 +675,35 @@
         }
 
         function submitNote() {
-            const text = document.getElementById("modalNoteText").value.trim();
-            const author = document.getElementById("modalNoteAuthor").value.trim() || "Ẩn danh";
-            
-            if (!text) return showNotice("Bạn chưa viết điều ước!");
-            
-            sendToSheet({ 
-                sheet: "UocNguyen", 
-                text: text, 
-                author: author, 
-                color: selectedNoteColor, 
-                stickers: selectedStickersData
-            }, () => {
-                document.getElementById("modalNoteText").value = "";
-                document.getElementById("modalNoteAuthor").value = "";
-                closeNoteModal();
-                showNotice("Gửi lời ước nguyện thành công rồi nha! ✨");
-            });
-        }
+    const text = document.getElementById("modalNoteText").value.trim();
+    const author = document.getElementById("modalNoteAuthor").value.trim() || "Ẩn danh";
+
+    if (!text) return showNotice("Bạn chưa viết điều ước!");
+
+    // Chuẩn hóa mảng stickers trước khi gửi sang Google Sheet
+    const formattedStickers = (selectedStickersData || []).map(item => ({
+        st: item.st || item.sticker || item.icon || item,
+        pos: item.pos || item.position || "top-left"
+    }));
+
+    sendToSheet({
+        sheet: "UocNguyen",
+        text: text,
+        author: author,
+        color: selectedNoteColor,
+        stickers: formattedStickers
+    }, () => {
+        document.getElementById("modalNoteText").value = "";
+        document.getElementById("modalNoteAuthor").value = "";
+        
+        // Reset lại danh sách sticker đã chọn
+        if (typeof selectedStickersData !== 'undefined') selectedStickersData = [];
+        if (typeof renderSelectedStickersList === 'function') renderSelectedStickersList();
+
+        closeNoteModal();
+        showNotice("Gửi lời ước nguyện thành công rồi nha! ✨");
+    });
+}
 
         // 5. RENDER TƯỜNG ƯỚC NGUYỆN
         function renderNotes(page) {
