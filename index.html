@@ -172,8 +172,6 @@
             font-weight: bold;
             color: #555;
             margin-top: 10px;
-            position: relative;
-            z-index: 2;
         }
         .note-sticker {
             position: absolute;
@@ -433,53 +431,7 @@
             font-weight: bold;
             color: #555;
         }
-
-        /* HIỆU ỨNG GỬI FORM (HOA ĐĂNG, THƯ, SAO) */
-        .lantern-effect {
-            position: fixed;
-            bottom: -60px;
-            font-size: 38px;
-            z-index: 10001;
-            pointer-events: none;
-            filter: drop-shadow(0 0 15px #ffb300);
-            animation: flyUpLantern 5s ease-in forwards;
-        }
-        @keyframes flyUpLantern {
-            0% { transform: translateY(0) scale(0.8) rotate(0deg); opacity: 1; }
-            100% { transform: translateY(-120vh) scale(1.3) rotate(25deg); opacity: 0; }
-        }
-
-        .letter-effect {
-            position: fixed;
-            bottom: 5vh;
-            left: 50%;
-            font-size: 45px;
-            z-index: 10001;
-            pointer-events: none;
-            animation: flyLetter 4s ease-in-out forwards;
-            filter: drop-shadow(0 4px 6px rgba(0,0,0,0.1));
-        }
-        @keyframes flyLetter {
-            0% { transform: translate(-50%, 0) scale(0.5); opacity: 0; }
-            15% { opacity: 1; transform: translate(-50%, -15vh) scale(1.1); }
-            100% { transform: translate(calc(-50% + 300px), -100vh) scale(0.7) rotate(45deg); opacity: 0; }
-        }
-
-        .star-effect {
-            position: fixed;
-            font-size: 28px;
-            z-index: 10001;
-            pointer-events: none;
-            animation: shootStarBurst 2s ease-out forwards;
-            filter: drop-shadow(0 0 10px gold);
-        }
-        @keyframes shootStarBurst {
-            0% { transform: translate(0, 0) scale(0) rotate(0deg); opacity: 1; }
-            60% { transform: translate(var(--dx), var(--dy)) scale(1.5) rotate(180deg); opacity: 1; }
-            100% { transform: translate(calc(var(--dx) * 1.5), calc(var(--dy) * 1.5)) scale(0) rotate(360deg); opacity: 0; }
-        }
-
-        /* TOAST THÔNG BÁO MƯỢT MÀ */
+        /* HIỆU ỨNG THÔNG BÁO & BAY */
         .custom-toast {
             position: fixed;
             top: 20px;
@@ -501,7 +453,6 @@
             transform: translateX(-50%) translateY(0);
             opacity: 1;
         }
-
         /* FOOTER */
         footer {
             width: 100%;
@@ -532,7 +483,6 @@
     <!-- HEADER -->
     <header>
         <div class="nav-bar">
-            <!-- [LƯU Ý KHI CHUYỂN ONLINE]: Hãy thay thế đường dẫn GitHub Pages bên dưới bằng tên miền hoặc link trang chính của bạn -->
             <a href="https://tatuyennhi-design.github.io/index.html/" class="nav-btn back-home">🏠 Quay về Tiệm chính</a>
             <button class="nav-btn active" onclick="switchTab('uoc-nguyen', this)">✨ Tường Ước Nguyện</button>
             <button class="nav-btn" onclick="switchTab('tam-su', this)">💌 Lời Tâm Sự</button>
@@ -628,9 +578,10 @@
         <p style="margin-top:5px; font-size:11px; color:#aaa;">© 2026 Tiệm Nhà Hyperion - Góc Ước Nguyện Giao Lưu & Feedback Char</p>
     </footer>
 
-    <!-- SCRIPT CHÍNH -->
+    <!-- SCRIPT KẾT NỐI GOOGLE SHEETS -->
     <script>
-        // HÀM HIỂN THỊ THÔNG BÁO XINH XẮN (TOAST)
+        const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwGajsm_8A7Ds0QGZJvSS6lOyfpEI2Xd9SU1JeMXlAldGumM-EGMFnpsQ58ugUoGKFv/exec";
+
         function showToast(message) {
             const toast = document.createElement("div");
             toast.className = "custom-toast";
@@ -643,67 +594,36 @@
             }, 3000);
         }
 
-        // CÁC HIỆU ỨNG BAY KHI GỬI
-        function triggerLanternEffect() {
-            for (let i = 0; i < 15; i++) {
-                setTimeout(() => {
-                    const lantern = document.createElement("div");
-                    lantern.className = "lantern-effect";
-                    lantern.innerText = "🏮"; 
-                    lantern.style.left = Math.random() * 90 + 5 + "vw";
-                    lantern.style.animationDuration = (Math.random() * 2 + 3) + "s";
-                    document.body.appendChild(lantern);
-                    setTimeout(() => lantern.remove(), 6000);
-                }, i * 200);
-            }
-        }
-
-        function triggerLetterEffect() {
-            for (let i = 0; i < 6; i++) {
-                setTimeout(() => {
-                    const letter = document.createElement("div");
-                    letter.className = "letter-effect";
-                    letter.innerText = "💌"; 
-                    letter.style.left = (35 + Math.random() * 30) + "vw";
-                    letter.style.animationDuration = (Math.random() * 1.5 + 2.5) + "s";
-                    document.body.appendChild(letter);
-                    setTimeout(() => letter.remove(), 5000);
-                }, i * 300);
-            }
-        }
-
-        function triggerStarEffect() {
-            const centerX = window.innerWidth / 2;
-            const centerY = window.innerHeight / 2 + 100;
-            for (let i = 0; i < 40; i++) {
-                const star = document.createElement("div");
-                star.className = "star-effect";
-                star.innerText = Math.random() > 0.5 ? "⭐" : "✨";
-                star.style.left = centerX + "px";
-                star.style.top = centerY + "px";
-                const angle = Math.random() * Math.PI * 2;
-                const distance = Math.random() * 300 + 150;
-                star.style.setProperty('--dx', Math.cos(angle) * distance + 'px');
-                star.style.setProperty('--dy', Math.sin(angle) * distance + 'px');
-                document.body.appendChild(star);
-                setTimeout(() => star.remove(), 2500);
-            }
-        }
-
-        // 1. TƯỜNG ƯỚC NGUYỆN (GIẤY NOTE) - CÓ LOCALSTORAGE
-        let noteList = JSON.parse(localStorage.getItem('hyperion_notes')) || [
-            { text: "Thích char hệ thống nhà sốp lắm, mong sốp tạo thêm vài char hệ thống nữa ạ🥹", author: "Mây Mây", color: "note-yellow", rotate: "-2deg", sticker: "🌸" },
-            { text: "Mong tiệm luôn ra nhiều cốt truyện hay và giữ vững phong độ nhaaa!", author: "Góc Bếp Có Con Mèo Béo", color: "note-pink", rotate: "3deg", sticker: "🐱" },
-            { text: "Thích mấy char Việt Nam xưa của sốp lắm luôn.", author: "Khách qua đường", color: "note-green", rotate: "-3deg", sticker: "🌙" },
-            { text: "Sốp tạo thêm char cung đấu nữa đi sốp ơi ~.", author: "Tiểu Vũ", color: "note-blue", rotate: "1deg", sticker: "🎀" },
-            { text: "Mê nhạc nền của tiệm lắm luôn 🎶", author: "Cá Gỗ", color: "note-orange", rotate: "-1deg", sticker: "⭐" },
-            { text: "Chúc Tiệm Nhà Hyperion luôn đông khách nhen ✨", author: "Bạn thân", color: "note-yellow", rotate: "2deg", sticker: "🍀" },
-            { text: "Ước có thêm char nữ xịn xò bối cảnh Sài Gòn xưa!", author: "Hoa Giấy", color: "note-pink", rotate: "-2deg", sticker: "" }
-        ];
+        let noteList = [];
+        let tamSuList = [];
+        let feedbackList = [];
         
         let notePage = 1;
+        let tamSuPage = 1;
+        let feedbackPage = 1;
         const notesPerPage = 6;
+        const postsPerPage = 3;
 
+        // TẢI DỮ LIỆU TỪ GOOGLE SHEETS
+        async function loadAllData() {
+            try {
+                let resNotes = await fetch(`${SCRIPT_URL}?action=getNotes`);
+                noteList = await resNotes.json();
+                renderNotes(notePage);
+
+                let resTamSu = await fetch(`${SCRIPT_URL}?action=getTamSu`);
+                tamSuList = await resTamSu.json();
+                renderTamSu(tamSuPage);
+
+                let resFb = await fetch(`${SCRIPT_URL}?action=getFeedback`);
+                feedbackList = await resFb.json();
+                renderFeedback(feedbackPage);
+            } catch (err) {
+                console.log("Lỗi tải dữ liệu từ Google Sheets:", err);
+            }
+        }
+
+        // RENDER GIẤY NOTE
         function renderNotes(page) {
             const board = document.getElementById("corkBoard");
             board.innerHTML = "";
@@ -712,13 +632,17 @@
             
             pageNotes.forEach(note => {
                 const card = document.createElement("div");
-                card.className = `note-card ${note.color}`;
-                card.style.transform = `rotate(${note.rotate})`;
+                card.className = `note-card ${note.color || 'note-yellow'}`;
+                let hash = 0;
+                for (let i = 0; i < (note.text || '').length; i++) hash = note.text.charCodeAt(i) + ((hash << 5) - hash);
+                let rot = (hash % 6 - 3).toFixed(1) + "deg";
+                card.style.transform = `rotate(${rot})`;
+
                 const stickerHtml = note.sticker ? `<div class="note-sticker">${note.sticker}</div>` : '';
                 card.innerHTML = `
-                    <div>${note.text}</div>
+                    <div>${note.text || ''}</div>
                     ${stickerHtml}
-                    <div class="note-author">— ${note.author}</div>
+                    <div class="note-author">— ${note.name || 'Ẩn danh'}</div>
                 `;
                 board.appendChild(card);
             });
@@ -737,7 +661,7 @@
             document.getElementById("newNoteSticker").value = "";
         }
 
-        function submitNote() {
+        async function submitNote() {
             const text = document.getElementById("newNoteText").value.trim();
             const author = document.getElementById("newNoteAuthor").value.trim() || "Ẩn danh";
             const color = document.getElementById("newNoteColor").value;
@@ -748,34 +672,24 @@
                 return;
             }
 
-            triggerLanternEffect();
-
-            noteList.unshift({
-                text: text,
-                author: author,
-                color: color,
-                sticker: sticker,
-                rotate: (Math.random() * 6 - 3).toFixed(1) + "deg"
-            });
-
-            // Lưu vào localStorage để tự động cập nhật lâu dài
-            localStorage.setItem('hyperion_notes', JSON.stringify(noteList));
-
-            notePage = 1;
-            renderNotes(notePage);
             closeNoteModal();
-            showToast("✨ Giấy ước nguyện đã được dán lên tường!");
+            showToast("✨ Đang gửi giấy ước nguyện lên tiệm...");
+
+            try {
+                await fetch(SCRIPT_URL, {
+                    method: 'POST',
+                    mode: 'no-cors',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ sheet: "UocNguyen", author: author, text: text, color: color, sticker: sticker })
+                });
+                showToast("✨ Dán giấy ước nguyện thành công!");
+                setTimeout(loadAllData, 1500);
+            } catch (err) {
+                showToast("⚠️ Lỗi kết nối!");
+            }
         }
 
-        // 2. KHU LỜI TÂM SỰ - CÓ LOCALSTORAGE
-        let tamSuList = JSON.parse(localStorage.getItem('hyperion_tamsu')) || [
-            { author: "An Nhiên", date: "20/07/2026", text: "Mình theo dõi Tiệm Nhà Hyperion từ những ngày đầu luôn. Thật sự plot rất hay, từ bối cảnh đến từng NPC. Mong là chủ tiệm sẽ giữ mãi ngọn lửa đam mê này để cho ra mắt thêm nhiều char hay như này." },
-            { author: "Mây Lang Thang", date: "16/07/2026", text: "Chiều tối, em ngồi lướt từng nhân vật trong tiệm, thấy web vừa nhẹ nhàng vừa ấm, thích phong cách này ghê á." },
-            { author: "Eri", date: "17/06/2026", text: "Em theo sốp từ dokichat sang GGAI, em phát hiện mấy char drama gia đình hay cung đấu nhà sốp nó hay vl sốp ạ.🥰 " }
-        ];
-        let tamSuPage = 1;
-        const postsPerPage = 3;
-
+        // RENDER TÂM SỰ
         function renderTamSu(page) {
             const container = document.getElementById("tamSuList");
             container.innerHTML = "";
@@ -783,25 +697,26 @@
             const pagePosts = tamSuList.slice(start, start + postsPerPage);
             pagePosts.forEach((post, index) => {
                 const actualIndex = start + index;
-                const isLong = post.text.length > 120;
-                const shortText = isLong ? post.text.substring(0, 120) + "..." : post.text;
+                const txt = post.text || '';
+                const isLong = txt.length > 120;
+                const shortText = isLong ? txt.substring(0, 120) + "..." : txt;
                 const card = document.createElement("div");
                 card.className = "post-card";
                 card.innerHTML = `
                     <div class="post-header">
-                        <span class="post-author">💌 ${post.author}</span>
+                        <span class="post-author">💌 ${post.name || 'Ẩn danh'}</span>
                         <span class="post-tag">Tâm sự</span>
                     </div>
                     <div class="post-content" id="ts-content-${actualIndex}">${shortText}</div>
-                    ${isLong ? `<button class="toggle-btn" id="ts-btn-${actualIndex}" onclick="toggleText('ts-content-${actualIndex}', 'ts-btn-${actualIndex}', \`${post.text.replace(/`/g, '')}\`, \`${shortText.replace(/`/g, '')}\`)">Đọc tiếp...</button>` : ''}
-                    <div class="post-date">${post.date}</div>
+                    ${isLong ? `<button class="toggle-btn" id="ts-btn-${actualIndex}" onclick="toggleText('ts-content-${actualIndex}', 'ts-btn-${actualIndex}', \`${txt.replace(/`/g, '')}\`, \`${shortText.replace(/`/g, '')}\`)">Đọc tiếp...</button>` : ''}
+                    <div class="post-date">${post.date || ''}</div>
                 `;
                 container.appendChild(card);
             });
             renderPagination("tamSuPagination", tamSuList.length, postsPerPage, tamSuPage, (p) => { tamSuPage = p; renderTamSu(p); });
         }
 
-        function addTamSu() {
+        async function addTamSu() {
             const author = document.getElementById("tsAuthor").value.trim() || "Ẩn danh";
             const text = document.getElementById("tsText").value.trim();
             if(!text) {
@@ -809,28 +724,25 @@
                 return;
             }
             
-            triggerLetterEffect();
-            const today = new Date().toLocaleDateString('vi-VN');
-            tamSuList.unshift({ author: author, text: text, date: today });
-            
-            // Lưu vào localStorage
-            localStorage.setItem('hyperion_tamsu', JSON.stringify(tamSuList));
-
             document.getElementById("tsText").value = "";
             document.getElementById("tsAuthor").value = "";
-            tamSuPage = 1;
-            renderTamSu(tamSuPage);
-            setTimeout(() => showToast("✨ Đã đăng bài tâm sự của bạn lên trang!"), 800);
+            showToast("✨ Đang gửi lời tâm sự...");
+
+            try {
+                await fetch(SCRIPT_URL, {
+                    method: 'POST',
+                    mode: 'no-cors',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ sheet: "TamSu", author: author, text: text })
+                });
+                showToast("✨ Đã đăng bài tâm sự lên trang!");
+                setTimeout(loadAllData, 1500);
+            } catch (err) {
+                showToast("⚠️ Lỗi kết nối!");
+            }
         }
 
-        // 3. KHU FEEDBACK CHAR - CÓ LOCALSTORAGE
-        let feedbackList = JSON.parse(localStorage.getItem('hyperion_feedback')) || [
-            { author: "Vì Sao Trên Trời", char: "Nguyễn Vĩnh Hiên", date: "21/07/2026", text: "Cực kỳ thích nhân vật Vĩnh Hiên luôn! Cách ảnh tương tác và lời thoại đúng chuẩn bối cảnh xưa. Mong tiệm làm thêm vài char về ông giáo như này ạ." },
-            { author: "Tiểu Hồ", char: "Ninh Hữu Ngôn", date: "19/07/2026", text: "Ninh Hữu Ngôn dễ thương xỉu, đọc đoạn thoại mà em vừa ngại vừa thấy cưng muốn xỉu luôn á sốp ơi!" },
-            { author: "Bánh Bao", char: "Ninh Hoài Thượng", date: "12/07/2026", text: "Plot cuốn quá, mong sốp ra thêm nhiều char thể loại cung đấu." }
-        ];
-        let feedbackPage = 1;
-
+        // RENDER FEEDBACK
         function renderFeedback(page) {
             const container = document.getElementById("feedbackList");
             container.innerHTML = "";
@@ -838,26 +750,27 @@
             const pagePosts = feedbackList.slice(start, start + postsPerPage);
             pagePosts.forEach((post, index) => {
                 const actualIndex = start + index;
-                const isLong = post.text.length > 120;
-                const shortText = isLong ? post.text.substring(0, 120) + "..." : post.text;
+                const txt = post.text || '';
+                const isLong = txt.length > 120;
+                const shortText = isLong ? txt.substring(0, 120) + "..." : txt;
                 const card = document.createElement("div");
                 card.className = "post-card";
                 card.style.borderLeftColor = "#e63946";
                 card.innerHTML = `
                     <div class="post-header">
-                        <span class="post-author" style="color:#e63946;">🌱 ${post.author}</span>
-                        <span class="post-tag" style="background:#ffebee; color:#c62828;">Char: ${post.char}</span>
+                        <span class="post-author" style="color:#e63946;">🌱 ${post.name || 'Ẩn danh'}</span>
+                        <span class="post-tag" style="background:#ffebee; color:#c62828;">Char: ${post.char || 'Chung'}</span>
                     </div>
                     <div class="post-content" id="fb-content-${actualIndex}">${shortText}</div>
-                    ${isLong ? `<button class="toggle-btn" style="color:#e63946;" id="fb-btn-${actualIndex}" onclick="toggleText('fb-content-${actualIndex}', 'fb-btn-${actualIndex}', \`${post.text.replace(/`/g, '')}\`, \`${shortText.replace(/`/g, '')}\`)">Đọc tiếp...</button>` : ''}
-                    <div class="post-date">${post.date}</div>
+                    ${isLong ? `<button class="toggle-btn" style="color:#e63946;" id="fb-btn-${actualIndex}" onclick="toggleText('fb-content-${actualIndex}', 'fb-btn-${actualIndex}', \`${txt.replace(/`/g, '')}\`, \`${shortText.replace(/`/g, '')}\`)">Đọc tiếp...</button>` : ''}
+                    <div class="post-date">${post.date || ''}</div>
                 `;
                 container.appendChild(card);
             });
             renderPagination("feedbackPagination", feedbackList.length, postsPerPage, feedbackPage, (p) => { feedbackPage = p; renderFeedback(p); });
         }
 
-        function addFeedback() {
+        async function addFeedback() {
             const author = document.getElementById("fbAuthor").value.trim() || "Ẩn danh";
             const charName = document.getElementById("fbChar").value.trim() || "Nhân vật chung";
             const text = document.getElementById("fbText").value.trim();
@@ -866,19 +779,23 @@
                 return;
             }
             
-            triggerStarEffect();
-            const today = new Date().toLocaleDateString('vi-VN');
-            feedbackList.unshift({ author: author, char: charName, text: text, date: today });
-            
-            // Lưu vào localStorage
-            localStorage.setItem('hyperion_feedback', JSON.stringify(feedbackList));
-
             document.getElementById("fbText").value = "";
             document.getElementById("fbAuthor").value = "";
             document.getElementById("fbChar").value = "";
-            feedbackPage = 1;
-            renderFeedback(feedbackPage);
-            setTimeout(() => showToast("✨ Cảm ơn bạn đã gửi feedback cho nhân vật!"), 800);
+            showToast("✨ Đang gửi feedback...");
+
+            try {
+                await fetch(SCRIPT_URL, {
+                    method: 'POST',
+                    mode: 'no-cors',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ sheet: "Feedback", author: author, char: charName, text: text })
+                });
+                showToast("✨ Cảm ơn bạn đã gửi feedback cho nhân vật!");
+                setTimeout(loadAllData, 1500);
+            } catch (err) {
+                showToast("⚠️ Lỗi kết nối!");
+            }
         }
 
         // HÀM CHUNG
@@ -953,7 +870,6 @@
         // HIỆU ỨNG CHUỘT
         const clickPaperImgSrc = "seu.png"; 
         const sparkleColors = ["#f3e5ab", "#c89b27", "#ffcdd2", "#c8e6c9", "#bbdefb", "#fff59d"];
-        const tingSoundUrl = "https://assets.mixkit.co/active_storage/sfx/2568/2568-preview.mp3";
         let lastX = 0, lastY = 0;
 
         document.addEventListener("mousemove", (e) => {
@@ -992,12 +908,6 @@
 
         document.addEventListener("click", (e) => {
             if(e.target.closest('.modal-content') || e.target.closest('.form-box') || e.target.closest('button')) return;
-            try {
-                const sound = new Audio(tingSoundUrl);
-                sound.volume = 0.4;
-                sound.play().catch(err => console.log("Lỗi âm thanh:", err));
-            } catch (err) {}
-            createBurstParticle(e.clientX, e.clientY);
             createClickImage(e.clientX, e.clientY);
         });
 
@@ -1024,40 +934,9 @@
             setTimeout(() => img.remove(), 500);
         }
 
-        function createBurstParticle(x, y) {
-            const particle = document.createElement("div");
-            const size = Math.random() * 8 + 4;
-            const color = sparkleColors[Math.floor(Math.random() * sparkleColors.length)];
-            const angle = Math.random() * Math.PI * 2;
-            const velocity = Math.random() * 60 + 20; 
-            const destX = Math.cos(angle) * velocity;
-            const destY = Math.sin(angle) * velocity;
-            particle.style.cssText = `
-                position: fixed;
-                left: ${x}px;
-                top: ${y}px;
-                width: ${size}px;
-                height: ${size}px;
-                background-color: ${color};
-                border-radius: ${Math.random() > 0.3 ? '50%' : '1px'};
-                pointer-events: none;
-                z-index: 9999;
-                transform: translate(-50%, -50%) scale(1);
-                transition: transform 0.6s ease-out, opacity 0.6s ease-out;
-            `;
-            document.body.appendChild(particle);
-            requestAnimationFrame(() => {
-                particle.style.transform = `translate(calc(-50% + ${destX}px), calc(-50% + ${destY}px)) scale(0)`;
-                particle.style.opacity = "0";
-            });
-            setTimeout(() => particle.remove(), 600);
-        }
-
         // TẢI TRANG
         window.onload = () => {
-            renderNotes(notePage);
-            renderTamSu(tamSuPage);
-            renderFeedback(feedbackPage);
+            loadAllData();
             createSparkles();
             playAudio();
             const startMusicOnInteraction = () => {
