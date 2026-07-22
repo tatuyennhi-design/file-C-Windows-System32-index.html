@@ -428,347 +428,343 @@
     </footer>
 
     <!-- SCRIPT CHÍNH (ĐÃ KẾT NỐI REALTIME CẢ 3 TAB VỚI GOOGLE SHEET) -->
-    <script>
-        // LINK GOOGLE APPS SCRIPT CỦA CẬU
-        const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwGajsm_8A7Ds0QGZJvSS6lOyfpEI2Xd9SU1JeMXlAldGumM-EGMFnpsQ58ugUoGKFv/exec";
+   <script>
+    // 🔗 LINK GOOGLE APPS SCRIPT
+    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwGajsm_8A7Ds0QGZJvSS6lOyfpEI2Xd9SU1JeMXlAldGumM-EGMFnpsQ58ugUoGKFv/exec";
 
-        // Mảng dữ liệu tải trực tiếp từ Sheet
-        let noteList = [];
-        let tamSuList = [];
-        let feedbackList = [];
+    let noteList = [];
+    let tamSuList = [];
+    let feedbackList = [];
 
-        let notePage = 1;
-        const notesPerPage = 6;
-        let tamSuPage = 1;
-        let feedbackPage = 1;
-        const postsPerPage = 3;
+    let notePage = 1;
+    const notesPerPage = 6;
+    let tamSuPage = 1;
+    let feedbackPage = 1;
+    const postsPerPage = 3;
 
-        // 📥 TẢI DỮ LIỆU TỪ GOOGLE SHEET CHÍNH THỨC
-        function loadDataFromSheet() {
-            fetch(SCRIPT_URL)
-                .then(res => res.json())
-                .then(data => {
-                    const colors = ["note-yellow", "note-pink", "note-green", "note-blue", "note-orange"];
-                    
-                    // Phân loại dữ liệu theo cột type
-                    noteList = data.filter(item => item.type === "uoc-nguyen").map(item => ({
-                        text: item.text,
-                        author: item.author || "Ẩn danh",
-                        color: colors[Math.floor(Math.random() * colors.length)],
-                        rotate: (Math.random() * 6 - 3).toFixed(1) + "deg"
-                    }));
+    // 📥 TẢI DỮ LIỆU TỪ GOOGLE SHEET VỀ WEB
+    function loadDataFromSheet() {
+        // 1. Lấy Ước Nguyện
+        fetch(`${SCRIPT_URL}?action=getNotes`)
+            .then(res => res.json())
+            .then(data => {
+                const colors = ["note-yellow", "note-pink", "note-green", "note-blue", "note-orange"];
+                noteList = data.map(item => ({
+                    text: item.text || item.noidung || "",
+                    author: item.author || item.tacgia || "Ẩn danh",
+                    color: item.color || colors[Math.floor(Math.random() * colors.length)],
+                    rotate: (Math.random() * 6 - 3).toFixed(1) + "deg"
+                }));
+                renderNotes(notePage);
+            }).catch(err => console.error("Lỗi Ước Nguyện:", err));
 
-                    tamSuList = data.filter(item => item.type === "tam-su").map(item => ({
-                        author: item.author || "Ẩn danh",
-                        text: item.text,
-                        date: item.date
-                    }));
+        // 2. Lấy Tâm Sự
+        fetch(`${SCRIPT_URL}?action=getTamSu`)
+            .then(res => res.json())
+            .then(data => {
+                tamSuList = data.map(item => ({
+                    author: item.author || item.tacgia || "Ẩn danh",
+                    text: item.text || item.noidung || "",
+                    date: item.date || item.ngay || ""
+                }));
+                renderTamSu(tamSuPage);
+            }).catch(err => console.error("Lỗi Tâm Sự:", err));
 
-                    feedbackList = data.filter(item => item.type === "feedback").map(item => ({
-                        author: item.author || "Ẩn danh",
-                        char: item.char || "Chung",
-                        text: item.text,
-                        date: item.date
-                    }));
+        // 3. Lấy Feedback
+        fetch(`${SCRIPT_URL}?action=getFeedback`)
+            .then(res => res.json())
+            .then(data => {
+                feedbackList = data.map(item => ({
+                    author: item.author || item.tacgia || "Ẩn danh",
+                    char: item.char || item.nhanvat || "Chung",
+                    text: item.text || item.noidung || "",
+                    date: item.date || item.ngay || ""
+                }));
+                renderFeedback(feedbackPage);
+            }).catch(err => console.error("Lỗi Feedback:", err));
+    }
 
-                    renderNotes(notePage);
-                    renderTamSu(tamSuPage);
-                    renderFeedback(feedbackPage);
-                })
-                .catch(err => console.error("Lỗi khi kết nối Google Sheet:", err));
-        }
+    // 📤 GỬI DỮ LIỆU MỚI VÀO GOOGLE SHEET
+    function sendToSheet(payload, callback) {
+        fetch(SCRIPT_URL, {
+            method: "POST",
+            mode: "no-cors",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(payload)
+        }).then(() => {
+            alert("Đã ghim bài viết của bạn lên trang vĩnh viễn!");
+            setTimeout(loadDataFromSheet, 1000);
+            if (callback) callback();
+        }).catch(err => alert("Có lỗi xảy ra khi kết nối!"));
+    }
 
-        // 📤 GỬI DỮ LIỆU MỚI VÀO GOOGLE SHEET
-        function sendToSheet(payload, callback) {
-            fetch(SCRIPT_URL, {
-                method: "POST",
-                mode: "no-cors",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify(payload)
-            }).then(() => {
-                alert("Đã ghim bài viết của bạn lên trang vĩnh viễn!");
-                loadDataFromSheet();
-                if (callback) callback();
-            }).catch(err => alert("Có lỗi xảy ra khi kết nối!"));
-        }
+    // 1. TƯỜNG ƯỚC NGUYỆN
+    function renderNotes(page) {
+        const board = document.getElementById("corkBoard");
+        board.innerHTML = "";
+        const start = (page - 1) * notesPerPage;
+        const pageNotes = noteList.slice(start, start + notesPerPage);
+        pageNotes.forEach(note => {
+            const card = document.createElement("div");
+            card.className = `note-card ${note.color}`;
+            card.style.transform = `rotate(${note.rotate})`;
+            card.innerHTML = `<div>${note.text}</div><div class="note-author">— ${note.author}</div>`;
+            board.appendChild(card);
+        });
+        renderPagination("notePagination", noteList.length, notesPerPage, notePage, (p) => { notePage = p; renderNotes(p); });
+    }
 
-        // 1. TƯỜNG ƯỚC NGUYỆN
-        function renderNotes(page) {
-            const board = document.getElementById("corkBoard");
-            board.innerHTML = "";
-            const start = (page - 1) * notesPerPage;
-            const pageNotes = noteList.slice(start, start + notesPerPage);
-            pageNotes.forEach(note => {
-                const card = document.createElement("div");
-                card.className = `note-card ${note.color}`;
-                card.style.transform = `rotate(${note.rotate})`;
-                card.innerHTML = `<div>${note.text}</div><div class="note-author">— ${note.author}</div>`;
-                board.appendChild(card);
-            });
-            renderPagination("notePagination", noteList.length, notesPerPage, notePage, (p) => { notePage = p; renderNotes(p); });
-        }
-
-        function openNoteForm() {
-            const text = prompt("Nhập lời ước nguyện / yêu cầu tạo char:");
-            if (text && text.trim() !== "") {
-                const author = prompt("Tên của bạn:") || "Ẩn danh";
-                const today = new Date().toLocaleDateString('vi-VN');
-                
-                sendToSheet({
-                    type: "uoc-nguyen",
-                    text: text,
-                    author: author,
-                    date: today
-                });
-            }
-        }
-
-        // 2. KHU LỜI TÂM SỰ
-        function renderTamSu(page) {
-            const container = document.getElementById("tamSuList");
-            container.innerHTML = "";
-            const start = (page - 1) * postsPerPage;
-            const pagePosts = tamSuList.slice(start, start + postsPerPage);
-            pagePosts.forEach((post, index) => {
-                const actualIndex = start + index;
-                const isLong = post.text.length > 120;
-                const shortText = isLong ? post.text.substring(0, 120) + "..." : post.text;
-                const card = document.createElement("div");
-                card.className = "post-card";
-                card.innerHTML = `
-                    <div class="post-header">
-                        <span class="post-author">💌 ${post.author}</span>
-                        <span class="post-tag">Tâm sự</span>
-                    </div>
-                    <div class="post-content" id="ts-content-${actualIndex}">${shortText}</div>
-                    ${isLong ? `<button class="toggle-btn" id="ts-btn-${actualIndex}" onclick="toggleText('ts-content-${actualIndex}', 'ts-btn-${actualIndex}', \`${post.text.replace(/`/g, '')}\`, \`${shortText.replace(/`/g, '')}\`)">Đọc tiếp...</button>` : ''}
-                    <div class="post-date">${post.date}</div>
-                `;
-                container.appendChild(card);
-            });
-            renderPagination("tamSuPagination", tamSuList.length, postsPerPage, tamSuPage, (p) => { tamSuPage = p; renderTamSu(p); });
-        }
-
-        function addTamSu() {
-            const author = document.getElementById("tsAuthor").value.trim() || "Ẩn danh";
-            const text = document.getElementById("tsText").value.trim();
-            if(!text) return alert("Bạn chưa viết nội dung tâm sự kìa!");
-            const today = new Date().toLocaleDateString('vi-VN');
-
+    function openNoteForm() {
+        const text = prompt("Nhập lời ước nguyện / yêu cầu tạo char:");
+        if (text && text.trim() !== "") {
+            const author = prompt("Tên của bạn:") || "Ẩn danh";
             sendToSheet({
-                type: "tam-su",
+                sheet: "UocNguyen",
                 text: text,
                 author: author,
-                date: today
-            }, () => {
-                document.getElementById("tsText").value = "";
-                document.getElementById("tsAuthor").value = "";
+                color: "note-yellow"
             });
         }
+    }
 
-        // 3. KHU FEEDBACK CHAR
-        function renderFeedback(page) {
-            const container = document.getElementById("feedbackList");
-            container.innerHTML = "";
-            const start = (page - 1) * postsPerPage;
-            const pagePosts = feedbackList.slice(start, start + postsPerPage);
-            pagePosts.forEach((post, index) => {
-                const actualIndex = start + index;
-                const isLong = post.text.length > 120;
-                const shortText = isLong ? post.text.substring(0, 120) + "..." : post.text;
-                const card = document.createElement("div");
-                card.className = "post-card";
-                card.style.borderLeftColor = "#e63946";
-                card.innerHTML = `
-                    <div class="post-header">
-                        <span class="post-author" style="color:#e63946;">🌱 ${post.author}</span>
-                        <span class="post-tag" style="background:#ffebee; color:#c62828;">Char: ${post.char}</span>
-                    </div>
-                    <div class="post-content" id="fb-content-${actualIndex}">${shortText}</div>
-                    ${isLong ? `<button class="toggle-btn" style="color:#e63946;" id="fb-btn-${actualIndex}" onclick="toggleText('fb-content-${actualIndex}', 'fb-btn-${actualIndex}', \`${post.text.replace(/`/g, '')}\`, \`${shortText.replace(/`/g, '')}\`)">Đọc tiếp...</button>` : ''}
-                    <div class="post-date">${post.date}</div>
-                `;
-                container.appendChild(card);
-            });
-            renderPagination("feedbackPagination", feedbackList.length, postsPerPage, feedbackPage, (p) => { feedbackPage = p; renderFeedback(p); });
-        }
-
-        function addFeedback() {
-            const author = document.getElementById("fbAuthor").value.trim() || "Ẩn danh";
-            const charName = document.getElementById("fbChar").value.trim() || "Nhân vật chung";
-            const text = document.getElementById("fbText").value.trim();
-            if(!text) return alert("Bạn chưa nhập nội dung feedback!");
-            const today = new Date().toLocaleDateString('vi-VN');
-
-            sendToSheet({
-                type: "feedback",
-                text: text,
-                author: author,
-                char: charName,
-                date: today
-            }, () => {
-                document.getElementById("fbText").value = "";
-                document.getElementById("fbAuthor").value = "";
-                document.getElementById("fbChar").value = "";
-            });
-        }
-
-        // HÀM CHUNG
-        function toggleText(contentId, btnId, fullText, shortText) {
-            const content = document.getElementById(contentId);
-            const btn = document.getElementById(btnId);
-            if (btn.innerText === "Đọc tiếp...") {
-                content.innerText = fullText;
-                btn.innerText = "Rút gọn";
-            } else {
-                content.innerText = shortText;
-                btn.innerText = "Đọc tiếp...";
-            }
-        }
-
-        function renderPagination(boxId, totalItems, itemsPerPage, currentPage, onPageChange) {
-            const box = document.getElementById(boxId);
-            box.innerHTML = "";
-            const totalPages = Math.ceil(totalItems / itemsPerPage) || 1;
-            for (let i = 1; i <= totalPages; i++) {
-                const btn = document.createElement("button");
-                btn.className = `page-btn ${i === currentPage ? 'active' : ''}`;
-                btn.innerText = `Trang ${i}`;
-                btn.onclick = () => onPageChange(i);
-                box.appendChild(btn);
-            }
-        }
-
-        function switchTab(tabId, btn) {
-            document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
-            document.querySelectorAll('.nav-bar .nav-btn').forEach(b => b.classList.remove('active'));
-            document.getElementById(tabId).classList.add('active');
-            btn.classList.add('active');
-        }
-
-        // ĐĨA THAN & PHÁT NHẠC
-        const music = document.getElementById("bgMusic");
-        const record = document.getElementById("vinylRecord");
-        const musicBtn = document.getElementById("musicBtn");
-
-        function playAudio() {
-            if (!music) return;
-            music.play().then(() => {
-                if (record) record.classList.add("playing");
-                if (musicBtn) musicBtn.innerText = "⏸ Pause";
-            }).catch(error => {
-                console.log("Autoplay bị chặn, chờ tương tác...");
-            });
-        }
-
-        function toggleMusic() {
-            if (music.paused) {
-                playAudio();
-            } else {
-                music.pause();
-                if (record) record.classList.remove("playing");
-                if (musicBtn) musicBtn.innerText = "▶ Play";
-            }
-        } 
-
-        function createSparkles() {
-            for (let i = 0; i < 20; i++) {
-                const particle = document.createElement("div");
-                particle.className = "sparkle-particle";
-                particle.style.left = Math.random() * 100 + "vw";
-                particle.style.animationDelay = Math.random() * 5 + "s";
-                particle.style.animationDuration = (Math.random() * 5 + 5) + "s";
-                document.body.appendChild(particle);
-            }
-        }
-
-        // HIỆU ỨNG RÊ CHUỘT & CLICK
-        const clickPaperImgSrc = "seu.png"; 
-        const sparkleColors = ["#f3e5ab", "#c89b27", "#ffcdd2", "#c8e6c9", "#bbdefb", "#fff59d"];
-        const tingSoundUrl = "https://assets.mixkit.co/active_storage/sfx/2568/2568-preview.mp3";
-        let lastX = 0, lastY = 0;
-
-        document.addEventListener("mousemove", (e) => {
-            if (Math.abs(e.clientX - lastX) > 5 || Math.abs(e.clientY - lastY) > 5) {
-                createTrailParticle(e.clientX, e.clientY);
-                lastX = e.clientX;
-                lastY = e.clientY;
-            }
-        });
-
-        function createTrailParticle(x, y) {
-            const particle = document.createElement("div");
-            const size = Math.random() * 6 + 4;
-            const color = sparkleColors[Math.floor(Math.random() * sparkleColors.length)];
-            particle.style.cssText = `
-                position: fixed;
-                left: ${x}px;
-                top: ${y}px;
-                width: ${size}px;
-                height: ${size}px;
-                background-color: ${color};
-                border-radius: ${Math.random() > 0.5 ? '50%' : '2px'};
-                pointer-events: none;
-                z-index: 9999;
-                opacity: 0.9;
-                transform: translate(-50%, -50%) rotate(${Math.random() * 360}deg);
-                transition: transform 0.8s ease-out, opacity 0.8s ease-out;
+    // 2. KHU LỜI TÂM SỰ
+    function renderTamSu(page) {
+        const container = document.getElementById("tamSuList");
+        container.innerHTML = "";
+        const start = (page - 1) * postsPerPage;
+        const pagePosts = tamSuList.slice(start, start + postsPerPage);
+        pagePosts.forEach((post, index) => {
+            const actualIndex = start + index;
+            const isLong = post.text.length > 120;
+            const shortText = isLong ? post.text.substring(0, 120) + "..." : post.text;
+            const card = document.createElement("div");
+            card.className = "post-card";
+            card.innerHTML = `
+                <div class="post-header">
+                    <span class="post-author">💌 ${post.author}</span>
+                    <span class="post-tag">Tâm sự</span>
+                </div>
+                <div class="post-content" id="ts-content-${actualIndex}">${shortText}</div>
+                ${isLong ? `<button class="toggle-btn" id="ts-btn-${actualIndex}" onclick="toggleText('ts-content-${actualIndex}', 'ts-btn-${actualIndex}', \`${post.text.replace(/`/g, '')}\`, \`${shortText.replace(/`/g, '')}\`)">Đọc tiếp...</button>` : ''}
+                <div class="post-date">${post.date}</div>
             `;
-            document.body.appendChild(particle);
-            requestAnimationFrame(() => {
-                particle.style.transform = `translate(-50%, ${20 + Math.random() * 20}px) rotate(${Math.random() * 360}deg) scale(0)`;
-                particle.style.opacity = "0";
-            });
-            setTimeout(() => particle.remove(), 800);
-        }
-
-        document.addEventListener("click", (e) => {
-            try {
-                const sound = new Audio(tingSoundUrl);
-                sound.volume = 0.4;
-                sound.play().catch(err => {});
-            } catch (err) {}
-            createClickImage(e.clientX, e.clientY);
+            container.appendChild(card);
         });
+        renderPagination("tamSuPagination", tamSuList.length, postsPerPage, tamSuPage, (p) => { tamSuPage = p; renderTamSu(p); });
+    }
 
-        function createClickImage(x, y) {
-            const img = document.createElement("img");
-            img.src = clickPaperImgSrc;
-            img.style.cssText = `
-                position: fixed;
-                left: ${x}px;
-                top: ${y}px;
-                width: 30px;
-                height: 30px;
-                pointer-events: none;
-                z-index: 10000;
-                transform: translate(-50%, -50%) scale(0.5) rotate(0deg);
-                transition: transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.5s ease-out;
-                opacity: 1;
+    function addTamSu() {
+        const author = document.getElementById("tsAuthor").value.trim() || "Ẩn danh";
+        const text = document.getElementById("tsText").value.trim();
+        if(!text) return alert("Bạn chưa viết nội dung tâm sự kìa!");
+
+        sendToSheet({
+            sheet: "TamSu",
+            text: text,
+            author: author
+        }, () => {
+            document.getElementById("tsText").value = "";
+            document.getElementById("tsAuthor").value = "";
+        });
+    }
+
+    // 3. KHU FEEDBACK CHAR
+    function renderFeedback(page) {
+        const container = document.getElementById("feedbackList");
+        container.innerHTML = "";
+        const start = (page - 1) * postsPerPage;
+        const pagePosts = feedbackList.slice(start, start + postsPerPage);
+        pagePosts.forEach((post, index) => {
+            const actualIndex = start + index;
+            const isLong = post.text.length > 120;
+            const shortText = isLong ? post.text.substring(0, 120) + "..." : post.text;
+            const card = document.createElement("div");
+            card.className = "post-card";
+            card.style.borderLeftColor = "#e63946";
+            card.innerHTML = `
+                <div class="post-header">
+                    <span class="post-author" style="color:#e63946;">🌱 ${post.author}</span>
+                    <span class="post-tag" style="background:#ffebee; color:#c62828;">Char: ${post.char}</span>
+                </div>
+                <div class="post-content" id="fb-content-${actualIndex}">${shortText}</div>
+                ${isLong ? `<button class="toggle-btn" style="color:#e63946;" id="fb-btn-${actualIndex}" onclick="toggleText('fb-content-${actualIndex}', 'fb-btn-${actualIndex}', \`${post.text.replace(/`/g, '')}\`, \`${shortText.replace(/`/g, '')}\`)">Đọc tiếp...</button>` : ''}
+                <div class="post-date">${post.date}</div>
             `;
-            document.body.appendChild(img);
-            requestAnimationFrame(() => {
-                img.style.transform = `translate(-50%, -80%) scale(1.2) rotate(${Math.random() * 40 - 20}deg)`;
-                img.style.opacity = "0";
-            });
-            setTimeout(() => img.remove(), 500);
-        }
+            container.appendChild(card);
+        });
+        renderPagination("feedbackPagination", feedbackList.length, postsPerPage, feedbackPage, (p) => { feedbackPage = p; renderFeedback(p); });
+    }
 
-        // TẢI TRANG
-        window.onload = () => {
-            loadDataFromSheet();
-            createSparkles();
+    function addFeedback() {
+        const author = document.getElementById("fbAuthor").value.trim() || "Ẩn danh";
+        const charName = document.getElementById("fbChar").value.trim() || "Nhân vật chung";
+        const text = document.getElementById("fbText").value.trim();
+        if(!text) return alert("Bạn chưa nhập nội dung feedback!");
+
+        sendToSheet({
+            sheet: "Feedback",
+            text: text,
+            author: author,
+            char: charName
+        }, () => {
+            document.getElementById("fbText").value = "";
+            document.getElementById("fbAuthor").value = "";
+            document.getElementById("fbChar").value = "";
+        });
+    }
+
+    // CÁC HÀM PHỤ TRỢ & PHÂN TRANG
+    function toggleText(contentId, btnId, fullText, shortText) {
+        const content = document.getElementById(contentId);
+        const btn = document.getElementById(btnId);
+        if (btn.innerText === "Đọc tiếp...") {
+            content.innerText = fullText;
+            btn.innerText = "Rút gọn";
+        } else {
+            content.innerText = shortText;
+            btn.innerText = "Đọc tiếp...";
+        }
+    }
+
+    function renderPagination(boxId, totalItems, itemsPerPage, currentPage, onPageChange) {
+        const box = document.getElementById(boxId);
+        box.innerHTML = "";
+        const totalPages = Math.ceil(totalItems / itemsPerPage) || 1;
+        for (let i = 1; i <= totalPages; i++) {
+            const btn = document.createElement("button");
+            btn.className = `page-btn ${i === currentPage ? 'active' : ''}`;
+            btn.innerText = `Trang ${i}`;
+            btn.onclick = () => onPageChange(i);
+            box.appendChild(btn);
+        }
+    }
+
+    function switchTab(tabId, btn) {
+        document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
+        document.querySelectorAll('.nav-bar .nav-btn').forEach(b => b.classList.remove('active'));
+        document.getElementById(tabId).classList.add('active');
+        btn.classList.add('active');
+    }
+
+    // ĐĨA THAN & PHÁT NHẠC
+    const music = document.getElementById("bgMusic");
+    const record = document.getElementById("vinylRecord");
+    const musicBtn = document.getElementById("musicBtn");
+
+    function playAudio() {
+        if (!music) return;
+        music.play().then(() => {
+            if (record) record.classList.add("playing");
+            if (musicBtn) musicBtn.innerText = "⏸ Pause";
+        }).catch(error => console.log("Autoplay bị chặn"));
+    }
+
+    function toggleMusic() {
+        if (music.paused) {
             playAudio();
-            const startMusicOnInteraction = () => {
-                if (music && music.paused) {
-                    playAudio();
-                }
-                window.removeEventListener("click", startMusicOnInteraction);
-                window.removeEventListener("touchstart", startMusicOnInteraction);
-            };
-            window.addEventListener("click", startMusicOnInteraction);
-            window.addEventListener("touchstart", startMusicOnInteraction);
+        } else {
+            music.pause();
+            if (record) record.classList.remove("playing");
+            if (musicBtn) musicBtn.innerText = "▶ Play";
+        }
+    } 
+
+    function createSparkles() {
+        for (let i = 0; i < 20; i++) {
+            const particle = document.createElement("div");
+            particle.className = "sparkle-particle";
+            particle.style.left = Math.random() * 100 + "vw";
+            particle.style.animationDelay = Math.random() * 5 + "s";
+            particle.style.animationDuration = (Math.random() * 5 + 5) + "s";
+            document.body.appendChild(particle);
+        }
+    }
+
+    // HIỆU ỨNG RÊ CHUỘT & CLICK
+    const clickPaperImgSrc = "seu.png"; 
+    const sparkleColors = ["#f3e5ab", "#c89b27", "#ffcdd2", "#c8e6c9", "#bbdefb", "#fff59d"];
+    const tingSoundUrl = "https://assets.mixkit.co/active_storage/sfx/2568/2568-preview.mp3";
+    let lastX = 0, lastY = 0;
+
+    document.addEventListener("mousemove", (e) => {
+        if (Math.abs(e.clientX - lastX) > 5 || Math.abs(e.clientY - lastY) > 5) {
+            createTrailParticle(e.clientX, e.clientY);
+            lastX = e.clientX;
+            lastY = e.clientY;
+        }
+    });
+
+    function createTrailParticle(x, y) {
+        const particle = document.createElement("div");
+        const size = Math.random() * 6 + 4;
+        const color = sparkleColors[Math.floor(Math.random() * sparkleColors.length)];
+        particle.style.cssText = `
+            position: fixed;
+            left: ${x}px;
+            top: ${y}px;
+            width: ${size}px;
+            height: ${size}px;
+            background-color: ${color};
+            border-radius: ${Math.random() > 0.5 ? '50%' : '2px'};
+            pointer-events: none;
+            z-index: 9999;
+            opacity: 0.9;
+            transform: translate(-50%, -50%) rotate(${Math.random() * 360}deg);
+            transition: transform 0.8s ease-out, opacity 0.8s ease-out;
+        `;
+        document.body.appendChild(particle);
+        requestAnimationFrame(() => {
+            particle.style.transform = `translate(-50%, ${20 + Math.random() * 20}px) rotate(${Math.random() * 360}deg) scale(0)`;
+            particle.style.opacity = "0";
+        });
+        setTimeout(() => particle.remove(), 800);
+    }
+
+    document.addEventListener("click", (e) => {
+        try {
+            const sound = new Audio(tingSoundUrl);
+            sound.volume = 0.4;
+            sound.play().catch(err => {});
+        } catch (err) {}
+        createClickImage(e.clientX, e.clientY);
+    });
+
+    function createClickImage(x, y) {
+        const img = document.createElement("img");
+        img.src = clickPaperImgSrc;
+        img.style.cssText = `
+            position: fixed;
+            left: ${x}px;
+            top: ${y}px;
+            width: 30px;
+            height: 30px;
+            pointer-events: none;
+            z-index: 10000;
+            transform: translate(-50%, -50%) scale(0.5) rotate(0deg);
+            transition: transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.5s ease-out;
+            opacity: 1;
+        `;
+        document.body.appendChild(img);
+        requestAnimationFrame(() => {
+            img.style.transform = `translate(-50%, -80%) scale(1.2) rotate(${Math.random() * 40 - 20}deg)`;
+            img.style.opacity = "0";
+        });
+        setTimeout(() => img.remove(), 500);
+    }
+
+    // TẢI TRANG HÀN HOÀN
+    window.onload = () => {
+        loadDataFromSheet();
+        createSparkles();
+        playAudio();
+        const startMusicOnInteraction = () => {
+            if (music && music.paused) playAudio();
+            window.removeEventListener("click", startMusicOnInteraction);
+            window.removeEventListener("touchstart", startMusicOnInteraction);
         };
-    </script>
+        window.addEventListener("click", startMusicOnInteraction);
+        window.addEventListener("touchstart", startMusicOnInteraction);
+    };
+</script>
 </body>
 </html>
