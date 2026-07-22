@@ -1013,7 +1013,7 @@
         };
     </script>
     // Hàm render nội dung có nút Đọc tiếp / Thu gọn dùng chung cho toàn bộ web
-function renderTextWithReadMore(text, maxLength = 100) {
+function renderTextWithReadMore(text, maxLength = 50) {
     if (!text) return "";
     if (text.length <= maxLength) {
         return `<span class="note-text-full">${text}</span>`;
