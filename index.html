@@ -539,7 +539,7 @@
         let selectedStickersData = []; // Mảng chứa object: { st: '🌸', pos: 'top-left' }
         let stickerToAssignPos = ""; 
 
-        // 1. TẢI DỮ LIỆU TỪ GOOGLE SHEET
+               // 1. TẢI DỮ LIỆU TỪ GOOGLE SHEET
         function loadDataFromSheet() {
             fetch(`${SCRIPT_URL}?action=getNotes`)
                 .then(res => res.json())
@@ -551,7 +551,7 @@
                             color: item.color || "note-yellow",
                             stickers: item.stickers || [], 
                             rotate: (Math.random() * 6 - 3).toFixed(1) + "deg"
-                        }));
+                        })).reverse(); // <--- THÊM .reverse() Ở ĐÂY NÈ
                         renderNotes(notePage);
                     }
                 }).catch(e => console.log("Lỗi tải Ước Nguyện:", e));
@@ -560,7 +560,7 @@
                 .then(res => res.json())
                 .then(data => {
                     if (Array.isArray(data)) {
-                        tamSuList = data;
+                        tamSuList = data.reverse(); // <--- THÊM .reverse() Ở ĐÂY NỮA
                         renderTamSu(tamSuPage);
                     }
                 }).catch(e => console.log("Lỗi tải Tâm Sự:", e));
@@ -569,11 +569,12 @@
                 .then(res => res.json())
                 .then(data => {
                     if (Array.isArray(data)) {
-                        feedbackList = data;
+                        feedbackList = data.reverse(); // <--- VÀ THÊM .reverse() Ở ĐÂY NỮA
                         renderFeedback(feedbackPage);
                     }
                 }).catch(e => console.log("Lỗi tải Feedback:", e));
         }
+
 
         // 2. GỬI DỮ LIỆU LÊN GOOGLE SHEET
         function sendToSheet(data, onSuccess) {
