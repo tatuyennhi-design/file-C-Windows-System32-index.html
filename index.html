@@ -393,6 +393,20 @@
             color: #776a4a;
             z-index: 10;
         }
+        .btn-toggle-read {
+    background: transparent;
+    border: none;
+    color: #c88f21;
+    font-weight: bold;
+    cursor: pointer;
+    font-size: 0.9em;
+    padding: 0 4px;
+}
+
+.btn-toggle-read:hover {
+    text-decoration: underline;
+}
+
     </style>
 </head>
 <body>
@@ -998,5 +1012,42 @@
             window.addEventListener("touchstart", startMusicOnInteraction);
         };
     </script>
+    // Hàm render nội dung có nút Đọc tiếp / Thu gọn dùng chung cho toàn bộ web
+function renderTextWithReadMore(text, maxLength = 100) {
+    if (!text) return "";
+    if (text.length <= maxLength) {
+        return `<span class="note-text-full">${text}</span>`;
+    }
+
+    const shortText = text.substring(0, maxLength);
+    const fullTextEncoded = encodeURIComponent(text);
+
+    return `
+        <span class="note-text-content">${shortText}...</span>
+        <button class="btn-toggle-read" 
+                data-expanded="false" 
+                onclick="toggleReadMore(this, '${fullTextEncoded}', ${maxLength})">
+            ...Đọc tiếp
+        </button>
+    `;
+}
+
+// Hàm sự kiện khi bấm nút Đọc tiếp / Thu gọn
+function toggleReadMore(btn, fullTextEncoded, maxLength) {
+    const fullText = decodeURIComponent(fullTextEncoded);
+    const textContainer = btn.previousElementSibling;
+    const isExpanded = btn.getAttribute('data-expanded') === 'true';
+
+    if (isExpanded) {
+        textContainer.innerText = fullText.substring(0, maxLength) + "...";
+        btn.innerText = "...Đọc tiếp";
+        btn.setAttribute('data-expanded', 'false');
+    } else {
+        textContainer.innerText = fullText;
+        btn.innerText = " Thu gọn";
+        btn.setAttribute('data-expanded', 'true');
+    }
+}
+
 </body>
 </html>
