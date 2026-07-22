@@ -173,6 +173,7 @@
             color: #555;
             margin-top: 10px;
         }
+
         /* KHU BÀI VIẾT TÂM SỰ & FEEDBACK DẠNG DANH SÁCH */
         .post-list {
             display: flex;
@@ -231,6 +232,7 @@
             margin-top: 8px;
             text-align: right;
         }
+
         /* FORM ĐẶT PHÍA DƯỚI CÙNG */
         .form-box {
             background: #ffffff;
@@ -267,6 +269,7 @@
         .form-box button:hover {
             background: #b0841a;
         }
+
         /* THANH PHÂN TRANG */
         .pagination {
             display: flex;
@@ -290,6 +293,18 @@
             background: var(--accent-gold);
             color: #fff;
         }
+
+        /* POPUP MODAL CHO TƯỜNG ƯỚC NGUYỆN */
+        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.4); display: none; justify-content: center; align-items: center; z-index: 999; }
+        .modal-overlay.active { display: flex; }
+        .modal-box { background: white; padding: 25px; border-radius: 15px; max-width: 400px; width: 90%; text-align: center; box-shadow: 0 5px 20px rgba(0,0,0,0.2); border: 2px solid var(--accent-gold); }
+        .modal-box input, .modal-box textarea { width: 100%; padding: 10px; margin-bottom: 10px; border: 1px solid #e0d0a0; border-radius: 8px; outline: none; }
+        .color-picker, .sticker-picker { display: flex; gap: 10px; justify-content: center; margin-bottom: 12px; }
+        .color-opt { width: 25px; height: 25px; border-radius: 50%; cursor: pointer; border: 2px solid transparent; }
+        .color-opt.selected { border-color: #333; transform: scale(1.1); }
+        .sticker-opt { width: 30px; height: 30px; cursor: pointer; opacity: 0.6; transition: 0.2s; font-size: 20px; }
+        .sticker-opt.selected { opacity: 1; transform: scale(1.2); }
+
         /* ĐĨA THAN */
         .vinyl-player-box {
             position: fixed;
@@ -368,7 +383,7 @@
     </div>
     <audio id="bgMusic" loop src="nhac.mp3"></audio>
 
-    <!-- HEADER -->
+    <!-- HEADER & SLOGAN -->
     <header>
         <div class="nav-bar">
             <a href="https://tatuyennhi-design.github.io/index.html/" class="nav-btn back-home">🏠 Quay về Tiệm chính</a>
@@ -389,7 +404,7 @@
             <div class="cork-board" id="corkBoard"></div>
             <div class="pagination" id="notePagination"></div>
             <div style="text-align: center; margin-top: 20px;">
-                <button class="nav-btn" style="background:var(--accent-gold); color:#fff; padding:10px 24px; font-size:15px;" onclick="openNoteForm()">✍️ Dán giấy ước nguyện mới</button>
+                <button class="nav-btn" style="background:var(--accent-gold); color:#fff; padding:10px 24px; font-size:15px;" onclick="openNoteModal()">✍️ Dán giấy ước nguyện mới</button>
             </div>
         </div>
 
@@ -421,422 +436,400 @@
         </div>
     </main>
 
+    <!-- POPUP NỐT ƯỚC NGUYỆN -->
+    <div id="noteModal" class="modal-overlay">
+        <div class="modal-box">
+            <h3 style="color:var(--accent-gold); margin-bottom:10px;">Gửi Điều Ước ✨</h3>
+            <input type="text" id="modalNoteAuthor" placeholder="Tên bạn (ẩn danh thì bỏ trống)">
+            <textarea id="modalNoteText" rows="3" placeholder="Nhập lời ước nguyện / yêu cầu tạo char..."></textarea>
+
+            <p style="font-size:0.85em; margin-bottom: 5px;">Chọn màu giấy:</p>
+            <div class="color-picker">
+                <div class="color-opt selected" style="background:#fff59d;" onclick="selectColor('note-yellow', this)"></div>
+                <div class="color-opt" style="background:#ffcdd2;" onclick="selectColor('note-pink', this)"></div>
+                <div class="color-opt" style="background:#c8e6c9;" onclick="selectColor('note-green', this)"></div>
+                <div class="color-opt" style="background:#bbdefb;" onclick="selectColor('note-blue', this)"></div>
+                <div class="color-opt" style="background:#ffe0b2;" onclick="selectColor('note-orange', this)"></div>
+            </div>
+
+            <p style="font-size:0.85em; margin-bottom: 5px;">Chọn Sticker trang trí:</p>
+            <div class="sticker-picker">
+                <span class="sticker-opt selected" onclick="selectSticker('', this)">🚫</span>
+                <span class="sticker-opt" onclick="selectSticker('🌸', this)">🌸</span>
+                <span class="sticker-opt" onclick="selectSticker('⭐', this)">⭐</span>
+                <span class="sticker-opt" onclick="selectSticker('🍀', this)">🍀</span>
+                <span class="sticker-opt" onclick="selectSticker('🎀', this)">🎀</span>
+            </div>
+
+            <button class="nav-btn" style="background:var(--accent-gold); color:white; border:none;" onclick="submitNote()">Gửi Ước Nguyện</button>
+            <button class="nav-btn" style="background:#aaa; color:white; border:none;" onclick="closeNoteModal()">Hủy</button>
+        </div>
+    </div>
+
+    <!-- POPUP THÔNG BÁO CUSTOM -->
+    <div id="customNotice" class="modal-overlay">
+        <div class="modal-box">
+            <p class="notice-message" style="margin-bottom: 15px; font-weight: bold;">Thông báo</p>
+            <button class="nav-btn" style="background:var(--accent-gold); color:white; border:none;" onclick="closeNotice()">Đóng</button>
+        </div>
+    </div>
+
     <!-- FOOTER -->
     <footer>
         <p>✨ Cảm ơn bạn rất nhiều vì đã ghé thăm và để lại dấu chân tại Tiệm Nhà Hyperion ✨</p>
         <p style="margin-top:5px; font-size:11px; color:#aaa;">© 2026 Tiệm Nhà Hyperion - Góc Ước Nguyện Giao Lưu & Feedback Char</p>
     </footer>
 
-    <!-- SCRIPT CHÍNH (ĐÃ KẾT NỐI REALTIME CẢ 3 TAB VỚI GOOGLE SHEET) -->
-  <script>
-    // 🔗 LINK GOOGLE APPS SCRIPT
-    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwGajsm_8A7Ds0QGZJvSS6lOyfpEI2Xd9SU1JeMXlAldGumM-EGMFnpsQ58ugUoGKFv/exec";
+    <!-- SCRIPT CHÍNH (ĐÃ NỐI GOOGLE SHEET + GIỮ HIỆU ỨNG GỐC) -->
+    <script>
+        // 🔗 LINK APPS SCRIPT CỦA CẬU:
+        const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwGajsm_8A7Ds0QGZJvSS6lOyfpEI2Xd9SU1JeMXlAldGumM-EGMFnpsQ58ugUoGKFv/exec";
 
-    let noteList = [];
-    let tamSuList = [];
-    let feedbackList = [];
+        let noteList = [];
+        let tamSuList = [];
+        let feedbackList = [];
 
-    let notePage = 1;
-    const notesPerPage = 6;
-    let tamSuPage = 1;
-    let feedbackPage = 1;
-    const postsPerPage = 3;
+        let notePage = 1, tamSuPage = 1, feedbackPage = 1;
+        const notesPerPage = 6, postsPerPage = 3;
+        let selectedNoteColor = "note-yellow", selectedSticker = "";
 
-    let selectedNoteColor = "note-yellow";
-    let selectedSticker = "";
+        // 1. TẢI DỮ LIỆU TỪ GOOGLE SHEET
+        function loadDataFromSheet() {
+            fetch(`${SCRIPT_URL}?action=getNotes`)
+                .then(res => res.json())
+                .then(data => {
+                    if (Array.isArray(data)) {
+                        noteList = data.map(item => ({
+                            text: item.text,
+                            author: item.author,
+                            color: item.color || "note-yellow",
+                            sticker: item.sticker || "",
+                            rotate: (Math.random() * 6 - 3).toFixed(1) + "deg"
+                        }));
+                        renderNotes(notePage);
+                    }
+                }).catch(e => console.log("Lỗi tải Ước Nguyện:", e));
 
-    // 📥 TẢI DỮ LIỆU TỪ GOOGLE SHEET VỀ WEB
-    function loadDataFromSheet() {
-        // 1. Lấy Ước Nguyện
-        fetch(`${SCRIPT_URL}?action=getNotes`)
-            .then(res => res.json())
-            .then(data => {
-                const colors = ["note-yellow", "note-pink", "note-green", "note-blue", "note-orange"];
-                noteList = data.map(item => ({
-                    text: item.text || item.noidung || "",
-                    author: item.author || item.tacgia || "Ẩn danh",
-                    color: item.color || colors[Math.floor(Math.random() * colors.length)],
-                    sticker: item.sticker || "",
-                    rotate: (Math.random() * 6 - 3).toFixed(1) + "deg"
-                }));
-                renderNotes(notePage);
-            }).catch(err => console.error("Lỗi Ước Nguyện:", err));
+            fetch(`${SCRIPT_URL}?action=getTamSu`)
+                .then(res => res.json())
+                .then(data => {
+                    if (Array.isArray(data)) {
+                        tamSuList = data;
+                        renderTamSu(tamSuPage);
+                    }
+                }).catch(e => console.log("Lỗi tải Tâm Sự:", e));
 
-        // 2. Lấy Tâm Sự
-        fetch(`${SCRIPT_URL}?action=getTamSu`)
-            .then(res => res.json())
-            .then(data => {
-                tamSuList = data.map(item => ({
-                    author: item.author || item.tacgia || "Ẩn danh",
-                    text: item.text || item.noidung || "",
-                    date: item.date || item.ngay || ""
-                }));
-                renderTamSu(tamSuPage);
-            }).catch(err => console.error("Lỗi Tâm Sự:", err));
-
-        // 3. Lấy Feedback
-        fetch(`${SCRIPT_URL}?action=getFeedback`)
-            .then(res => res.json())
-            .then(data => {
-                feedbackList = data.map(item => ({
-                    author: item.author || item.tacgia || "Ẩn danh",
-                    char: item.char || item.nhanvat || "Chung",
-                    text: item.text || item.noidung || "",
-                    date: item.date || item.ngay || ""
-                }));
-                renderFeedback(feedbackPage);
-            }).catch(err => console.error("Lỗi Feedback:", err));
-    }
-
-    // 📤 GỬI DỮ LIỆU MỚI VÀO GOOGLE SHEET
-    function sendToSheet(payload, callback) {
-        fetch(SCRIPT_URL, {
-            method: "POST",
-            mode: "no-cors",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(payload)
-        }).then(() => {
-            showCustomNotice("Đã ghim bài viết của bạn lên trang vĩnh viễn! ✨");
-            setTimeout(loadDataFromSheet, 1000);
-            if (callback) callback();
-        }).catch(err => showCustomNotice("Có lỗi xảy ra khi kết nối! 😿"));
-    }
-
-    // 🔔 HỘP THÔNG BÁO XỊN SÒ (thay cho alert mặc định)
-    function showCustomNotice(msg) {
-        const noticeBox = document.getElementById("customNotice") || document.getElementById("noticeModal");
-        if (noticeBox) {
-            const msgEl = noticeBox.querySelector(".notice-message") || noticeBox;
-            if(msgEl) msgEl.innerText = msg;
-            noticeBox.style.display = "flex";
-            noticeBox.classList.add("active");
-        } else {
-            alert(msg);
+            fetch(`${SCRIPT_URL}?action=getFeedback`)
+                .then(res => res.json())
+                .then(data => {
+                    if (Array.isArray(data)) {
+                        feedbackList = data;
+                        renderFeedback(feedbackPage);
+                    }
+                }).catch(e => console.log("Lỗi tải Feedback:", e));
         }
-    }
 
-    function closeNotice() {
-        const noticeBox = document.getElementById("customNotice") || document.getElementById("noticeModal");
-        if (noticeBox) {
-            noticeBox.style.display = "none";
-            noticeBox.classList.remove("active");
+        // 2. GỬI DỮ LIỆU LÊN GOOGLE SHEET
+        function sendToSheet(payload, callback) {
+            fetch(SCRIPT_URL, {
+                method: "POST",
+                mode: "no-cors",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(payload)
+            }).then(() => {
+                showNotice("Đã gửi thành công lên Tiệm! ✨");
+                setTimeout(loadDataFromSheet, 1200);
+                if (callback) callback();
+            }).catch(() => showNotice("Có lỗi khi kết nối!"));
         }
-    }
 
-    // 📌 QUẢN LÝ POPUP VÀ LỰA CHỌN NỐT
-    function openNoteModal() {
-        const modal = document.getElementById("noteModal");
-        if (modal) {
-            modal.style.display = "flex";
+        // 3. POPUP MODAL & THÔNG BÁO
+        function showNotice(msg) {
+            const modal = document.getElementById("customNotice");
+            modal.querySelector(".notice-message").innerText = msg;
             modal.classList.add("active");
         }
-    }
+        function closeNotice() { document.getElementById("customNotice").classList.remove("active"); }
+        function openNoteModal() { document.getElementById("noteModal").classList.add("active"); }
+        function closeNoteModal() { document.getElementById("noteModal").classList.remove("active"); }
 
-    function closeNoteModal() {
-        const modal = document.getElementById("noteModal");
-        if (modal) {
-            modal.style.display = "none";
-            modal.classList.remove("active");
+        function selectColor(color, el) {
+            selectedNoteColor = color;
+            document.querySelectorAll('.color-opt').forEach(b => b.classList.remove('selected'));
+            el.classList.add('selected');
         }
-    }
 
-    function selectColor(colorClass, el) {
-        selectedNoteColor = colorClass;
-        document.querySelectorAll('.color-option, .color-btn').forEach(btn => btn.classList.remove('selected', 'active'));
-        if (el) el.classList.add('selected', 'active');
-    }
-
-    function selectSticker(stickerUrl, el) {
-        selectedSticker = stickerUrl;
-        document.querySelectorAll('.sticker-option, .sticker-btn').forEach(btn => btn.classList.remove('selected', 'active'));
-        if (el) el.classList.add('selected', 'active');
-    }
-
-    // 1. TƯỜNG ƯỚC NGUYỆN
-    function renderNotes(page) {
-        const board = document.getElementById("corkBoard");
-        if(!board) return;
-        board.innerHTML = "";
-        const start = (page - 1) * notesPerPage;
-        const pageNotes = noteList.slice(start, start + notesPerPage);
-        pageNotes.forEach(note => {
-            const card = document.createElement("div");
-            card.className = `note-card ${note.color}`;
-            card.style.transform = `rotate(${note.rotate})`;
-            
-            let stickerHtml = note.sticker ? `<img src="${note.sticker}" class="note-sticker" style="position:absolute; top:-10px; right:-10px; width:35px; height:35px; pointer-events:none;">` : '';
-            
-            card.innerHTML = `${stickerHtml}<div>${note.text}</div><div class="note-author">— ${note.author}</div>`;
-            board.appendChild(card);
-        });
-        renderPagination("notePagination", noteList.length, notesPerPage, notePage, (p) => { notePage = p; renderNotes(p); });
-    }
-
-    function submitNote() {
-        const textInput = document.getElementById("noteText") || document.getElementById("modalNoteText");
-        const authorInput = document.getElementById("noteAuthor") || document.getElementById("modalNoteAuthor");
-        
-        const text = textInput ? textInput.value.trim() : "";
-        const author = (authorInput && authorInput.value.trim()) ? authorInput.value.trim() : "Ẩn danh";
-
-        if (!text) return showCustomNotice("Bạn chưa viết lời ước nguyện kìa!");
-
-        sendToSheet({
-            sheet: "UocNguyen",
-            text: text,
-            author: author,
-            color: selectedNoteColor,
-            sticker: selectedSticker
-        }, () => {
-            if (textInput) textInput.value = "";
-            if (authorInput) authorInput.value = "";
-            closeNoteModal();
-        });
-    }
-
-    // 2. KHU LỜI TÂM SỰ
-    function renderTamSu(page) {
-        const container = document.getElementById("tamSuList");
-        if(!container) return;
-        container.innerHTML = "";
-        const start = (page - 1) * postsPerPage;
-        const pagePosts = tamSuList.slice(start, start + postsPerPage);
-        pagePosts.forEach((post, index) => {
-            const actualIndex = start + index;
-            const isLong = post.text.length > 120;
-            const shortText = isLong ? post.text.substring(0, 120) + "..." : post.text;
-            const card = document.createElement("div");
-            card.className = "post-card";
-            card.innerHTML = `
-                <div class="post-header">
-                    <span class="post-author">💌 ${post.author}</span>
-                    <span class="post-tag">Tâm sự</span>
-                </div>
-                <div class="post-content" id="ts-content-${actualIndex}">${shortText}</div>
-                ${isLong ? `<button class="toggle-btn" id="ts-btn-${actualIndex}" onclick="toggleText('ts-content-${actualIndex}', 'ts-btn-${actualIndex}', \`${post.text.replace(/`/g, '')}\`, \`${shortText.replace(/`/g, '')}\`)">Đọc tiếp...</button>` : ''}
-                <div class="post-date">${post.date}</div>
-            `;
-            container.appendChild(card);
-        });
-        renderPagination("tamSuPagination", tamSuList.length, postsPerPage, tamSuPage, (p) => { tamSuPage = p; renderTamSu(p); });
-    }
-
-    function addTamSu() {
-        const author = document.getElementById("tsAuthor").value.trim() || "Ẩn danh";
-        const text = document.getElementById("tsText").value.trim();
-        if(!text) return showCustomNotice("Bạn chưa viết nội dung tâm sự kìa!");
-
-        sendToSheet({
-            sheet: "TamSu",
-            text: text,
-            author: author
-        }, () => {
-            document.getElementById("tsText").value = "";
-            document.getElementById("tsAuthor").value = "";
-        });
-    }
-
-    // 3. KHU FEEDBACK CHAR
-    function renderFeedback(page) {
-        const container = document.getElementById("feedbackList");
-        if(!container) return;
-        container.innerHTML = "";
-        const start = (page - 1) * postsPerPage;
-        const pagePosts = feedbackList.slice(start, start + postsPerPage);
-        pagePosts.forEach((post, index) => {
-            const actualIndex = start + index;
-            const isLong = post.text.length > 120;
-            const shortText = isLong ? post.text.substring(0, 120) + "..." : post.text;
-            const card = document.createElement("div");
-            card.className = "post-card";
-            card.style.borderLeftColor = "#e63946";
-            card.innerHTML = `
-                <div class="post-header">
-                    <span class="post-author" style="color:#e63946;">🌱 ${post.author}</span>
-                    <span class="post-tag" style="background:#ffebee; color:#c62828;">Char: ${post.char}</span>
-                </div>
-                <div class="post-content" id="fb-content-${actualIndex}">${shortText}</div>
-                ${isLong ? `<button class="toggle-btn" style="color:#e63946;" id="fb-btn-${actualIndex}" onclick="toggleText('fb-content-${actualIndex}', 'fb-btn-${actualIndex}', \`${post.text.replace(/`/g, '')}\`, \`${shortText.replace(/`/g, '')}\`)">Đọc tiếp...</button>` : ''}
-                <div class="post-date">${post.date}</div>
-            `;
-            container.appendChild(card);
-        });
-        renderPagination("feedbackPagination", feedbackList.length, postsPerPage, feedbackPage, (p) => { feedbackPage = p; renderFeedback(p); });
-    }
-
-    function addFeedback() {
-        const author = document.getElementById("fbAuthor").value.trim() || "Ẩn danh";
-        const charName = document.getElementById("fbChar").value.trim() || "Nhân vật chung";
-        const text = document.getElementById("fbText").value.trim();
-        if(!text) return showCustomNotice("Bạn chưa nhập nội dung feedback!");
-
-        sendToSheet({
-            sheet: "Feedback",
-            text: text,
-            author: author,
-            char: charName
-        }, () => {
-            document.getElementById("fbText").value = "";
-            document.getElementById("fbAuthor").value = "";
-            document.getElementById("fbChar").value = "";
-        });
-    }
-
-    // CÁC HÀM PHỤ TRỢ & PHÂN TRANG
-    function toggleText(contentId, btnId, fullText, shortText) {
-        const content = document.getElementById(contentId);
-        const btn = document.getElementById(btnId);
-        if (btn.innerText === "Đọc tiếp...") {
-            content.innerText = fullText;
-            btn.innerText = "Rút gọn";
-        } else {
-            content.innerText = shortText;
-            btn.innerText = "Đọc tiếp...";
+        function selectSticker(st, el) {
+            selectedSticker = st;
+            document.querySelectorAll('.sticker-opt').forEach(b => b.classList.remove('selected'));
+            el.classList.add('selected');
         }
-    }
 
-    function renderPagination(boxId, totalItems, itemsPerPage, currentPage, onPageChange) {
-        const box = document.getElementById(boxId);
-        if(!box) return;
-        box.innerHTML = "";
-        const totalPages = Math.ceil(totalItems / itemsPerPage) || 1;
-        for (let i = 1; i <= totalPages; i++) {
-            const btn = document.createElement("button");
-            btn.className = `page-btn ${i === currentPage ? 'active' : ''}`;
-            btn.innerText = `Trang ${i}`;
-            btn.onclick = () => onPageChange(i);
-            box.appendChild(btn);
+        // 4. RENDER TƯỜNG ƯỚC NGUYỆN
+        function renderNotes(page) {
+            const board = document.getElementById("corkBoard");
+            if (!board) return; board.innerHTML = "";
+            const items = noteList.slice((page - 1) * notesPerPage, page * notesPerPage);
+
+            items.forEach(item => {
+                const card = document.createElement("div");
+                card.className = `note-card ${item.color}`;
+                card.style.transform = `rotate(${item.rotate})`;
+                let st = item.sticker ? `<span style="position:absolute; top:-10px; right:-5px; font-size:24px;">${item.sticker}</span>` : '';
+                card.innerHTML = `${st}<div>${item.text}</div><div class="note-author">— ${item.author}</div>`;
+                board.appendChild(card);
+            });
+            renderPagination("notePagination", noteList.length, notesPerPage, notePage, (p) => { notePage = p; renderNotes(p); });
         }
-    }
 
-    function switchTab(tabId, btn) {
-        document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
-        document.querySelectorAll('.nav-bar .nav-btn').forEach(b => b.classList.remove('active'));
-        const targetTab = document.getElementById(tabId);
-        if(targetTab) targetTab.classList.add('active');
-        if(btn) btn.classList.add('active');
-    }
+        function submitNote() {
+            const text = document.getElementById("modalNoteText").value.trim();
+            const author = document.getElementById("modalNoteAuthor").value.trim() || "Ẩn danh";
+            if (!text) return showNotice("Bạn chưa viết điều ước!");
 
-    // ĐĨA THAN & PHÁT NHẠC
-    const music = document.getElementById("bgMusic");
-    const record = document.getElementById("vinylRecord");
-    const musicBtn = document.getElementById("musicBtn");
-
-    function playAudio() {
-        if (!music) return;
-        music.play().then(() => {
-            if (record) record.classList.add("playing");
-            if (musicBtn) musicBtn.innerText = "⏸ Pause";
-        }).catch(error => console.log("Autoplay bị chặn"));
-    }
-
-    function toggleMusic() {
-        if (!music) return;
-        if (music.paused) {
-            playAudio();
-        } else {
-            music.pause();
-            if (record) record.classList.remove("playing");
-            if (musicBtn) musicBtn.innerText = "▶ Play";
+            sendToSheet({ sheet: "UocNguyen", text: text, author: author, color: selectedNoteColor, sticker: selectedSticker }, () => {
+                document.getElementById("modalNoteText").value = "";
+                document.getElementById("modalNoteAuthor").value = "";
+                closeNoteModal();
+            });
         }
-    } 
 
-    function createSparkles() {
-        for (let i = 0; i < 20; i++) {
+        // 5. RENDER LỜI TÂM SỰ
+        function renderTamSu(page) {
+            const container = document.getElementById("tamSuList");
+            if (!container) return; container.innerHTML = "";
+            const items = tamSuList.slice((page - 1) * postsPerPage, page * postsPerPage);
+
+            items.forEach((post, i) => {
+                const idx = (page - 1) * postsPerPage + i;
+                const isLong = post.text.length > 120;
+                const shortTxt = isLong ? post.text.substring(0, 120) + "..." : post.text;
+                const card = document.createElement("div");
+                card.className = "post-card";
+                card.innerHTML = `
+                    <div class="post-header">
+                        <span class="post-author">💌 ${post.author}</span>
+                        <span class="post-tag">Tâm sự</span>
+                    </div>
+                    <div class="post-content" id="ts-c-${idx}">${shortTxt}</div>
+                    ${isLong ? `<button class="toggle-btn" id="ts-b-${idx}" onclick="toggleText('ts-c-${idx}', 'ts-b-${idx}', \`${post.text.replace(/`/g, '')}\`, \`${shortTxt.replace(/`/g, '')}\`)">Đọc tiếp...</button>` : ''}
+                    <div class="post-date">${post.date || ''}</div>
+                `;
+                container.appendChild(card);
+            });
+            renderPagination("tamSuPagination", tamSuList.length, postsPerPage, tamSuPage, (p) => { tamSuPage = p; renderTamSu(p); });
+        }
+
+        function addTamSu() {
+            const author = document.getElementById("tsAuthor").value.trim() || "Ẩn danh";
+            const text = document.getElementById("tsText").value.trim();
+            if (!text) return showNotice("Bạn chưa viết nội dung tâm sự kìa!");
+
+            sendToSheet({ sheet: "TamSu", text: text, author: author }, () => {
+                document.getElementById("tsText").value = "";
+                document.getElementById("tsAuthor").value = "";
+            });
+        }
+
+        // 6. RENDER FEEDBACK CHAR
+        function renderFeedback(page) {
+            const container = document.getElementById("feedbackList");
+            if (!container) return; container.innerHTML = "";
+            const items = feedbackList.slice((page - 1) * postsPerPage, page * postsPerPage);
+
+            items.forEach((post, i) => {
+                const idx = (page - 1) * postsPerPage + i;
+                const isLong = post.text.length > 120;
+                const shortTxt = isLong ? post.text.substring(0, 120) + "..." : post.text;
+                const card = document.createElement("div");
+                card.className = "post-card";
+                card.style.borderLeftColor = "#e63946";
+                card.innerHTML = `
+                    <div class="post-header">
+                        <span class="post-author" style="color:#e63946;">🌱 ${post.author}</span>
+                        <span class="post-tag" style="background:#ffebee; color:#c62828;">Char: ${post.char || 'Chung'}</span>
+                    </div>
+                    <div class="post-content" id="fb-c-${idx}">${shortTxt}</div>
+                    ${isLong ? `<button class="toggle-btn" style="color:#e63946;" id="fb-b-${idx}" onclick="toggleText('fb-c-${idx}', 'fb-b-${idx}', \`${post.text.replace(/`/g, '')}\`, \`${shortTxt.replace(/`/g, '')}\`)">Đọc tiếp...</button>` : ''}
+                    <div class="post-date">${post.date || ''}</div>
+                `;
+                container.appendChild(card);
+            });
+            renderPagination("feedbackPagination", feedbackList.length, postsPerPage, feedbackPage, (p) => { feedbackPage = p; renderFeedback(p); });
+        }
+
+        function addFeedback() {
+            const author = document.getElementById("fbAuthor").value.trim() || "Ẩn danh";
+            const charName = document.getElementById("fbChar").value.trim() || "Nhân vật chung";
+            const text = document.getElementById("fbText").value.trim();
+            if (!text) return showNotice("Bạn chưa nhập nội dung feedback!");
+
+            sendToSheet({ sheet: "Feedback", text: text, author: author, char: charName }, () => {
+                document.getElementById("fbText").value = "";
+                document.getElementById("fbAuthor").value = "";
+                document.getElementById("fbChar").value = "";
+            });
+        }
+
+        // 7. HÀM DÙNG CHUNG & PHÂN TRANG
+        function toggleText(contentId, btnId, fullText, shortText) {
+            const content = document.getElementById(contentId);
+            const btn = document.getElementById(btnId);
+            if (btn.innerText === "Đọc tiếp...") {
+                content.innerText = fullText;
+                btn.innerText = "Rút gọn";
+            } else {
+                content.innerText = shortText;
+                btn.innerText = "Đọc tiếp...";
+            }
+        }
+
+        function renderPagination(boxId, totalItems, itemsPerPage, currentPage, onPageChange) {
+            const box = document.getElementById(boxId); if (!box) return; box.innerHTML = "";
+            const totalPages = Math.ceil(totalItems / itemsPerPage) || 1;
+            for (let i = 1; i <= totalPages; i++) {
+                const btn = document.createElement("button");
+                btn.className = `page-btn ${i === currentPage ? 'active' : ''}`;
+                btn.innerText = `Trang ${i}`;
+                btn.onclick = () => onPageChange(i);
+                box.appendChild(btn);
+            }
+        }
+
+        function switchTab(tabId, btn) {
+            document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
+            document.querySelectorAll('.nav-bar .nav-btn').forEach(b => b.classList.remove('active'));
+            document.getElementById(tabId).classList.add('active');
+            btn.classList.add('active');
+        }
+
+        // 8. ĐĨA THAN, NHẠC VÀ HIỆU ỨNG GỐC
+        const music = document.getElementById("bgMusic");
+        const record = document.getElementById("vinylRecord");
+        const musicBtn = document.getElementById("musicBtn");
+
+        function playAudio() {
+            if (!music) return;
+            music.play().then(() => {
+                if (record) record.classList.add("playing");
+                if (musicBtn) musicBtn.innerText = "⏸ Pause";
+            }).catch(error => console.log("Autoplay bị chặn..."));
+        }
+
+        function toggleMusic() {
+            if (music.paused) playAudio();
+            else {
+                music.pause();
+                if (record) record.classList.remove("playing");
+                if (musicBtn) musicBtn.innerText = "▶ Play";
+            }
+        } 
+
+        function createSparkles() {
+            for (let i = 0; i < 20; i++) {
+                const particle = document.createElement("div");
+                particle.className = "sparkle-particle";
+                particle.style.left = Math.random() * 100 + "vw";
+                particle.style.animationDelay = Math.random() * 5 + "s";
+                particle.style.animationDuration = (Math.random() * 5 + 5) + "s";
+                document.body.appendChild(particle);
+            }
+        }
+
+        // Hiệu ứng rê chuột & click
+        const clickPaperImgSrc = "seu.png"; 
+        const sparkleColors = ["#f3e5ab", "#c89b27", "#ffcdd2", "#c8e6c9", "#bbdefb", "#fff59d"];
+        const tingSoundUrl = "https://assets.mixkit.co/active_storage/sfx/2568/2568-preview.mp3";
+        let lastX = 0, lastY = 0;
+
+        document.addEventListener("mousemove", (e) => {
+            if (Math.abs(e.clientX - lastX) > 5 || Math.abs(e.clientY - lastY) > 5) {
+                createTrailParticle(e.clientX, e.clientY);
+                lastX = e.clientX; lastY = e.clientY;
+            }
+        });
+
+        function createTrailParticle(x, y) {
             const particle = document.createElement("div");
-            particle.className = "sparkle-particle";
-            particle.style.left = Math.random() * 100 + "vw";
-            particle.style.animationDelay = Math.random() * 5 + "s";
-            particle.style.animationDuration = (Math.random() * 5 + 5) + "s";
+            const size = Math.random() * 6 + 4;
+            const color = sparkleColors[Math.floor(Math.random() * sparkleColors.length)];
+            particle.style.cssText = `
+                position: fixed; left: ${x}px; top: ${y}px; width: ${size}px; height: ${size}px;
+                background-color: ${color}; border-radius: ${Math.random() > 0.5 ? '50%' : '2px'};
+                pointer-events: none; z-index: 9999; opacity: 0.9;
+                transform: translate(-50%, -50%) rotate(${Math.random() * 360}deg);
+                transition: transform 0.8s ease-out, opacity 0.8s ease-out;
+            `;
             document.body.appendChild(particle);
+            requestAnimationFrame(() => {
+                particle.style.transform = `translate(-50%, ${20 + Math.random() * 20}px) rotate(${Math.random() * 360}deg) scale(0)`;
+                particle.style.opacity = "0";
+            });
+            setTimeout(() => particle.remove(), 800);
         }
-    }
 
-    // HIỆU ỨNG RÊ CHUỘT & CLICK
-    const clickPaperImgSrc = "seu.png"; 
-    const sparkleColors = ["#f3e5ab", "#c89b27", "#ffcdd2", "#c8e6c9", "#bbdefb", "#fff59d"];
-    const tingSoundUrl = "https://assets.mixkit.co/active_storage/sfx/2568/2568-preview.mp3";
-    let lastX = 0, lastY = 0;
+        document.addEventListener("click", (e) => {
+            try {
+                const sound = new Audio(tingSoundUrl);
+                sound.volume = 0.4;
+                sound.play().catch(err => {});
+            } catch (err) {}
+            createClickImage(e.clientX, e.clientY);
+            createBurstParticle(e.clientX, e.clientY);
+        });
 
-    document.addEventListener("mousemove", (e) => {
-        if (Math.abs(e.clientX - lastX) > 5 || Math.abs(e.clientY - lastY) > 5) {
-            createTrailParticle(e.clientX, e.clientY);
-            lastX = e.clientX;
-            lastY = e.clientY;
+        function createClickImage(x, y) {
+            const img = document.createElement("img");
+            img.src = clickPaperImgSrc;
+            img.style.cssText = `
+                position: fixed; left: ${x}px; top: ${y}px; width: 30px; height: 30px;
+                pointer-events: none; z-index: 10000; opacity: 1;
+                transform: translate(-50%, -50%) scale(0.5) rotate(0deg);
+                transition: transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.5s ease-out;
+            `;
+            document.body.appendChild(img);
+            requestAnimationFrame(() => {
+                img.style.transform = `translate(-50%, -80%) scale(1.2) rotate(${Math.random() * 40 - 20}deg)`;
+                img.style.opacity = "0";
+            });
+            setTimeout(() => img.remove(), 500);
         }
-    });
 
-    function createTrailParticle(x, y) {
-        const particle = document.createElement("div");
-        const size = Math.random() * 6 + 4;
-        const color = sparkleColors[Math.floor(Math.random() * sparkleColors.length)];
-        particle.style.cssText = `
-            position: fixed;
-            left: ${x}px;
-            top: ${y}px;
-            width: ${size}px;
-            height: ${size}px;
-            background-color: ${color};
-            border-radius: ${Math.random() > 0.5 ? '50%' : '2px'};
-            pointer-events: none;
-            z-index: 9999;
-            opacity: 0.9;
-            transform: translate(-50%, -50%) rotate(${Math.random() * 360}deg);
-            transition: transform 0.8s ease-out, opacity 0.8s ease-out;
-        `;
-        document.body.appendChild(particle);
-        requestAnimationFrame(() => {
-            particle.style.transform = `translate(-50%, ${20 + Math.random() * 20}px) rotate(${Math.random() * 360}deg) scale(0)`;
-            particle.style.opacity = "0";
-        });
-        setTimeout(() => particle.remove(), 800);
-    }
+        function createBurstParticle(x, y) {
+            const particle = document.createElement("div");
+            const size = Math.random() * 8 + 4;
+            const color = sparkleColors[Math.floor(Math.random() * sparkleColors.length)];
+            const angle = Math.random() * Math.PI * 2;
+            const velocity = Math.random() * 60 + 20; 
+            const destX = Math.cos(angle) * velocity;
+            const destY = Math.sin(angle) * velocity;
+            particle.style.cssText = `
+                position: fixed; left: ${x}px; top: ${y}px; width: ${size}px; height: ${size}px;
+                background-color: ${color}; border-radius: ${Math.random() > 0.3 ? '50%' : '1px'};
+                pointer-events: none; z-index: 9999; transform: translate(-50%, -50%) scale(1);
+                transition: transform 0.6s ease-out, opacity 0.6s ease-out;
+            `;
+            document.body.appendChild(particle);
+            requestAnimationFrame(() => {
+                particle.style.transform = `translate(calc(-50% + ${destX}px), calc(-50% + ${destY}px)) scale(0)`;
+                particle.style.opacity = "0";
+            });
+            setTimeout(() => particle.remove(), 600);
+        }
 
-    document.addEventListener("click", (e) => {
-        try {
-            const sound = new Audio(tingSoundUrl);
-            sound.volume = 0.4;
-            sound.play().catch(err => {});
-        } catch (err) {}
-        createClickImage(e.clientX, e.clientY);
-    });
-
-    function createClickImage(x, y) {
-        const img = document.createElement("img");
-        img.src = clickPaperImgSrc;
-        img.style.cssText = `
-            position: fixed;
-            left: ${x}px;
-            top: ${y}px;
-            width: 30px;
-            height: 30px;
-            pointer-events: none;
-            z-index: 10000;
-            transform: translate(-50%, -50%) scale(0.5) rotate(0deg);
-            transition: transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.5s ease-out;
-            opacity: 1;
-        `;
-        document.body.appendChild(img);
-        requestAnimationFrame(() => {
-            img.style.transform = `translate(-50%, -80%) scale(1.2) rotate(${Math.random() * 40 - 20}deg)`;
-            img.style.opacity = "0";
-        });
-        setTimeout(() => img.remove(), 500);
-    }
-
-    // TẢI TRANG
-    window.onload = () => {
-        loadDataFromSheet();
-        createSparkles();
-        playAudio();
-        const startMusicOnInteraction = () => {
-            if (music && music.paused) playAudio();
-            window.removeEventListener("click", startMusicOnInteraction);
-            window.removeEventListener("touchstart", startMusicOnInteraction);
+        // TẢI TRANG
+        window.onload = () => {
+            loadDataFromSheet();
+            createSparkles();
+            playAudio();
+            const startMusicOnInteraction = () => {
+                if (music && music.paused) playAudio();
+                window.removeEventListener("click", startMusicOnInteraction);
+                window.removeEventListener("touchstart", startMusicOnInteraction);
+            };
+            window.addEventListener("click", startMusicOnInteraction);
+            window.addEventListener("touchstart", startMusicOnInteraction);
         };
-        window.addEventListener("click", startMusicOnInteraction);
-        window.addEventListener("touchstart", startMusicOnInteraction);
-    };
-</script>
+    </script>
 </body>
 </html>
