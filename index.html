@@ -8,6 +8,32 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Patrick+Hand&family=Quicksand:wght@400;600&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+
+    <!-- Firebase SDKs -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getDatabase, ref, push, onValue } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyC8ksReOeGVbSPlybFhGaO6wue46ID9YME",
+            authDomain: "xuhuong-6949e.firebaseapp.com",
+            projectId: "xuhuong-6949e",
+            databaseURL: "https://xuhuong-6949e-default-rtdb.firebaseio.com",
+            storageBucket: "xuhuong-6949e.firebasestorage.app",
+            messagingSenderId: "454402686292",
+            appId: "1:454402686292:web:1b188b7cd86785df9f1cc1",
+            measurementId: "G-1GF4SXRWZQ"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getDatabase(app);
+        window.db = db;
+        window.dbRef = ref;
+        window.dbPush = push;
+        window.dbOnValue = onValue;
+    </script>
+
     <style>
         :root {
             --bg-lemon: #fffdf0;
@@ -499,7 +525,7 @@
     <header>
         <div class="nav-bar">
             <a href="https://tatuyennhi-design.github.io/index.html/" class="nav-btn back-home">🏠 Quay về Tiệm chính</a>
-           <button class="nav-btn active" onclick="switchTab('uoc-nguyen', this)">✨ Tường Ước Nguyện</button>
+            <button class="nav-btn active" onclick="switchTab('uoc-nguyen', this)">✨ Tường Ước Nguyện</button>
             <button class="nav-btn" onclick="switchTab('tam-su', this)">💌 Lời Tâm Sự</button>
             <button class="nav-btn" onclick="switchTab('feedback', this)">🌱 Feedback Char</button>
         </div>
@@ -601,10 +627,9 @@
         <p>✨ Cảm ơn bạn rất nhiều vì đã ghé thăm và để lại dấu chân tại Tiệm Nhà Hyperion ✨</p>
         <p style="margin-top:5px; font-size:11px; color:#aaa;">© 2026 Tiệm Nhà Hyperion - Góc Ước Nguyện Giao Lưu & Feedback Char</p>
     </footer>
-    <!-- SCRIPT CHÍNH -->
+
+    <!-- SCRIPT CHÍNH XỬ LÝ BẰNG FIREBASE REALTIME DATABASE -->
     <script>
-        const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyGCYtjfmW1q5IMZQHEIgI49aR5_kK8QItEUNCZLaxaXFax5UXQZdP_2tb6D5ladfkE/exec";
-        
         let noteList = [];
         let tamSuList = [];
         let feedbackList = [];
@@ -615,84 +640,73 @@
         let selectedStickersData = []; 
         let stickerToAssignPos = ""; 
 
-        // Hàm fallback xử lý ngày tháng hiển thị tào lao ở Frontend
-        function formatDateUI(dateStr) {
-            if (!dateStr) return "";
-            // Nếu Apps Script đã format chuẩn (có dấu gạch chéo) thì dùng luôn
-            if (typeof dateStr === 'string' && dateStr.includes('/')) return dateStr;
-            
-            // Nếu là chuỗi ISO hoặc chuỗi gốc bị lọt xuống, tự ép lại định dạng
-            try {
-                let d = new Date(dateStr);
-                if (isNaN(d.getTime())) return dateStr;
-                let day = ("0" + d.getDate()).slice(-2);
-                let month = ("0" + (d.getMonth() + 1)).slice(-2);
-                let year = d.getFullYear();
-                let hrs = ("0" + d.getHours()).slice(-2);
-                let mins = ("0" + d.getMinutes()).slice(-2);
-                return `${day}/${month}/${year} ${hrs}:${mins}`;
-            } catch(e) {
-                return dateStr;
-            }
+        // 1. TẢI DỮ LIỆU BẰNG FIREBASE REALTIME (0.1 GIÂY & KHÔNG BỊ LAG)
+        function initFirebaseListeners() {
+            // Lắng nghe dữ liệu Ước Nguyện
+            window.dbOnValue(window.dbRef(window.db, 'wishes'), (snapshot) => {
+                const data = snapshot.val();
+                if (data) {
+                    noteList = Object.keys(data).map(key => ({
+                        id: key,
+                        text: data[key].text,
+                        author: data[key].author,
+                        color: data[key].color || "note-yellow",
+                        stickers: data[key].stickers || [], 
+                        date: data[key].date || "",
+                        rotate: (Math.random() * 6 - 3).toFixed(1) + "deg"
+                    })).reverse(); // Tin mới lên đầu
+                } else {
+                    noteList = [];
+                }
+                renderNotes(notePage);
+            });
+
+            // Lắng nghe dữ liệu Tâm Sự
+            window.dbOnValue(window.dbRef(window.db, 'tamsu'), (snapshot) => {
+                const data = snapshot.val();
+                if (data) {
+                    tamSuList = Object.keys(data).map(key => ({
+                        id: key,
+                        text: data[key].text,
+                        author: data[key].author,
+                        date: data[key].date || ""
+                    })).reverse();
+                } else {
+                    tamSuList = [];
+                }
+                renderTamSu(tamSuPage);
+            });
+
+            // Lắng nghe dữ liệu Feedback
+            window.dbOnValue(window.dbRef(window.db, 'feedback'), (snapshot) => {
+                const data = snapshot.val();
+                if (data) {
+                    feedbackList = Object.keys(data).map(key => ({
+                        id: key,
+                        text: data[key].text,
+                        author: data[key].author,
+                        char: data[key].char || "Chung",
+                        date: data[key].date || ""
+                    })).reverse();
+                } else {
+                    feedbackList = [];
+                }
+                renderFeedback(feedbackPage);
+            });
         }
 
-        // 1. TẢI DỮ LIỆU TỪ GOOGLE SHEET (CÓ .reverse() ĐỂ ĐẨY TIN MỚI LÊN ĐẦU)
-        function loadDataFromSheet() {
-            fetch(`${SCRIPT_URL}?action=getNotes`)
-                .then(res => res.json())
-                .then(data => {
-                    if (Array.isArray(data)) {
-                        noteList = data.map(item => ({
-                            text: item.text,
-                            author: item.author,
-                            color: item.color || "note-yellow",
-                            stickers: item.stickers || [], 
-                            date: item.date || "", // Lấy ngày tháng từ Google Sheet
-                            rotate: (Math.random() * 6 - 3).toFixed(1) + "deg"
-                        })).reverse();
-                        renderNotes(notePage);
-                    }
-                }).catch(e => console.log("Lỗi tải Ước Nguyện:", e));
-            fetch(`${SCRIPT_URL}?action=getTamSu`)
-                .then(res => res.json())
-                .then(data => {
-                    if (Array.isArray(data)) {
-                        tamSuList = data.reverse();
-                        renderTamSu(tamSuPage);
-                    }
-                }).catch(e => console.log("Lỗi tải Tâm Sự:", e));
-            fetch(`${SCRIPT_URL}?action=getFeedback`)
-                .then(res => res.json())
-                .then(data => {
-                    if (Array.isArray(data)) {
-                        feedbackList = data.reverse();
-                        renderFeedback(feedbackPage);
-                    }
-                }).catch(e => console.log("Lỗi tải Feedback:", e));
+        // Hàm hỗ trợ định dạng thời gian
+        function getCurrentFormattedDate() {
+            let d = new Date();
+            let day = ("0" + d.getDate()).slice(-2);
+            let month = ("0" + (d.getMonth() + 1)).slice(-2);
+            let year = d.getFullYear();
+            let hrs = ("0" + d.getHours()).slice(-2);
+            let mins = ("0" + d.getMinutes()).slice(-2);
+            return `${day}/${month}/${year} ${hrs}:${mins}`;
         }
-        // 2. GỬI DỮ LIỆU LÊN GOOGLE SHEET
-        function sendToSheet(data, onSuccess) {
-            fetch(SCRIPT_URL, {
-                method: "POST",
-                headers: { "Content-Type": "text/plain;charset=utf-8" },
-                body: JSON.stringify(data)
-            })
-            .then(res => res.json())
-            .then(res => {
-                if (res.result === "success") {
-                    if (onSuccess) onSuccess();
-                    loadDataFromSheet();
-                } else {
-                    showNotice("Có lỗi từ máy chủ, hãy kiểm tra lại Apps Script nhé!");
-                    console.error(res);
-                }
-            })
-            .catch(err => {
-                console.error("Lỗi gửi dữ liệu:", err);
-                showNotice("Không thể gửi dữ liệu, kiểm tra kết nối mạng nha!");
-            });
-        } 
-        // 3. HÀM TẠO HIỆU ỨNG (LANTERN, BALLOON-STRING-LETTER, STAR)
+
+        // 2. HÀM TẠO HIỆU ỨNG (LANTERN, BALLOON-STRING-LETTER, STAR)
         function triggerLanternEffect() {
             for (let i = 0; i < 8; i++) {
                 setTimeout(() => {
@@ -737,7 +751,8 @@
                 setTimeout(() => star.remove(), 2200);
             }
         }
-        // 4. POPUP MODAL & THÔNG BÁO
+
+        // 3. POPUP MODAL & THÔNG BÁO
         function showNotice(msg) {
             const modal = document.getElementById("customNotice");
             modal.querySelector(".notice-message").innerText = msg;
@@ -759,7 +774,8 @@
             document.querySelectorAll('.color-opt').forEach(b => b.classList.remove('selected'));
             el.classList.add('selected');
         }
-        // 5. QUẢN LÝ TỰ CHỌN STICKER
+
+        // 4. QUẢN LÝ TỰ CHỌN STICKER
         function selectStickerForPos(st) {
             if (selectedStickersData.length >= 3) {
                 return showNotice("Bạn chỉ được chọn tối đa 3 sticker thôi nha!");
@@ -806,30 +822,40 @@
             selectedStickersData.splice(index, 1);
             renderSelectedStickersList();
         }
+
+        // 5. ĐĂNG ƯỚC NGUYỆN LÊN FIREBASE (SIÊU TỐC)
         function submitNote() {
             const text = document.getElementById("modalNoteText").value.trim();
             const author = document.getElementById("modalNoteAuthor").value.trim() || "Ẩn danh";
             if (!text) return showNotice("Bạn chưa viết điều ước!");
+            
             triggerLanternEffect();
             const formattedStickers = (selectedStickersData || []).map(item => ({
                 st: item.st || item.sticker || item.icon || item,
                 pos: item.pos || item.position || "top-left"
             }));
-            sendToSheet({
-                sheet: "UocNguyen",
+
+            const wishesRef = window.dbRef(window.db, 'wishes');
+            window.dbPush(wishesRef, {
                 text: text,
                 author: author,
                 color: selectedNoteColor,
-                stickers: formattedStickers
-            }, () => {
+                stickers: formattedStickers,
+                date: getCurrentFormattedDate(),
+                timestamp: Date.now()
+            }).then(() => {
                 document.getElementById("modalNoteText").value = "";
                 document.getElementById("modalNoteAuthor").value = "";
                 selectedStickersData = [];
                 renderSelectedStickersList();
                 closeNoteModal();
                 showNotice("Gửi lời ước nguyện thành công rồi nha! ✨");
+            }).catch(err => {
+                showNotice("Có lỗi khi gửi, hãy kiểm tra mạng nha!");
+                console.error(err);
             });
         }
+
         // 6. RENDER TƯỜNG ƯỚC NGUYỆN
         function renderNotes(page) {
             const board = document.getElementById("corkBoard");
@@ -870,7 +896,7 @@
                     <div style="margin-top:10px; padding: 0 5px;">${item.text}</div>
                     <div class="note-author">
                         — ${item.author}
-                        <div style="font-size: 11px; color: #999; margin-top: 4px;">${formatDateUI(item.date)}</div>
+                        <div style="font-size: 11px; color: #999; margin-top: 4px;">${item.date}</div>
                     </div>
                 `;
                 board.appendChild(card);
@@ -878,7 +904,8 @@
             
             renderPagination("notePagination", noteList.length, notesPerPage, notePage, (p) => { notePage = p; renderNotes(p); });
         }
-        // 7. RENDER & THÊM LỜI TÂM SỰ
+
+        // 7. RENDER & THÊM LỜI TÂM SỰ BẰNG FIREBASE
         function renderTamSu(page) {
             const container = document.getElementById("tamSuList");
             if (!container) return; 
@@ -898,7 +925,7 @@
                     </div>
                     <div class="post-content" id="ts-c-${idx}">${shortTxt}</div>
                     ${isLong ? `<button class="toggle-btn" id="ts-b-${idx}" onclick="toggleText('ts-c-${idx}', 'ts-b-${idx}', \`${post.text.replace(/`/g, '')}\`, \`${shortTxt.replace(/`/g, '')}\`)">Đọc tiếp...</button>` : ''}
-                    <div class="post-date">${formatDateUI(post.date)}</div>
+                    <div class="post-date">${post.date}</div>
                 `;
                 container.appendChild(card);
             });
@@ -908,14 +935,24 @@
             const author = document.getElementById("tsAuthor").value.trim() || "Ẩn danh";
             const text = document.getElementById("tsText").value.trim();
             if (!text) return showNotice("Bạn chưa viết nội dung tâm sự kìa!");
+            
             triggerBalloonEffect();
-            sendToSheet({ sheet: "TamSu", text: text, author: author }, () => {
+            const tsRef = window.dbRef(window.db, 'tamsu');
+            window.dbPush(tsRef, {
+                text: text,
+                author: author,
+                date: getCurrentFormattedDate(),
+                timestamp: Date.now()
+            }).then(() => {
                 document.getElementById("tsText").value = "";
                 document.getElementById("tsAuthor").value = "";
                 showNotice("Đã gửi tâm sự thành công! 💌");
+            }).catch(err => {
+                showNotice("Có lỗi khi gửi, thử lại nhé!");
             });
         }
-        // 8. RENDER & THÊM FEEDBACK CHAR
+
+        // 8. RENDER & THÊM FEEDBACK CHAR BẰNG FIREBASE
         function renderFeedback(page) {
             const container = document.getElementById("feedbackList");
             if (!container) return; 
@@ -936,7 +973,7 @@
                     </div>
                     <div class="post-content" id="fb-c-${idx}">${shortTxt}</div>
                     ${isLong ? `<button class="toggle-btn" style="color:#e63946;" id="fb-b-${idx}" onclick="toggleText('fb-c-${idx}', 'fb-b-${idx}', \`${post.text.replace(/`/g, '')}\`, \`${shortTxt.replace(/`/g, '')}\`)">Đọc tiếp...</button>` : ''}
-                    <div class="post-date">${formatDateUI(post.date)}</div>
+                    <div class="post-date">${post.date}</div>
                 `;
                 container.appendChild(card);
             });
@@ -947,14 +984,25 @@
             const charName = document.getElementById("fbChar").value.trim() || "Nhân vật chung";
             const text = document.getElementById("fbText").value.trim();
             if (!text) return showNotice("Bạn chưa nhập nội dung feedback!");
+            
             triggerStarEffect();
-            sendToSheet({ sheet: "Feedback", text: text, author: author, char: charName }, () => {
+            const fbRef = window.dbRef(window.db, 'feedback');
+            window.dbPush(fbRef, {
+                text: text,
+                author: author,
+                char: charName,
+                date: getCurrentFormattedDate(),
+                timestamp: Date.now()
+            }).then(() => {
                 document.getElementById("fbText").value = "";
                 document.getElementById("fbAuthor").value = "";
                 document.getElementById("fbChar").value = "";
                 showNotice("Đã gửi feedback thành công! 🌱");
+            }).catch(err => {
+                showNotice("Có lỗi khi gửi, thử lại nhé!");
             });
         }
+
         // 9. HÀM DÙNG CHUNG & PHÂN TRANG
         function toggleText(contentId, btnId, fullText, shortText) {
             const content = document.getElementById(contentId);
@@ -986,6 +1034,7 @@
             document.getElementById(tabId).classList.add('active');
             btn.classList.add('active');
         }
+
         // 10. ĐĨA THAN, NHẠC VÀ HIỆU ỨNG CHUỘT
         const music = document.getElementById("bgMusic");
         const record = document.getElementById("vinylRecord");
@@ -1089,9 +1138,10 @@
             });
             setTimeout(() => particle.remove(), 600);
         }
+
         // TẢI TRANG
         window.onload = () => {
-            loadDataFromSheet();
+            initFirebaseListeners(); // Lắng nghe Firebase realtime siêu tốc
             createSparkles();
             playAudio();
             const startMusicOnInteraction = () => {
